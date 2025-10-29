@@ -1,0 +1,769 @@
+{
+    "title": "Web Engineering - Lecture 04: Server-Side Programming",
+    "fill_in_the_blanks": [
+      {
+        "question": "______ is the program that runs on server dealing with the generation of content of web page.",
+        "answer": "Server-side programming"
+      },
+      {
+        "question": "Python is a server-side language popular with frameworks like Django, Flask, and ______.",
+        "answer": "FastAPI"
+      },
+      {
+        "question": "JavaScript (Node.js) is an event-driven, non-blocking ______ technology, great for APIs.",
+        "answer": "I/O"
+      },
+      {
+        "question": "Server-side programming sends responses back to the client, usually as HTML, JSON, or ______.",
+        "answer": "XML"
+      },
+      {
+        "question": "PHP stands for ______, which is an open-source language for web development.",
+        "answer": "Hypertext Preprocessor"
+      },
+      {
+        "question": "Developers can create dynamic websites by embedding ______ code into HTML.",
+        "answer": "PHP"
+      },
+      {
+        "question": "PHP supports easy interaction with databases like ______, enabling efficient data handling.",
+        "answer": "MySQL"
+      },
+      {
+        "question": "PHP runs on multiple operating systems and works with popular web servers like Apache and ______.",
+        "answer": "Nginx"
+      },
+      {
+        "question": "PHP supports both object-oriented and ______ programming paradigms.",
+        "answer": "procedural"
+      },
+      {
+        "question": "In the 'Working of PHP' diagram, the Web Server sends an ______ to the Database.",
+        "answer": "SQL query"
+      },
+      {
+        "question": "A PHP file contains HTML, CSS, JavaScript and PHP code together and is saved with a ______ extension.",
+        "answer": ".php"
+      },
+      {
+        "question": "The output of a PHP file is sent to the browser as plain ______.",
+        "answer": "HTML"
+      },
+      {
+        "question": "PHP 8 introduced ______ compilation for faster execution.",
+        "answer": "Just-In-Time (JIT)"
+      },
+      {
+        "question": "______ is a server-side technology that allows developers to embed Java code directly into HTML pages.",
+        "answer": "JavaServer Pages (JSP)"
+      },
+      {
+        "question": "JSP is an advanced version of ______.",
+        "answer": "Servlets"
+      },
+      {
+        "question": "The ______ framework was designed and developed by Microsoft and first released in January 2002.",
+        "answer": "ASP.NET"
+      },
+      {
+        "question": "ASP.NET is based on the .NET framework and ______ (Common Language Runtime).",
+        "answer": "CLR"
+      },
+      {
+        "question": "The ASP.NET ______ model is event-driven and uses .aspx pages.",
+        "answer": "Web Forms"
+      },
+      {
+        "question": "HTTP (Hypertext Transfer Protocol) is a ______ protocol, meaning each request is independent.",
+        "answer": "stateless"
+      },
+      {
+        "question": "The HTTP ______ method is used to send data to the server, such as from a form submission.",
+        "answer": "POST"
+      }
+    ],
+    "true_false": [
+      {
+        "question": "Server-side programming only involves querying the database.",
+        "answer": false
+      },
+      {
+        "question": "Node.js is a server-side JavaScript technology known for its non-blocking I/O.",
+        "answer": true
+      },
+      {
+        "question": "Server-side code runs on the client's web browser.",
+        "answer": false
+      },
+      {
+        "question": "PHP is an acronym for 'Personal Home Page'.",
+        "answer": false
+      },
+      {
+        "question": "PHP is a proprietary, closed-source language.",
+        "answer": false
+      },
+      {
+        "question": "PHP code cannot be embedded into HTML files.",
+        "answer": false
+      },
+      {
+        "question": "PHP is cross-platform and can run on Windows, Linux, and macOS.",
+        "answer": true
+      },
+      {
+        "question": "PHP only supports procedural programming.",
+        "answer": false
+      },
+      {
+        "question": "In the 'Working of PHP' diagram, the web browser sends an SQL query to the web server.",
+        "answer": false
+      },
+      {
+        "question": "A PHP file's output is sent to the browser as processed PHP code.",
+        "answer": false
+      },
+      {
+        "question": "PHP can be used to manage login systems and control user access.",
+        "answer": true
+      },
+      {
+        "question": "WordPress, a popular CMS, uses PHP as its foundation.",
+        "answer": true
+      },
+      {
+        "question": "JSP is an older, less advanced version of Servlets.",
+        "answer": false
+      },
+      {
+        "question": "JSP is platform-dependent, meaning it can only run on Windows servers.",
+        "answer": false
+      },
+      {
+        "question": "JSP contains predefined objects like 'request' and 'response'.",
+        "answer": true
+      },
+      {
+        "question": "ASP.NET was developed by Oracle.",
+        "answer": false
+      },
+      {
+        "question": "ASP.NET code is compiled, making it faster than interpreted classic ASP scripts.",
+        "answer": true
+      },
+      {
+        "question": "The ASP.NET MVC model combines business logic, UI, and data into a single file.",
+        "answer": false
+      },
+      {
+        "question": "HTTP is a stateful protocol that remembers previous requests.",
+        "answer": false
+      },
+      {
+        "question": "The HTTP PUT method is used to retrieve data from the server.",
+        "answer": false
+      }
+    ],
+    "mcqs": [
+      {
+        "question": "Which of the following is a task performed by server-side programming?",
+        "options": [
+          "Running animations in the browser",
+          "Handling client-side form validation",
+          "Querying a database",
+          "Styling web pages with CSS"
+        ],
+        "answer": "Querying a database"
+      },
+      {
+        "question": "Which of the following is NOT listed as a server-side programming task?",
+        "options": [
+          "Operations over databases",
+          "Access/Write a file on server",
+          "Interact with other servers",
+          "Manipulating the client's DOM directly"
+        ],
+        "answer": "Manipulating the client's DOM directly"
+      },
+      {
+        "question": "Which server-side technology is associated with the Django and Flask frameworks?",
+        "options": [
+          "PHP",
+          "Python",
+          "Java",
+          "C# / .NET"
+        ],
+        "answer": "Python"
+      },
+      {
+        "question": "Which server-side technology is used for enterprise-level development with frameworks like Spring Boot?",
+        "options": [
+          "PHP",
+          "Python",
+          "Java",
+          "Ruby"
+        ],
+        "answer": "Java"
+      },
+      {
+        "question": "What is a key feature of Node.js for server-side development?",
+        "options": [
+          "Event-driven, non-blocking I/O",
+          "Procedural programming support",
+          "Enterprise-level servlets",
+          "Strongly-typed code"
+        ],
+        "answer": "Event-driven, non-blocking I/O"
+      },
+      {
+        "question": "What does PHP stand for?",
+        "options": [
+          "Personal Home Page",
+          "Python Hypertext Processor",
+          "Hypertext Preprocessor",
+          "Programming Homepage"
+        ],
+        "answer": "Hypertext Preprocessor"
+      },
+      {
+        "question": "What is a primary characteristic of PHP?",
+        "options": [
+          "It is a compiled language",
+          "It is client-side only",
+          "It is open-source and widely used",
+          "It was developed by Microsoft"
+        ],
+        "answer": "It is open-source and widely used"
+      },
+      {
+        "question": "How does PHP create dynamic and interactive websites?",
+        "options": [
+          "By running only in the browser",
+          "By embedding PHP code into HTML",
+          "By using client-side JavaScript only",
+          "By replacing the web server"
+        ],
+        "answer": "By embedding PHP code into HTML"
+      },
+      {
+        "question": "Which of the following can PHP handle?",
+        "options": [
+          "Session management",
+          "Form handling",
+          "Database integration",
+          "All of the above"
+        ],
+        "answer": "All of the above"
+      },
+      {
+        "question": "What is the correct syntax to output 'Hello, World!' in PHP?",
+        "options": [
+          "console.log(\"Hello, World!\");",
+          "System.out.println(\"Hello, World!\");",
+          "echo \"Hello, World!\";",
+          "print(\"Hello, World!\")"
+        ],
+        "answer": "echo \"Hello, World!\";"
+      },
+      {
+        "question": "Which of the following is a characteristic of PHP?",
+        "options": [
+          "Client-Side Scripting only",
+          "Proprietary and expensive",
+          "Supports both Object-Oriented & Procedural",
+          "Limited to Apache servers"
+        ],
+        "answer": "Supports both Object-Oriented & Procedural"
+      },
+      {
+        "question": "According to the 'Working of PHP' diagram, what does the Web Browser send to the Web Server?",
+        "options": [
+          "http response",
+          "SQL query",
+          "http request",
+          "SQL response"
+        ],
+        "answer": "http request"
+      },
+      {
+        "question": "In the PHP workflow diagram, what does the Web Server send to the Database?",
+        "options": [
+          "http request",
+          "SQL query",
+          "http response",
+          "HTML page"
+        ],
+        "answer": "SQL query"
+      },
+      {
+        "question": "What does the Web Server send back to the Web Browser after processing a PHP request?",
+        "options": [
+          "http response",
+          "SQL query",
+          "PHP code",
+          "A .php file"
+        ],
+        "answer": "http response"
+      },
+      {
+        "question": "What does a PHP file typically contain?",
+        "options": [
+          "PHP code only",
+          "HTML and CSS only",
+          "HTML, CSS, JavaScript and PHP code",
+          "Java code only"
+        ],
+        "answer": "HTML, CSS, JavaScript and PHP code"
+      },
+      {
+        "question": "What file extension are PHP files saved with?",
+        "options": [
+          ".html",
+          ".js",
+          ".java",
+          ".php"
+        ],
+        "answer": ".php"
+      },
+      {
+        "question": "What is the final output of a PHP file sent to the browser?",
+        "options": [
+          "The original PHP code",
+          "Plain HTML",
+          "A Java applet",
+          "XML data only"
+        ],
+        "answer": "Plain HTML"
+      },
+      {
+        "question": "Which of the following can PHP do?",
+        "options": [
+          "Create, open, read, write, and delete files on the server",
+          "Only generate static content",
+          "Only run on the client's browser",
+          "Cannot interact with databases"
+        ],
+        "answer": "Create, open, read, write, and delete files on the server"
+      },
+      {
+        "question": "Which popular Content Management System (CMS) is built on a PHP foundation?",
+        "options": [
+          "Joomla",
+          "Drupal",
+          "WordPress",
+          "Shopify"
+        ],
+        "answer": "WordPress"
+      },
+      {
+        "question": "What performance enhancement was introduced in PHP 8?",
+        "options": [
+          "Non-blocking I/O",
+          "Just-In-Time (JIT) compilation",
+          "Servlets and Applets",
+          "Common Language Runtime (CLR)"
+        ],
+        "answer": "Just-In-Time (JIT) compilation"
+      },
+      {
+        "question": "Besides web development, PHP can also be used for:",
+        "options": [
+          "Client-side styling",
+          "Command-Line Scripting",
+          "Creating mobile operating systems",
+          "Browser engine development"
+        ],
+        "answer": "Command-Line Scripting"
+      },
+      {
+        "question": "What is JavaServer Pages (JSP)?",
+        "options": [
+          "A client-side JavaScript library",
+          "A server-side technology for dynamic web applications",
+          "A database management system",
+          "A type of web server"
+        ],
+        "answer": "A server-side technology for dynamic web applications"
+      },
+      {
+        "question": "JSP is described as an advanced version of what technology?",
+        "options": [
+          "Servlets",
+          "Classic ASP",
+          "PHP",
+          "Node.js"
+        ],
+        "answer": "Servlets"
+      },
+      {
+        "question": "Which of the following is a key feature of JSP?",
+        "options": [
+          "It is platform-dependent",
+          "It contains predefined objects like 'request' and 'session'",
+          "It cannot interact with databases",
+          "It is a client-side technology"
+        ],
+        "answer": "It contains predefined objects like 'request' and 'session'"
+      },
+      {
+        "question": "What is the principle of JSP's platform-independence?",
+        "options": [
+          "Write once, run anywhere",
+          "Only runs on Windows",
+          "Requires a specific browser",
+          "Only works with MySQL"
+        ],
+        "answer": "Write once, run anywhere"
+      },
+      {
+        "question": "Which layer in the JSP architecture processes the request using a JSP engine?",
+        "options": [
+          "Client Layer",
+          "Web Server Layer",
+          "Database/Backend Layer",
+          "Application Layer"
+        ],
+        "answer": "Web Server Layer"
+      },
+      {
+        "question": "What company designed and developed ASP.NET?",
+        "options": [
+          "Google",
+          "Oracle",
+          "Microsoft",
+          "Apple"
+        ],
+        "answer": "Microsoft"
+      },
+      {
+        "question": "ASP.NET is the successor to which technology?",
+        "options": [
+          "JSP",
+          "PHP",
+          "Classic ASP (Active Server Pages)",
+          "Servlets"
+        ],
+        "answer": "Classic ASP (Active Server Pages)"
+      },
+      {
+        "question": "When was version 1.0 of the .NET Framework first released?",
+        "options": [
+          "January 2002",
+          "June 2025",
+          "January 2000",
+          "December 1995"
+        ],
+        "answer": "January 2002"
+      },
+      {
+        "question": "The .NET Framework is used to create which types of applications?",
+        "options": [
+          "Web applications only",
+          "Console applications only",
+          "Windows applications only",
+          "Console, Web, and Windows applications"
+        ],
+        "answer": "Console, Web, and Windows applications"
+      },
+      {
+        "question": "Which of the following languages is supported by ASP.NET?",
+        "options": [
+          "C#",
+          "VB.NET",
+          "F#",
+          "All of the above"
+        ],
+        "answer": "All of the above"
+      },
+      {
+        "question": "ASP.NET is object-oriented and based on the .NET framework and:",
+        "options": [
+          "JSP Engine",
+          "Apache Server",
+          "CLR (Common Language Runtime)",
+          "JIT Compiler"
+        ],
+        "answer": "CLR (Common Language Runtime)"
+      },
+      {
+        "question": "What is a key feature of ASP.NET's performance?",
+        "options": [
+          "It uses compiled code, which is faster than interpreted scripts",
+          "It is interpreted, making it easy to debug",
+          "It runs only on the client-side",
+          "It is slower than classic ASP"
+        ],
+        "answer": "It uses compiled code, which is faster than interpreted scripts"
+      },
+      {
+        "question": "Which ASP.NET development model is event-driven and uses .aspx pages?",
+        "options": [
+          "ASP.NET Web Forms",
+          "ASP.NET MVC",
+          "ASP.NET Web API",
+          "ASP.NET Core"
+        ],
+        "answer": "ASP.NET Web Forms"
+      },
+      {
+        "question": "Which ASP.NET model is based on the 'Separation of concerns' (Model-View-Controller) pattern?",
+        "options": [
+          "ASP.NET Web Forms",
+          "ASP.NET MVC",
+          "ASP.NET Web API",
+          "Classic ASP"
+        ],
+        "answer": "ASP.NET MVC"
+      },
+      {
+        "question": "Which ASP.NET framework is used for building RESTful HTTP services, often for mobile apps or SPAs?",
+        "options": [
+          "ASP.NET Web Forms",
+          "ASP.NET MVC",
+          "ASP.NET Web API",
+          "ASP.NET Core"
+        ],
+        "answer": "ASP.NET Web API"
+      },
+      {
+        "question": "What is a key advantage of ASP.NET Core?",
+        "options": [
+          "It is cross-platform (Windows, Linux, macOS)",
+          "It only supports the Web Forms model",
+          "It is closed-source and proprietary",
+          "It only runs on Windows servers"
+        ],
+        "answer": "It is cross-platform (Windows, Linux, macOS)"
+      },
+      {
+        "question": "ASP.NET Core is a unified framework for:",
+        "options": [
+          "MVC, Web API, and Razor Pages",
+          "Web Forms only",
+          "Classic ASP and JSP",
+          "PHP and Python"
+        ],
+        "answer": "MVC, Web API, and Razor Pages"
+      },
+      {
+        "question": "What is server communication at its core?",
+        "options": [
+          "Sending requests and receiving responses",
+          "Only sending requests",
+          "Only receiving responses",
+          "Client-to-client interaction"
+        ],
+        "answer": "Sending requests and receiving responses"
+      },
+      {
+        "question": "What does HTTP stand for?",
+        "options": [
+          "Hypertext Transfer Protocol",
+          "Hyperlink Text Protocol",
+          "Hypertext Transfer Page",
+          "Hypertext Type Protocol"
+        ],
+        "answer": "Hypertext Transfer Protocol"
+      },
+      {
+        "question": "What does it mean that HTTP is a 'stateless' protocol?",
+        "options": [
+          "It remembers every previous request",
+          "Each request is independent and not remembered",
+          "It can only transfer text data",
+          "It requires a permanent connection"
+        ],
+        "answer": "Each request is independent and not remembered"
+      },
+      {
+        "question": "How is 'state' (like a user's login status) managed in HTTP?",
+        "options": [
+          "By the protocol itself",
+          "Using cookies, sessions, or tokens",
+          "By the physical network layer",
+          "It cannot be managed"
+        ],
+        "answer": "Using cookies, sessions, or tokens"
+      },
+      {
+        "question": "At which layer of the OSI model does HTTP operate?",
+        "options": [
+          "Physical Layer",
+          "Transport Layer",
+          "Network Layer",
+          "Application Layer"
+        ],
+        "answer": "Application Layer"
+      },
+      {
+        "question": "What does it mean that HTTP is 'Media Independent'?",
+        "options": [
+          "It only transfers HTML",
+          "It only transfers JSON",
+          "It can transfer any type of data (HTML, JSON, images, etc.)",
+          "It does not support media files"
+        ],
+        "answer": "It can transfer any type of data (HTML, JSON, images, etc.)"
+      },
+      {
+        "question": "What three components does an HTTP request line typically contain?",
+        "options": [
+          "Method, URL, and HTTP version",
+          "Status code, URL, and Headers",
+          "Method, Headers, and Body",
+          "URL, Body, and Status code"
+        ],
+        "answer": "Method, URL, and HTTP version"
+      },
+      {
+        "question": "In an HTTP request, where is optional data (like from a form submission) placed?",
+        "options": [
+          "Request line",
+          "Headers",
+          "Body",
+          "Status line"
+        ],
+        "answer": "Body"
+      },
+      {
+        "question": "What does an HTTP response status line contain?",
+        "options": [
+          "Method, URL, status code",
+          "HTTP version, status code (e.g., 200 OK), status text",
+          "Headers, Body, Method",
+          "URL, Body, Headers"
+        ],
+        "answer": "HTTP version, status code (e.g., 200 OK), status text"
+      },
+      {
+        "question": "What does the HTTP status code '404' mean?",
+        "options": [
+          "OK",
+          "Server Error",
+          "Not Found",
+          "Forbidden"
+        ],
+        "answer": "Not Found"
+      },
+      {
+        "question": "What does the HTTP status code '500' mean?",
+        "options": [
+          "OK",
+          "Server Error",
+          "Not Found",
+          "Moved Permanently"
+        ],
+        "answer": "Server Error"
+      },
+      {
+        "question": "In an HTTP response, where is the actual content (like HTML or JSON) located?",
+        "options": [
+          "Status line",
+          "Headers",
+          "Body",
+          "Request line"
+        ],
+        "answer": "Body"
+      },
+      {
+        "question": "In the server communication flow, what component initiates the request?",
+        "options": [
+          "The server",
+          "The client (browser)",
+          "The database",
+          "The network"
+        ],
+        "answer": "The client (browser)"
+      },
+      {
+        "question": "Which HTTP method is used to **retrieve** data from the server?",
+        "options": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ],
+        "answer": "GET"
+      },
+      {
+        "question": "Which HTTP method is used to **send** data to the server (e.g., submit a new resource)?",
+        "options": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ],
+        "answer": "POST"
+      },
+      {
+        "question": "Which HTTP method is typically used to **update** existing data on the server?",
+        "options": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ],
+        "answer": "PUT"
+      },
+      {
+        "question": "Which HTTP method is used to **remove** data from the server?",
+        "options": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ],
+        "answer": "DELETE"
+      },
+      {
+        "question": "Which of these is NOT a server-side technology mentioned in the lecture?",
+        "options": [
+          "PHP",
+          "ASP.NET Core",
+          "Node.js",
+          "React.js"
+        ],
+        "answer": "React.js"
+      },
+      {
+        "question": "ASP.NET Web API is often used for services that return what kind of data?",
+        "options": [
+          "HTML and CSS",
+          "JSON and XML",
+          "PHP code",
+          "Java Servlets"
+        ],
+        "answer": "JSON and XML"
+      },
+      {
+        "question": "Which technology is specifically mentioned as being 'platform-independent' with the phrase 'write once, run anywhere'?",
+        "options": [
+          "PHP",
+          "JSP (JavaServer Pages)",
+          "ASP.NET Web Forms",
+          "Classic ASP"
+        ],
+        "answer": "JSP (JavaServer Pages)"
+      },
+      {
+        "question": "Which ASP.NET model is described as 'event-driven (like Windows Forms)'?",
+        "options": [
+          "Web Forms",
+          "MVC",
+          "Web API",
+          "Core"
+        ],
+        "answer": "Web Forms"
+      },
+      {
+        "question": "What component in the JSP architecture diagram is located within the Web Server?",
+        "options": [
+          "Client",
+          "DB",
+          "JSP Engine",
+          "HTML page"
+        ],
+        "answer": "JSP Engine"
+      }
+    ]
+  }

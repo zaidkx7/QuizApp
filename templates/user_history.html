@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}My Quiz History - Quiz App{% endblock %}
+
+{% block nav_links %}
+<a href="/user/history" class="hover:text-blue-200 transition mr-4">My History</a>
+<a href="/logout" class="hover:text-blue-200 transition">Logout</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Welcome, {{ username }}!</h1>
+        <p class="text-gray-600">Available Quizzes and Your Submissions</p>
+    </div>
+
+    <!-- Available Quizzes -->
+    {% if quizzes %}
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Quizzes</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for quiz in quizzes %}
+            <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 flex-1">{{ quiz.title }}</h3>
+                    {% if quiz.is_active %}
+                    <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">Active</span>
+                    {% endif %}
+                </div>
+
+                {% set user_submission = quiz.user_submissions|first if quiz.user_submissions else None %}
+                {% if user_submission %}
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-2">Your Score:</p>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                        {% if user_submission.score >= 90 %}bg-green-100 text-green-800
+                        {% elif user_submission.score >= 70 %}bg-blue-100 text-blue-800
+                        {% elif user_submission.score >= 50 %}bg-yellow-100 text-yellow-800
+                        {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ "%.1f"|format(user_submission.score) }}%
+                    </span>
+                    <p class="text-xs text-gray-500 mt-1">Submitted: {{ user_submission.submitted_at.strftime('%b %d, %Y') }}</p>
+                </div>
+                <a href="/user/result/{{ user_submission.id }}"
+                    class="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
+                    View Results
+                </a>
+                {% else %}
+                <p class="text-sm text-gray-500 mb-4">Not attempted yet</p>
+                <a href="/user/quiz/{{ quiz.id }}"
+                    class="block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
+                    Take Quiz
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Past Submissions History -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">All Your Submissions</h2>
+
+    {% if results %}
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for result in results %}
+        <a href="/user/result/{{ result.id }}" class="block">
+            <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition cursor-pointer">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">{{ result.quiz.title }}</h3>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                        {% if result.score >= 90 %}bg-green-100 text-green-800
+                        {% elif result.score >= 70 %}bg-blue-100 text-blue-800
+                        {% elif result.score >= 50 %}bg-yellow-100 text-yellow-800
+                        {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ "%.1f"|format(result.score) }}%
+                    </span>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <p>{{ result.submitted_at.strftime('%B %d, %Y') }}</p>
+                    <p class="text-xs text-gray-500">{{ result.submitted_at.strftime('%I:%M %p') }}</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <p class="text-sm text-blue-600 font-semibold">View Details →</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Submissions Yet</h3>
+        <p class="text-gray-500">You haven't taken any quizzes yet. Start with the available quizzes above!</p>
+    </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

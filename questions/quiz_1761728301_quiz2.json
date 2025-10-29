@@ -1,0 +1,719 @@
+{
+  "title": "Web Engineering - Lecture 2 Quiz (HTML5 Essentials & CSS)",
+  "fill_in_the_blanks": [
+    {
+      "question": "HTML5 semantic elements clearly describe their purpose in human and ____-readable language.",
+      "answer": "machine"
+    },
+    {
+      "question": "Using semantic elements improves Accessibility, SEO, and ____.",
+      "answer": "Maintainability"
+    },
+    {
+      "question": "The ____ tag defines a self-contained, independent piece of content like a blog post.",
+      "answer": "article"
+    },
+    {
+      "question": "The ____ tag identifies content related to the primary content but not part of it, like author info.",
+      "answer": "aside"
+    },
+    {
+      "question": "The `<details>` tag is used with the ____ tag to provide a title for the disclosure widget.",
+      "answer": "summary"
+    },
+    {
+      "question": "The ____ tag is used to provide a caption for a `<figure>` element.",
+      "answer": "figcaption"
+    },
+    {
+      "question": "The ____ tag is used for self-contained content like illustrations or photos and doesn't affect the document flow if removed.",
+      "answer": "figure"
+    },
+    {
+      "question": "The ____ tag defines the footer section, which typically contains copyright and contact info.",
+      "answer": "footer"
+    },
+    {
+      "question": "The ____ tag defines the introductory or navigational content of a webpage, like a logo or search bar.",
+      "answer": "header"
+    },
+    {
+      "question": "A document must not contain more than one ____ element.",
+      "answer": "main"
+    },
+    {
+      "question": "The ____ tag is new in HTML5 and is used to highlight a part of the text.",
+      "answer": "mark"
+    },
+    {
+      "question": "The ____ tag is used to define navigation sections on a webpage, such as the main menu.",
+      "answer": "nav"
+    },
+    {
+      "question": "HTML5 forms are used to collect user ____ and send it to a server.",
+      "answer": "input"
+    },
+    {
+      "question": "The `<input type=\"____\">` is a new HTML5 input type for email addresses.",
+      "answer": "email"
+    },
+    {
+      "question": "The `____` attribute in an HTML5 form specifies that a field must be filled out.",
+      "answer": "required"
+    },
+    {
+      "question": "The `____` attribute provides a hint text inside an input field.",
+      "answer": "placeholder"
+    },
+    {
+      "question": "____ CSS involves applying styles directly to HTML elements using the `style` attribute.",
+      "answer": "Inline"
+    },
+    {
+      "question": "Internal CSS is defined within the ____ tag in the `<head>` section.",
+      "answer": "style"
+    },
+    {
+      "question": "External CSS files have a ____ extension and are linked using the `<link>` tag.",
+      "answer": ".css"
+    },
+    {
+      "question": "____ Layout is the default top-to-bottom arrangement of HTML elements.",
+      "answer": "Normal Flow"
+    }
+  ],
+  "true_false": [
+    {
+      "question": "Non-semantic elements like <div> clearly define their content and purpose.",
+      "answer": false
+    },
+    {
+      "question": "Using semantic HTML can lead to better SEO because it\u2019s easier for search engines to index.",
+      "answer": true
+    },
+    {
+      "question": "An `<article>` tag can only be used once on a single webpage.",
+      "answer": false
+    },
+    {
+      "question": "The `<aside>` tag is used to contain the main, primary content of the page.",
+      "answer": false
+    },
+    {
+      "question": "The `<details>` tag is commonly used for creating FAQs or dropdown menus.",
+      "answer": true
+    },
+    {
+      "question": "A `<figcaption>` element must always be placed *after* the content within a `<figure>`.",
+      "answer": false
+    },
+    {
+      "question": "Removing a `<figure>` element from a document will not affect the document's flow.",
+      "answer": true
+    },
+    {
+      "question": "The `<footer>` tag was added to HTML in 2014.",
+      "answer": true
+    },
+    {
+      "question": "A single HTML document can contain multiple `<main>` elements.",
+      "answer": false
+    },
+    {
+      "question": "The `<main>` element can be a child of an `<article>`, `<aside>`, `<footer>`, `<header>`, or `<nav>` element.",
+      "answer": false
+    },
+    {
+      "question": "The `<mark>` tag is a new tag introduced in HTML5 to highlight text.",
+      "answer": true
+    },
+    {
+      "question": "Using the `<nav>` tag helps improve accessibility for screen readers.",
+      "answer": true
+    },
+    {
+      "question": "HTML5 forms increased the need for JavaScript for simple validation.",
+      "answer": false
+    },
+    {
+      "question": "`placeholder` is a new input type in HTML5.",
+      "answer": false
+    },
+    {
+      "question": "Using `type=\"tel\"` on an input can show a specialized number keypad on mobile phones.",
+      "answer": true
+    },
+    {
+      "question": "Inline CSS is the recommended method for styling large, multi-page websites.",
+      "answer": false
+    },
+    {
+      "question": "Internal CSS is defined in a separate .css file.",
+      "answer": false
+    },
+    {
+      "question": "External CSS can improve website performance by allowing the browser to cache the .css file.",
+      "answer": true
+    },
+    {
+      "question": "Flexbox is an older layout method than Float Layout.",
+      "answer": false
+    },
+    {
+      "question": "Grid Layout is a two-dimensional system, controlling both rows and columns.",
+      "answer": true
+    }
+  ],
+  "mcqs": [
+    {
+      "question": "What is the primary benefit of using HTML5 semantic elements?",
+      "options": [
+        "They automatically style the webpage with colors and fonts.",
+        "They clearly describe their purpose to both humans and machines.",
+        "They replace the need for CSS entirely.",
+        "They make the webpage load faster than non-semantic elements."
+      ],
+      "answer": "They clearly describe their purpose to both humans and machines."
+    },
+    {
+      "question": "Which of the following is NOT listed as a reason to use semantic HTML?",
+      "options": [
+        "Accessibility",
+        "SEO",
+        "Maintainability",
+        "Automatic JavaScript validation"
+      ],
+      "answer": "Automatic JavaScript validation"
+    },
+    {
+      "question": "Which semantic tag is best suited for a self-contained, independent piece of content like a blog post or news article?",
+      "options": [
+        "<section>",
+        "<div>",
+        "<article>",
+        "<aside>"
+      ],
+      "answer": "<article>"
+    },
+    {
+      "question": "What is the correct use of the `<aside>` tag?",
+      "options": [
+        "To contain the main, dominant content of the page.",
+        "To define a navigation menu.",
+        "To hold content related to the primary content, but not part of it (e.g., a sidebar).",
+        "To define the footer of the page."
+      ],
+      "answer": "To hold content related to the primary content, but not part of it (e.g., a sidebar)."
+    },
+    {
+      "question": "Which tag creates a disclosure widget that the user can click to view or hide additional information?",
+      "options": [
+        "<details>",
+        "<figure>",
+        "<summary>",
+        "<mark>"
+      ],
+      "answer": "<details>"
+    },
+    {
+      "question": "The `<details>` tag is generally used in conjunction with which tag to provide its title or header?",
+      "options": [
+        "<figcaption>",
+        "<h3>",
+        "<summary>",
+        "<title>"
+      ],
+      "answer": "<summary>"
+    },
+    {
+      "question": "Which tag is used to provide a caption or description for a `<figure>` element?",
+      "options": [
+        "<caption>",
+        "<details>",
+        "<figcaption>",
+        "<summary>"
+      ],
+      "answer": "<figcaption>"
+    },
+    {
+      "question": "According to the lecture, what is the correct placement for a `<figcaption>` element?",
+      "options": [
+        "It can be placed anywhere inside the `<body>`.",
+        "It must be the first or last child of the `<figure>` element.",
+        "It must be placed immediately *outside* the `<figure>` element.",
+        "It replaces the `alt` attribute on an image."
+      ],
+      "answer": "It must be the first or last child of the `<figure>` element."
+    },
+    {
+      "question": "Which tag is new in HTML5 and used for self-contained content like illustrations, diagrams, or photos?",
+      "options": [
+        "<figure>",
+        "<article>",
+        "<img>",
+        "<section>"
+      ],
+      "answer": "<figure>"
+    },
+    {
+      "question": "The `<footer>` tag typically contains all of the following EXCEPT:",
+      "options": [
+        "Contact information",
+        "Copyright information",
+        "The main navigation menu and logo",
+        "Sitemap or back-to-top links"
+      ],
+      "answer": "The main navigation menu and logo"
+    },
+    {
+      "question": "Which tag is a semantic element used to define the introductory content, often containing a logo, title, or search bar?",
+      "options": [
+        "<footer>",
+        "<header>",
+        "<main>",
+        "<nav>"
+      ],
+      "answer": "<header>"
+    },
+    {
+      "question": "What is the rule for using the `<main>` tag in an HTML document?",
+      "options": [
+        "A document can have unlimited <main> elements.",
+        "A document must not contain more than one <main> element.",
+        "A <main> element must be inside a `<footer>`.",
+        "A <main> element is required for every `<article>`."
+      ],
+      "answer": "A document must not contain more than one <main> element."
+    },
+    {
+      "question": "The `<main>` tag should NOT be a child of which of the following elements?",
+      "options": [
+        "<body>",
+        "<div> (that is not a child of article, aside, etc.)",
+        "<article>",
+        "<html>"
+      ],
+      "answer": "<article>"
+    },
+    {
+      "question": "What does the HTML5 `<mark>` tag do?",
+      "options": [
+        "Marks a section for deletion by the browser.",
+        "Defines the main content of the page.",
+        "Creates a bookmark link.",
+        "Defines and highlights a part of the text."
+      ],
+      "answer": "Defines and highlights a part of the text."
+    },
+    {
+      "question": "Which semantic tag is used to define a section of navigation links, such as a main menu or index?",
+      "options": [
+        "<header>",
+        "<links>",
+        "<nav>",
+        "<menu>"
+      ],
+      "answer": "<nav>"
+    },
+    {
+      "question": "Which of these elements was NOT in the list of fundamental HTML5 semantic elements?",
+      "options": [
+        "<article>",
+        "<figcaption>",
+        "<section>",
+        "<div>"
+      ],
+      "answer": "<div>"
+    },
+    {
+      "question": "What was a major improvement in HTML5 forms?",
+      "options": [
+        "They removed all input types except 'text'.",
+        "They added new input types and built-in validation features.",
+        "They required all validation to be done with JavaScript.",
+        "They can only be styled using Inline CSS."
+      ],
+      "answer": "They added new input types and built-in validation features."
+    },
+    {
+      "question": "Which of the following is a NEW input type introduced in HTML5?",
+      "options": [
+        "text",
+        "submit",
+        "password",
+        "email"
+      ],
+      "answer": "email"
+    },
+    {
+      "question": "Which HTML5 input type provides a slider control for selecting a value within a range?",
+      "options": [
+        "number",
+        "range",
+        "slider",
+        "tel"
+      ],
+      "answer": "range"
+    },
+    {
+      "question": "Which input type, when used on a mobile phone, is likely to bring up a specialized number keypad?",
+      "options": [
+        "phone",
+        "number",
+        "tel",
+        "text"
+      ],
+      "answer": "tel"
+    },
+    {
+      "question": "Which input type provides a native color picker?",
+      "options": [
+        "rgb",
+        "color",
+        "picker",
+        "style"
+      ],
+      "answer": "color"
+    },
+    {
+      "question": "Which new HTML5 attribute specifies that an input field must be filled out before submitting?",
+      "options": [
+        "validate",
+        "important",
+        "required",
+        "autofocus"
+      ],
+      "answer": "required"
+    },
+    {
+      "question": "Which attribute provides hint text *inside* an input field that disappears when the user starts typing?",
+      "options": [
+        "hint",
+        "value",
+        "placeholder",
+        "title"
+      ],
+      "answer": "placeholder"
+    },
+    {
+      "question": "Which HTML5 attribute allows you to specify a regular expression for an input field's value to be checked against?",
+      "options": [
+        "regex",
+        "pattern",
+        "validate",
+        "rule"
+      ],
+      "answer": "pattern"
+    },
+    {
+      "question": "Which attribute automatically places the cursor in a specific input field when the page loads?",
+      "options": [
+        "autofocus",
+        "selected",
+        "focus",
+        "required"
+      ],
+      "answer": "autofocus"
+    },
+    {
+      "question": "What is a key benefit of HTML5 forms?",
+      "options": [
+        "Built-in validation without needing JavaScript in many cases.",
+        "They only work on desktop computers.",
+        "They automatically connect to a SQL database.",
+        "They are harder for users to understand."
+      ],
+      "answer": "Built-in validation without needing JavaScript in many cases."
+    },
+    {
+      "question": "What does CSS stand for?",
+      "options": [
+        "Computer Style Sheet",
+        "Cascading Style Sheet",
+        "Creative Style Sheet",
+        "Content Structure Sheet"
+      ],
+      "answer": "Cascading Style Sheet"
+    },
+    {
+      "question": "What is CSS primarily used for?",
+      "options": [
+        "To define the structure of a web page.",
+        "To style and control the layout and appearance of HTML elements.",
+        "To handle user input and form validation.",
+        "To perform server-side logic."
+      ],
+      "answer": "To style and control the layout and appearance of HTML elements."
+    },
+    {
+      "question": "Which of the following is NOT one of the three types of CSS implementation?",
+      "options": [
+        "Inline CSS",
+        "Internal CSS",
+        "External CSS",
+        "Dynamic CSS"
+      ],
+      "answer": "Dynamic CSS"
+    },
+    {
+      "question": "How is Inline CSS applied to an HTML document?",
+      "options": [
+        "Using a `<style>` tag in the `<head>`.",
+        "Using a `<link>` tag to a .css file.",
+        "Using the `style` attribute directly on an HTML element.",
+        "Using a `<script>` tag."
+      ],
+      "answer": "Using the `style` attribute directly on an HTML element."
+    },
+    {
+      "question": "When is it appropriate to use Inline CSS?",
+      "options": [
+        "For styling an entire large-scale website.",
+        "For quick fixes or styling HTML emails.",
+        "As the primary method for maintainability.",
+        "When you want to use browser caching."
+      ],
+      "answer": "For quick fixes or styling HTML emails."
+    },
+    {
+      "question": "How is Internal (Embedded) CSS implemented?",
+      "options": [
+        "Using the `style` attribute on every element.",
+        "Inside a `<style>` tag, which is placed in the `<head>` section.",
+        "In a separate .css file linked via the `<body>`.",
+        "Inside a `<script>` tag."
+      ],
+      "answer": "Inside a `<style>` tag, which is placed in the `<head>` section."
+    },
+    {
+      "question": "What is an advantage of Internal CSS?",
+      "options": [
+        "It is reusable across multiple pages.",
+        "It is the best for large-scale projects.",
+        "It styles only one element at a time.",
+        "It keeps HTML and CSS in the same file, which is easy for small projects."
+      ],
+      "answer": "It keeps HTML and CSS in the same file, which is easy for small projects."
+    },
+    {
+      "question": "What is a major disadvantage of Internal CSS?",
+      "options": [
+        "It is not reusable across multiple pages, increasing file size for larger sites.",
+        "It is too slow and blocks page rendering.",
+        "It cannot be used with semantic HTML tags.",
+        "It is applied using the `style` attribute."
+      ],
+      "answer": "It is not reusable across multiple pages, increasing file size for larger sites."
+    },
+    {
+      "question": "When is Internal CSS most appropriate to use?",
+      "options": [
+        "For large-scale projects with hundreds of pages.",
+        "When designing a single-page website.",
+        "For HTML email templates.",
+        "When you need to override an external style for a single element."
+      ],
+      "answer": "When designing a single-page website."
+    },
+    {
+      "question": "How is External CSS implemented?",
+      "options": [
+        "Using the `style` attribute on the `<body>` tag.",
+        "Using a `<style>` tag in the `<body>`.",
+        "Linking a separate `.css` file in the `<head>` using a `<link>` tag.",
+        "Writing CSS rules directly in an `<a>` tag."
+      ],
+      "answer": "Linking a separate `.css` file in the `<head>` using a `<link>` tag."
+    },
+    {
+      "question": "What is a key advantage of External CSS?",
+      "options": [
+        "It makes the HTML file larger.",
+        "It only works for one page at a time.",
+        "It improves performance via CSS caching and is maintainable.",
+        "It is best for quick fixes on a single element."
+      ],
+      "answer": "It improves performance via CSS caching and is maintainable."
+    },
+    {
+      "question": "For large-scale projects, which CSS type is best for maintainability and scalability?",
+      "options": [
+        "Inline CSS",
+        "Internal CSS",
+        "External CSS",
+        "All are equally maintainable."
+      ],
+      "answer": "External CSS"
+    },
+    {
+      "question": "What is a 'layout' in web design?",
+      "options": [
+        "The font and color scheme of a website.",
+        "The arrangement and structure of webpage elements (header, content, etc.).",
+        "The type of database used to store content.",
+        "The JavaScript functions used for interactivity."
+      ],
+      "answer": "The arrangement and structure of webpage elements (header, content, etc.)."
+    },
+    {
+      "question": "Which of the following is NOT one of the layout types mentioned in the lecture?",
+      "options": [
+        "Normal Flow Layout",
+        "Float Layout",
+        "Flexbox Layout",
+        "Table Layout"
+      ],
+      "answer": "Table Layout"
+    },
+    {
+      "question": "What is 'Normal Flow' layout?",
+      "options": [
+        "The default top-to-bottom arrangement of HTML elements.",
+        "A layout created using `display: flex`.",
+        "An old layout created using the `float` property.",
+        "A two-dimensional layout for rows and columns."
+      ],
+      "answer": "The default top-to-bottom arrangement of HTML elements."
+    },
+    {
+      "question": "Which layout is an *older* method that uses the CSS `float` property to place elements side by side?",
+      "options": [
+        "Normal Flow",
+        "Float Layout",
+        "Flexbox Layout",
+        "Grid Layout"
+      ],
+      "answer": "Float Layout"
+    },
+    {
+      "question": "Which CSS layout system is designed to arrange elements in a single row or column in a flexible and responsive way?",
+      "options": [
+        "Float Layout",
+        "Normal Flow",
+        "Flexbox Layout",
+        "Grid Layout"
+      ],
+      "answer": "Flexbox Layout"
+    },
+    {
+      "question": "Flexbox is described as working well for...",
+      "options": [
+        "Very simple, static, top-to-bottom pages.",
+        "Navigation bars and responsive sections.",
+        "Complex, full-page, two-dimensional layouts.",
+        "Old websites that do not need to be responsive."
+      ],
+      "answer": "Navigation bars and responsive sections."
+    },
+    {
+      "question": "Which layout system is described as the 'most powerful' and 'two-dimensional (rows + columns)'?",
+      "options": [
+        "Float Layout",
+        "Normal Flow",
+        "Flexbox Layout",
+        "Grid Layout"
+      ],
+      "answer": "Grid Layout"
+    },
+    {
+      "question": "What is Grid Layout best used for, according to the lecture?",
+      "options": [
+        "Simple text highlighting.",
+        "Old, basic 2-column websites.",
+        "Complex full-page designs.",
+        "Styling a single paragraph."
+      ],
+      "answer": "Complex full-page designs."
+    },
+    {
+      "question": "According to the comparison table, which layout is best for 'Responsive sections'?",
+      "options": [
+        "Normal Flow",
+        "Float",
+        "Flexbox",
+        "Grid"
+      ],
+      "answer": "Flexbox"
+    },
+    {
+      "question": "According to the comparison table, which layout is best for 'Full-page layouts'?",
+      "options": [
+        "Normal Flow",
+        "Float",
+        "Flexbox",
+        "Grid"
+      ],
+      "answer": "Grid"
+    },
+    {
+      "question": "What CSS property and value are used to initiate a Flexbox layout on a container?",
+      "options": [
+        "display: flex;",
+        "display: grid;",
+        "float: left;",
+        "display: normal;"
+      ],
+      "answer": "display: flex;"
+    },
+    {
+      "question": "What CSS property and value are used to initiate a Grid layout on a container?",
+      "options": [
+        "display: flex;",
+        "display: grid;",
+        "float: grid;",
+        "display: flow;"
+      ],
+      "answer": "display: grid;"
+    },
+    {
+      "question": "What is the primary difference between Flexbox and Grid?",
+      "options": [
+        "Flexbox is one-dimensional (row OR column), while Grid is two-dimensional (rows AND columns).",
+        "Grid is an older technology than Flexbox.",
+        "Flexbox is for full-page layouts, while Grid is for navigation bars.",
+        "There is no significant difference; they are interchangeable."
+      ],
+      "answer": "Flexbox is one-dimensional (row OR column), while Grid is two-dimensional (rows AND columns)."
+    },
+    {
+      "question": "What does the `required` attribute do in an HTML5 form?",
+      "options": [
+        "It provides a hint text inside the input field.",
+        "It specifies a regular expression for validation.",
+        "It automatically selects the field on page load.",
+        "It specifies that the field must be filled out."
+      ],
+      "answer": "It specifies that the field must be filled out."
+    },
+    {
+      "question": "Which layout is described as the 'default top-to-bottom' arrangement?",
+      "options": [
+        "Normal Flow",
+        "Float",
+        "Flexbox",
+        "Grid"
+      ],
+      "answer": "Normal Flow"
+    },
+    {
+      "question": "Which tag is used to highlight text and is new in HTML5?",
+      "options": [
+        "<highlight>",
+        "<mark>",
+        "<yellow>",
+        "<style>"
+      ],
+      "answer": "<mark>"
+    },
+    {
+      "question": "The lecture concludes that HTML5 and CSS3 provide the ____ for modern web development.",
+      "options": [
+        "database structure",
+        "server-side logic",
+        "foundation",
+        "JavaScript framework"
+      ],
+      "answer": "foundation"
+    }
+  ]
+}

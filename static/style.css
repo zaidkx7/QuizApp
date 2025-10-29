@@ -1,0 +1,24 @@
+/* Custom styles for Quiz App */
+/* Most styling is handled by TailwindCSS */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom focus styles */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+}

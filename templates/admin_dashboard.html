@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Quiz App{% endblock %}
+
+{% block nav_links %}
+<a href="/admin/dashboard" class="hover:text-blue-200 transition mr-4">Dashboard</a>
+<a href="/admin/quizzes" class="hover:text-blue-200 transition mr-4">Manage Quizzes</a>
+<a href="/admin/scores" class="hover:text-blue-200 transition mr-4">View Scores</a>
+<a href="/admin/users" class="hover:text-blue-200 transition mr-4">Manage Users</a>
+<a href="/logout" class="hover:text-blue-200 transition">Logout</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Admin Dashboard</h1>
+
+    {% if message %}
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <div class="grid md:grid-cols-3 gap-8">
+        <!-- Manage Quizzes Card -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Manage Quizzes</h2>
+            <p class="text-gray-600 mb-6">Upload, manage, and set active quizzes</p>
+
+            <a href="/admin/quizzes"
+                class="block text-center bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold mb-4">
+                Manage Quizzes
+            </a>
+
+            <div class="mt-6">
+                <svg class="w-32 h-32 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- View Scores Card -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Student Scores</h2>
+            <p class="text-gray-600 mb-6">View all student submissions and scores</p>
+
+            <a href="/admin/scores"
+                class="block text-center bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold mb-3">
+                View All Scores
+            </a>
+
+            <form method="POST" action="/admin/submissions/delete-all" onsubmit="return confirm('Are you sure you want to delete ALL student submissions? This cannot be undone!')">
+                <button type="submit"
+                    class="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-semibold">
+                    Delete All Submissions
+                </button>
+            </form>
+
+            <div class="mt-6">
+                <svg class="w-32 h-32 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Users Section -->
+    <div class="mt-8">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Manage Users</h2>
+            <p class="text-gray-600 mb-6">Add, edit, or remove student accounts</p>
+            <a href="/admin/users"
+                class="block text-center bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
+                Manage Users
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

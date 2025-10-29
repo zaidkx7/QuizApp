@@ -1,0 +1,137 @@
+{
+  "title": "General Knowledge Quiz - Sample",
+  "fill_in_the_blanks": [
+    {
+      "question": "The capital of France is ____.",
+      "answer": "Paris"
+    },
+    {
+      "question": "The largest ocean on Earth is the ____ Ocean.",
+      "answer": "Pacific"
+    },
+    {
+      "question": "HTML stands for Hyper Text ____ Language.",
+      "answer": "Markup"
+    },
+    {
+      "question": "The speed of light is approximately ____ km/s.",
+      "answer": "300000"
+    },
+    {
+      "question": "The programming language created by Guido van Rossum is ____.",
+      "answer": "Python"
+    }
+  ],
+  "true_false": [
+    {
+      "question": "The Earth is flat.",
+      "answer": false
+    },
+    {
+      "question": "Water boils at 100 degrees Celsius at sea level.",
+      "answer": true
+    },
+    {
+      "question": "JavaScript and Java are the same programming language.",
+      "answer": false
+    },
+    {
+      "question": "The Great Wall of China is visible from space with the naked eye.",
+      "answer": false
+    },
+    {
+      "question": "SQL stands for Structured Query Language.",
+      "answer": true
+    },
+    {
+      "question": "There are 12 months in a year.",
+      "answer": true
+    },
+    {
+      "question": "Gold is the most abundant metal in Earth's crust.",
+      "answer": false
+    }
+  ],
+  "mcqs": [
+    {
+      "question": "What is the largest planet in our solar system?",
+      "options": [
+        "Earth",
+        "Mars",
+        "Jupiter",
+        "Saturn"
+      ],
+      "answer": "Jupiter"
+    },
+    {
+      "question": "Which programming language is known as the 'language of the web'?",
+      "options": [
+        "Python",
+        "JavaScript",
+        "C++",
+        "Ruby"
+      ],
+      "answer": "JavaScript"
+    },
+    {
+      "question": "What year did World War II end?",
+      "options": [
+        "1943",
+        "1944",
+        "1945",
+        "1946"
+      ],
+      "answer": "1945"
+    },
+    {
+      "question": "Which data structure uses LIFO (Last In First Out)?",
+      "options": [
+        "Queue",
+        "Stack",
+        "Array",
+        "Linked List"
+      ],
+      "answer": "Stack"
+    },
+    {
+      "question": "What is the chemical symbol for Gold?",
+      "options": [
+        "Go",
+        "Gd",
+        "Au",
+        "Ag"
+      ],
+      "answer": "Au"
+    },
+    {
+      "question": "Which HTTP status code indicates 'Not Found'?",
+      "options": [
+        "200",
+        "301",
+        "404",
+        "500"
+      ],
+      "answer": "404"
+    },
+    {
+      "question": "Who painted the Mona Lisa?",
+      "options": [
+        "Vincent van Gogh",
+        "Pablo Picasso",
+        "Leonardo da Vinci",
+        "Michelangelo"
+      ],
+      "answer": "Leonardo da Vinci"
+    },
+    {
+      "question": "What is the time complexity of binary search?",
+      "options": [
+        "O(n)",
+        "O(log n)",
+        "O(n²)",
+        "O(1)"
+      ],
+      "answer": "O(log n)"
+    }
+  ]
+}
