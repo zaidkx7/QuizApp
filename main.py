@@ -1,9 +1,6 @@
-from fastapi import FastAPI, Request, Form, UploadFile, File, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from sqlalchemy.orm import Session
-from starlette.middleware.sessions import SessionMiddleware
+from functools import wraps
 import json
 import os
 import re
@@ -11,36 +8,45 @@ from datetime import datetime
 from typing import Optional
 from rapidfuzz import fuzz
 
-from database import engine, get_db, Base
+from database import engine, SessionLocal, Base
 from models import User, Result, Quiz
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
-# Initialize FastAPI app
-app = FastAPI(title="Quiz App")
+# Initialize Flask app
+app = Flask(__name__)
 
-# Add session middleware
+# Configure session
 # IMPORTANT: Change this secret key before deploying to production!
 # Generate with: python3 -c "import secrets; print(secrets.token_hex(32))"
 SECRET_KEY = "689eaa035980f7a2f09caaef195600c3b8f589a1a36cc696dae3425fefe587d5"
-app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
-
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Setup templates
-templates = Jinja2Templates(directory="templates")
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Admin credentials
 ADMIN_USERNAME = "zaid.sh"
 ADMIN_PASSWORD = "admin@zaid.sh"
 
 
+# Database session decorator
+def with_db(f):
+    """Decorator to provide database session to route handlers"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        db = SessionLocal()
+        try:
+            return f(db, *args, **kwargs)
+        finally:
+            db.close()
+    return decorated_function
+
+
 # Helper functions
-def get_current_user(request: Request, db: Session):
+def get_current_user(db: Session):
     """Get current user from session"""
-    user_id = request.session.get("user_id")
+    user_id = session.get("user_id")
     if user_id:
         return db.query(User).filter(User.id == user_id).first()
     return None
@@ -158,87 +164,90 @@ def calculate_score(exam_data, user_answers):
 
 
 # Routes
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
+@app.route("/")
+def index():
     """Landing page"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return render_template("index.html")
 
 
+@app.route("/admin/login", methods=["GET", "POST"])
+@with_db
+def admin_login(db):
+    """Admin login page and handler"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            # Check if admin user exists in DB, if not create it
+            admin_user = db.query(User).filter(User.username == ADMIN_USERNAME, User.role == "admin").first()
+            if not admin_user:
+                admin_user = User(username=ADMIN_USERNAME, role="admin")
+                db.add(admin_user)
+                db.commit()
+                db.refresh(admin_user)
+
+            # Set session
+            session["user_id"] = admin_user.id
+            session["role"] = "admin"
+            return redirect(url_for("admin_dashboard"))
+
+        return render_template("admin_login.html", error="Invalid credentials")
+
+    return render_template("admin_login.html", error=None)
 
 
-@app.get("/admin/login", response_class=HTMLResponse)
-async def admin_login_page(request: Request):
-    """Admin login page"""
-    return templates.TemplateResponse("admin_login.html", {"request": request, "error": None})
-
-
-@app.post("/admin/login")
-async def admin_login(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
-    """Handle admin login"""
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-        # Check if admin user exists in DB, if not create it
-        admin_user = db.query(User).filter(User.username == ADMIN_USERNAME, User.role == "admin").first()
-        if not admin_user:
-            admin_user = User(username=ADMIN_USERNAME, role="admin")
-            db.add(admin_user)
-            db.commit()
-            db.refresh(admin_user)
-
-        # Set session
-        request.session["user_id"] = admin_user.id
-        request.session["role"] = "admin"
-        return RedirectResponse(url="/admin/dashboard", status_code=303)
-
-    return templates.TemplateResponse("admin_login.html", {"request": request, "error": "Invalid credentials"})
-
-
-@app.get("/admin/dashboard", response_class=HTMLResponse)
-async def admin_dashboard(request: Request, db: Session = Depends(get_db)):
+@app.route("/admin/dashboard")
+@with_db
+def admin_dashboard(db):
     """Admin dashboard"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
-    return templates.TemplateResponse("admin_dashboard.html", {
-        "request": request,
-        "message": request.session.pop("message", None)
-    })
+    message = session.pop("message", None)
+    return render_template("admin_dashboard.html", message=message)
 
 
-@app.get("/admin/quizzes", response_class=HTMLResponse)
-async def admin_quizzes(request: Request, db: Session = Depends(get_db)):
+@app.route("/admin/quizzes")
+@with_db
+def admin_quizzes(db):
     """Manage quizzes page"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Get all quizzes
     quizzes = db.query(Quiz).order_by(Quiz.created_at.desc()).all()
 
-    return templates.TemplateResponse("admin_quizzes.html", {
-        "request": request,
-        "quizzes": quizzes,
-        "message": request.session.pop("message", None)
-    })
+    message = session.pop("message", None)
+    return render_template("admin_quizzes.html", quizzes=quizzes, message=message)
 
 
-@app.post("/admin/quiz/upload")
-async def upload_quiz(request: Request, file: UploadFile = File(...), db: Session = Depends(get_db)):
+@app.route("/admin/quiz/upload", methods=["POST"])
+@with_db
+def upload_quiz(db):
     """Handle quiz file upload"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     try:
+        file = request.files.get('file')
+
+        if not file or not file.filename:
+            session["message"] = "No file selected"
+            return redirect(url_for("admin_quizzes"))
+
         # Read and parse JSON
-        content = await file.read()
+        content = file.read()
         quiz_data = json.loads(content)
 
         # Validate JSON structure
         required_keys = ["title"]
         if not all(key in quiz_data for key in required_keys):
-            request.session["message"] = "Invalid quiz format - must have 'title' field"
-            return RedirectResponse(url="/admin/quizzes", status_code=303)
+            session["message"] = "Invalid quiz format - must have 'title' field"
+            return redirect(url_for("admin_quizzes"))
 
         # Generate unique filename
         import time
@@ -260,23 +269,24 @@ async def upload_quiz(request: Request, file: UploadFile = File(...), db: Sessio
         db.add(new_quiz)
         db.commit()
 
-        request.session["message"] = f"Quiz '{quiz_data['title']}' uploaded successfully!"
-        return RedirectResponse(url="/admin/quizzes", status_code=303)
+        session["message"] = f"Quiz '{quiz_data['title']}' uploaded successfully!"
+        return redirect(url_for("admin_quizzes"))
 
     except json.JSONDecodeError:
-        request.session["message"] = "Invalid JSON file"
-        return RedirectResponse(url="/admin/quizzes", status_code=303)
+        session["message"] = "Invalid JSON file"
+        return redirect(url_for("admin_quizzes"))
     except Exception as e:
-        request.session["message"] = f"Error uploading quiz: {str(e)}"
-        return RedirectResponse(url="/admin/quizzes", status_code=303)
+        session["message"] = f"Error uploading quiz: {str(e)}"
+        return redirect(url_for("admin_quizzes"))
 
 
-@app.post("/admin/quiz/set-active/{quiz_id}")
-async def set_active_quiz(request: Request, quiz_id: int, db: Session = Depends(get_db)):
+@app.route("/admin/quiz/set-active/<int:quiz_id>", methods=["POST"])
+@with_db
+def set_active_quiz(db, quiz_id):
     """Set a quiz as active"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Deactivate all quizzes
     db.query(Quiz).update({"is_active": False})
@@ -286,19 +296,20 @@ async def set_active_quiz(request: Request, quiz_id: int, db: Session = Depends(
     if quiz:
         quiz.is_active = True
         db.commit()
-        request.session["message"] = f"Quiz '{quiz.title}' is now active!"
+        session["message"] = f"Quiz '{quiz.title}' is now active!"
     else:
-        request.session["message"] = "Quiz not found"
+        session["message"] = "Quiz not found"
 
-    return RedirectResponse(url="/admin/quizzes", status_code=303)
+    return redirect(url_for("admin_quizzes"))
 
 
-@app.post("/admin/quiz/delete/{quiz_id}")
-async def delete_quiz(request: Request, quiz_id: int, db: Session = Depends(get_db)):
+@app.route("/admin/quiz/delete/<int:quiz_id>", methods=["POST"])
+@with_db
+def delete_quiz(db, quiz_id):
     """Delete a quiz and its submissions"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     quiz = db.query(Quiz).filter(Quiz.id == quiz_id).first()
     if quiz:
@@ -314,77 +325,74 @@ async def delete_quiz(request: Request, quiz_id: int, db: Session = Depends(get_
         db.delete(quiz)
         db.commit()
 
-        request.session["message"] = f"Quiz '{quiz.title}' deleted successfully!"
+        session["message"] = f"Quiz '{quiz.title}' deleted successfully!"
     else:
-        request.session["message"] = "Quiz not found"
+        session["message"] = "Quiz not found"
 
-    return RedirectResponse(url="/admin/quizzes", status_code=303)
+    return redirect(url_for("admin_quizzes"))
 
 
-@app.get("/admin/scores", response_class=HTMLResponse)
-async def view_scores(request: Request, db: Session = Depends(get_db)):
+@app.route("/admin/scores")
+@with_db
+def view_scores(db):
     """View all user scores"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Get all results with user info
     results = db.query(Result).join(User).order_by(Result.submitted_at.desc()).all()
 
-    return templates.TemplateResponse("scores.html", {
-        "request": request,
-        "results": results
-    })
+    return render_template("scores.html", results=results)
 
 
-@app.get("/user/register", response_class=HTMLResponse)
-async def user_register_page(request: Request):
-    """User registration/login page"""
-    return templates.TemplateResponse("user_register.html", {"request": request, "error": None})
+@app.route("/user/register", methods=["GET", "POST"])
+@with_db
+def user_register(db):
+    """User registration/login page and handler"""
+    if request.method == "POST":
+        user_id = request.form.get("user_id", "").strip()
+        password = request.form.get("password", "").strip()
+
+        if not user_id or len(user_id) == 0:
+            return render_template("user_register.html", error="Student ID is required")
+
+        if not password or len(password) == 0:
+            return render_template("user_register.html", error="Password is required")
+
+        # Check if user exists (only admin-created users can login)
+        user = db.query(User).filter(User.user_id == user_id, User.role == "user").first()
+
+        if not user:
+            # User doesn't exist - show error
+            return render_template("user_register.html", error="Invalid credentials. Please contact your administrator.")
+
+        # Verify password
+        if user.password != password:
+            return render_template("user_register.html", error="Invalid credentials. Please contact your administrator.")
+
+        # Set session
+        session["user_id"] = user.id
+        session["role"] = "user"
+
+        return redirect(url_for("user_history"))
+
+    return render_template("user_register.html", error=None)
 
 
-@app.post("/user/register")
-async def user_register(request: Request, user_id: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
-    """Handle user registration/login"""
-    if not user_id or len(user_id.strip()) == 0:
-        return templates.TemplateResponse("user_register.html", {"request": request, "error": "Student ID is required"})
-
-    if not password or len(password.strip()) == 0:
-        return templates.TemplateResponse("user_register.html", {"request": request, "error": "Password is required"})
-
-    user_id = user_id.strip()
-    password = password.strip()
-
-    # Check if user exists (only admin-created users can login)
-    user = db.query(User).filter(User.user_id == user_id, User.role == "user").first()
-
-    if not user:
-        # User doesn't exist - show error
-        return templates.TemplateResponse("user_register.html", {"request": request, "error": "Invalid credentials. Please contact your administrator."})
-
-    # Verify password
-    if user.password != password:
-        return templates.TemplateResponse("user_register.html", {"request": request, "error": "Invalid credentials. Please contact your administrator."})
-
-    # Set session
-    request.session["user_id"] = user.id
-    request.session["role"] = "user"
-
-    return RedirectResponse(url="/user/history", status_code=303)
-
-
-@app.get("/user/history", response_class=HTMLResponse)
-async def user_history(request: Request, db: Session = Depends(get_db)):
+@app.route("/user/history")
+@with_db
+def user_history(db):
     """Display user's quiz history"""
     try:
         # Check if user is logged in
-        if request.session.get("role") != "user":
-            return RedirectResponse(url="/user/register", status_code=303)
+        if session.get("role") != "user":
+            return redirect(url_for("user_register"))
 
         # Get current user
-        user = get_current_user(request, db)
+        user = get_current_user(db)
         if not user:
-            return RedirectResponse(url="/user/register", status_code=303)
+            return redirect(url_for("user_register"))
 
         # Get all quizzes with user's submissions
         quizzes = db.query(Quiz).order_by(Quiz.is_active.desc(), Quiz.created_at.desc()).all()
@@ -396,31 +404,28 @@ async def user_history(request: Request, db: Session = Depends(get_db)):
         # Get all user's results
         results = db.query(Result).filter(Result.user_id == user.id).order_by(Result.submitted_at.desc()).all()
 
-        return templates.TemplateResponse("user_history.html", {
-            "request": request,
-            "username": user.user_id if user.user_id else user.username,
-            "quizzes": quizzes,
-            "results": results
-        })
+        username = user.user_id if user.user_id else user.username
+        return render_template("user_history.html", username=username, quizzes=quizzes, results=results)
     except Exception as e:
         print(f"ERROR in user_history: {str(e)}")
         import traceback
         traceback.print_exc()
-        return HTMLResponse(f"<h1>Error loading history</h1><p>{str(e)}</p>", status_code=500)
+        return f"<h1>Error loading history</h1><p>{str(e)}</p>", 500
 
 
-@app.get("/user/quiz/{quiz_id}", response_class=HTMLResponse)
-async def take_quiz(request: Request, quiz_id: int, db: Session = Depends(get_db)):
+@app.route("/user/quiz/<int:quiz_id>")
+@with_db
+def take_quiz(db, quiz_id):
     """Display quiz for user"""
     try:
         # Check if user is logged in
-        if request.session.get("role") != "user":
-            return RedirectResponse(url="/user/register", status_code=303)
+        if session.get("role") != "user":
+            return redirect(url_for("user_register"))
 
         # Get current user
-        user = get_current_user(request, db)
+        user = get_current_user(db)
         if not user:
-            return RedirectResponse(url="/user/register", status_code=303)
+            return redirect(url_for("user_register"))
 
         # Check if user already submitted this quiz
         existing_submission = db.query(Result).filter(
@@ -429,37 +434,34 @@ async def take_quiz(request: Request, quiz_id: int, db: Session = Depends(get_db
         ).first()
 
         if existing_submission:
-            request.session["message"] = "You have already submitted this quiz!"
-            return RedirectResponse(url=f"/user/result/{existing_submission.id}", status_code=303)
+            session["message"] = "You have already submitted this quiz!"
+            return redirect(url_for("view_result", result_id=existing_submission.id))
 
         # Load quiz
         quiz, quiz_data = load_quiz_by_id(quiz_id, db)
         if not quiz or not quiz_data:
-            return HTMLResponse("<h1>Quiz not found or unavailable.</h1>")
+            return "<h1>Quiz not found or unavailable.</h1>", 404
 
-        return templates.TemplateResponse("quiz.html", {
-            "request": request,
-            "exam": quiz_data,
-            "quiz_id": quiz_id
-        })
+        return render_template("quiz.html", exam=quiz_data, quiz_id=quiz_id)
     except Exception as e:
         print(f"ERROR in take_quiz: {str(e)}")
         import traceback
         traceback.print_exc()
-        return HTMLResponse(f"<h1>Error loading quiz</h1><p>{str(e)}</p>", status_code=500)
+        return f"<h1>Error loading quiz</h1><p>{str(e)}</p>", 500
 
 
-@app.post("/user/submit/{quiz_id}")
-async def submit_quiz(request: Request, quiz_id: int, db: Session = Depends(get_db)):
+@app.route("/user/submit/<int:quiz_id>", methods=["POST"])
+@with_db
+def submit_quiz(db, quiz_id):
     """Handle quiz submission"""
     # Check if user is logged in
-    if request.session.get("role") != "user":
-        return RedirectResponse(url="/user/register", status_code=303)
+    if session.get("role") != "user":
+        return redirect(url_for("user_register"))
 
     # Get current user
-    user = get_current_user(request, db)
+    user = get_current_user(db)
     if not user:
-        return RedirectResponse(url="/user/register", status_code=303)
+        return redirect(url_for("user_register"))
 
     # Check if user already submitted this quiz
     existing_submission = db.query(Result).filter(
@@ -468,15 +470,15 @@ async def submit_quiz(request: Request, quiz_id: int, db: Session = Depends(get_
     ).first()
 
     if existing_submission:
-        return RedirectResponse(url=f"/user/result/{existing_submission.id}", status_code=303)
+        return redirect(url_for("view_result", result_id=existing_submission.id))
 
     # Load quiz
     quiz, quiz_data = load_quiz_by_id(quiz_id, db)
     if not quiz or not quiz_data:
-        return HTMLResponse("<h1>Quiz not found.</h1>")
+        return "<h1>Quiz not found.</h1>", 404
 
     # Get form data
-    form_data = await request.form()
+    form_data = request.form
     user_answers = dict(form_data)
 
     # Calculate score
@@ -493,25 +495,26 @@ async def submit_quiz(request: Request, quiz_id: int, db: Session = Depends(get_
     db.commit()
     db.refresh(result)
 
-    return RedirectResponse(url=f"/user/result/{result.id}", status_code=303)
+    return redirect(url_for("view_result", result_id=result.id))
 
 
-@app.get("/user/result/{result_id}", response_class=HTMLResponse)
-async def view_result(request: Request, result_id: int, db: Session = Depends(get_db)):
+@app.route("/user/result/<int:result_id>")
+@with_db
+def view_result(db, result_id):
     """Display user's result by ID"""
     # Check if user is logged in
-    if request.session.get("role") != "user":
-        return RedirectResponse(url="/user/register", status_code=303)
+    if session.get("role") != "user":
+        return redirect(url_for("user_register"))
 
     # Get current user
-    user = get_current_user(request, db)
+    user = get_current_user(db)
     if not user:
-        return RedirectResponse(url="/user/register", status_code=303)
+        return redirect(url_for("user_register"))
 
     # Get result from database
     result = db.query(Result).filter(Result.id == result_id, Result.user_id == user.id).first()
     if not result:
-        return RedirectResponse(url="/user/history", status_code=303)
+        return redirect(url_for("user_history"))
 
     # Parse results from JSON
     results = json.loads(result.answers)
@@ -519,43 +522,37 @@ async def view_result(request: Request, result_id: int, db: Session = Depends(ge
     # Get quiz title from relationship
     exam_title = result.quiz.title if result.quiz else "Exam"
 
-    return templates.TemplateResponse("result.html", {
-        "request": request,
-        "score": result.score,
-        "results": results,
-        "exam_title": exam_title
-    })
+    return render_template("result.html", score=result.score, results=results, exam_title=exam_title)
 
 
-@app.get("/admin/quiz/preview/{quiz_id}", response_class=HTMLResponse)
-async def admin_quiz_preview(request: Request, quiz_id: int, db: Session = Depends(get_db)):
+@app.route("/admin/quiz/preview/<int:quiz_id>")
+@with_db
+def admin_quiz_preview(db, quiz_id):
     """Preview a quiz with correct answers"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Load quiz
     quiz, quiz_data = load_quiz_by_id(quiz_id, db)
     if not quiz or not quiz_data:
-        return HTMLResponse("<h1>Quiz not found.</h1>")
+        return "<h1>Quiz not found.</h1>", 404
 
-    return templates.TemplateResponse("admin_quiz_preview.html", {
-        "request": request,
-        "exam": quiz_data
-    })
+    return render_template("admin_quiz_preview.html", exam=quiz_data)
 
 
-@app.get("/admin/submission/{result_id}", response_class=HTMLResponse)
-async def admin_view_submission(request: Request, result_id: int, db: Session = Depends(get_db)):
+@app.route("/admin/submission/<int:result_id>")
+@with_db
+def admin_view_submission(db, result_id):
     """View a specific user's submission"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Get result from database
     result = db.query(Result).filter(Result.id == result_id).first()
     if not result:
-        return RedirectResponse(url="/admin/scores", status_code=303)
+        return redirect(url_for("view_scores"))
 
     # Parse results from JSON
     results = json.loads(result.answers)
@@ -563,60 +560,62 @@ async def admin_view_submission(request: Request, result_id: int, db: Session = 
     # Get quiz title from relationship
     exam_title = result.quiz.title if result.quiz else "Exam"
 
-    return templates.TemplateResponse("admin_user_submission.html", {
-        "request": request,
-        "username": result.user.username,
-        "score": result.score,
-        "results": results,
-        "exam_title": exam_title,
-        "submitted_at": result.submitted_at.strftime('%B %d, %Y at %I:%M %p')
-    })
+    submitted_at = result.submitted_at.strftime('%B %d, %Y at %I:%M %p')
+    return render_template("admin_user_submission.html",
+                         username=result.user.username,
+                         score=result.score,
+                         results=results,
+                         exam_title=exam_title,
+                         submitted_at=submitted_at)
 
 
-@app.post("/admin/submissions/delete-all")
-async def admin_delete_all_submissions(request: Request, db: Session = Depends(get_db)):
+@app.route("/admin/submissions/delete-all", methods=["POST"])
+@with_db
+def admin_delete_all_submissions(db):
     """Delete all student submissions"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Delete all results
     db.query(Result).delete()
     db.commit()
 
-    request.session["message"] = "All submissions deleted successfully!"
-    return RedirectResponse(url="/admin/dashboard", status_code=303)
+    session["message"] = "All submissions deleted successfully!"
+    return redirect(url_for("admin_dashboard"))
 
 
-@app.get("/admin/users", response_class=HTMLResponse)
-async def admin_users(request: Request, db: Session = Depends(get_db)):
+@app.route("/admin/users")
+@with_db
+def admin_users(db):
     """Manage users page"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Get all users (excluding admin)
     users = db.query(User).filter(User.role == "user").order_by(User.user_id).all()
 
-    return templates.TemplateResponse("admin_users.html", {
-        "request": request,
-        "users": users,
-        "message": request.session.pop("message", None)
-    })
+    message = session.pop("message", None)
+    return render_template("admin_users.html", users=users, message=message)
 
 
-@app.post("/admin/users/add")
-async def admin_add_user(request: Request, user_id: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+@app.route("/admin/users/add", methods=["POST"])
+@with_db
+def admin_add_user(db):
     """Add a new user"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    user_id = request.form.get("user_id")
+    password = request.form.get("password")
 
     # Check if user already exists
     existing_user = db.query(User).filter(User.user_id == user_id).first()
     if existing_user:
-        request.session["message"] = f"User with ID {user_id} already exists!"
-        return RedirectResponse(url="/admin/users", status_code=303)
+        session["message"] = f"User with ID {user_id} already exists!"
+        return redirect(url_for("admin_users"))
 
     # Create new user
     new_user = User(
@@ -628,28 +627,33 @@ async def admin_add_user(request: Request, user_id: str = Form(...), password: s
     db.add(new_user)
     db.commit()
 
-    request.session["message"] = f"User {user_id} added successfully!"
-    return RedirectResponse(url="/admin/users", status_code=303)
+    session["message"] = f"User {user_id} added successfully!"
+    return redirect(url_for("admin_users"))
 
 
-@app.post("/admin/users/edit")
-async def admin_edit_user(request: Request, user_db_id: int = Form(...), user_id: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+@app.route("/admin/users/edit", methods=["POST"])
+@with_db
+def admin_edit_user(db):
     """Edit a user"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    user_db_id = request.form.get("user_db_id", type=int)
+    user_id = request.form.get("user_id")
+    password = request.form.get("password")
 
     # Get user
     user = db.query(User).filter(User.id == user_db_id).first()
     if not user:
-        request.session["message"] = "User not found!"
-        return RedirectResponse(url="/admin/users", status_code=303)
+        session["message"] = "User not found!"
+        return redirect(url_for("admin_users"))
 
     # Check if new user_id conflicts with another user
     existing_user = db.query(User).filter(User.user_id == user_id, User.id != user_db_id).first()
     if existing_user:
-        request.session["message"] = f"User ID {user_id} is already taken!"
-        return RedirectResponse(url="/admin/users", status_code=303)
+        session["message"] = f"User ID {user_id} is already taken!"
+        return redirect(url_for("admin_users"))
 
     # Update user
     user.user_id = user_id
@@ -657,22 +661,23 @@ async def admin_edit_user(request: Request, user_db_id: int = Form(...), user_id
     user.username = f"Student_{user_id}"
     db.commit()
 
-    request.session["message"] = f"User {user_id} updated successfully!"
-    return RedirectResponse(url="/admin/users", status_code=303)
+    session["message"] = f"User {user_id} updated successfully!"
+    return redirect(url_for("admin_users"))
 
 
-@app.post("/admin/users/delete/{user_db_id}")
-async def admin_delete_user(request: Request, user_db_id: int, db: Session = Depends(get_db)):
+@app.route("/admin/users/delete/<int:user_db_id>", methods=["POST"])
+@with_db
+def admin_delete_user(db, user_db_id):
     """Delete a user and their submissions"""
     # Check if user is admin
-    if request.session.get("role") != "admin":
-        return RedirectResponse(url="/admin/login", status_code=303)
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
 
     # Get user
     user = db.query(User).filter(User.id == user_db_id).first()
     if not user:
-        request.session["message"] = "User not found!"
-        return RedirectResponse(url="/admin/users", status_code=303)
+        session["message"] = "User not found!"
+        return redirect(url_for("admin_users"))
 
     # Delete user's results first
     db.query(Result).filter(Result.user_id == user_db_id).delete()
@@ -681,17 +686,16 @@ async def admin_delete_user(request: Request, user_db_id: int, db: Session = Dep
     db.delete(user)
     db.commit()
 
-    request.session["message"] = "User deleted successfully!"
-    return RedirectResponse(url="/admin/users", status_code=303)
+    session["message"] = "User deleted successfully!"
+    return redirect(url_for("admin_users"))
 
 
-@app.get("/logout")
-async def logout(request: Request):
+@app.route("/logout")
+def logout():
     """Logout user"""
-    request.session.clear()
-    return RedirectResponse(url="/", status_code=303)
+    session.clear()
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8080, debug=True)
