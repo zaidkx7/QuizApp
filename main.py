@@ -59,19 +59,14 @@ def normalize(text: str) -> str:
 
     # Convert to lowercase
     text = text.lower()
-
     # Remove HTML brackets
     text = re.sub(r'[<>]', '', text)
-
     # Remove hyphens, underscores, and special characters
     text = re.sub(r'[-_.,;:!?(){}[\]"/\\]', ' ', text)
-
     # Collapse multiple spaces into one
     text = re.sub(r'\s+', ' ', text)
-
     # Trim leading/trailing spaces
     text = text.strip()
-
     return text
 
 
@@ -260,11 +255,9 @@ def upload_quiz(db):
             json.dump(quiz_data, f, indent=2)
 
         # Create Quiz record in database
-        is_first_quiz = db.query(Quiz).count() == 0
         new_quiz = Quiz(
             title=quiz_data["title"],
-            filename=filename,
-            is_active=is_first_quiz  # Auto-activate if it's the first quiz
+            filename=filename
         )
         db.add(new_quiz)
         db.commit()
@@ -278,29 +271,6 @@ def upload_quiz(db):
     except Exception as e:
         session["message"] = f"Error uploading quiz: {str(e)}"
         return redirect(url_for("admin_quizzes"))
-
-
-@app.route("/admin/quiz/set-active/<int:quiz_id>", methods=["POST"])
-@with_db
-def set_active_quiz(db, quiz_id):
-    """Set a quiz as active"""
-    # Check if user is admin
-    if session.get("role") != "admin":
-        return redirect(url_for("admin_login"))
-
-    # Deactivate all quizzes
-    db.query(Quiz).update({"is_active": False})
-
-    # Activate the selected quiz
-    quiz = db.query(Quiz).filter(Quiz.id == quiz_id).first()
-    if quiz:
-        quiz.is_active = True
-        db.commit()
-        session["message"] = f"Quiz '{quiz.title}' is now active!"
-    else:
-        session["message"] = "Quiz not found"
-
-    return redirect(url_for("admin_quizzes"))
 
 
 @app.route("/admin/quiz/delete/<int:quiz_id>", methods=["POST"])
@@ -395,7 +365,7 @@ def user_history(db):
             return redirect(url_for("user_register"))
 
         # Get all quizzes with user's submissions
-        quizzes = db.query(Quiz).order_by(Quiz.is_active.desc(), Quiz.created_at.desc()).all()
+        quizzes = db.query(Quiz).order_by(Quiz.created_at.desc()).all()
 
         # For each quiz, attach user's submission if exists
         for quiz in quizzes:
@@ -539,6 +509,21 @@ def admin_quiz_preview(db, quiz_id):
         return "<h1>Quiz not found.</h1>", 404
 
     return render_template("admin_quiz_preview.html", exam=quiz_data)
+
+@app.route("/admin/quizzes/delete-all", methods=["POST"])
+@with_db
+def admin_delete_all_quizzes(db):
+    """Delete all quizzes"""
+    # Check if user is admin
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    # Delete all quizzes
+    db.query(Quiz).delete()
+    db.commit()
+
+    session["message"] = "All quizzes deleted successfully!"
+    return redirect(url_for("admin_dashboard"))
 
 
 @app.route("/admin/submission/<int:result_id>")

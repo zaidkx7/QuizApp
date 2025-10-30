@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto">
+<div class="max-w-8xl mx-auto">
     <h1 class="text-4xl font-bold text-gray-800 mb-8">Manage Quizzes</h1>
 
     {% if message %}
@@ -39,22 +39,10 @@
     {% if quizzes %}
     <div class="grid md:grid-cols-2 gap-6">
         {% for quiz in quizzes %}
-        <div class="bg-white rounded-lg shadow-lg p-6 {% if quiz.is_active %}border-4 border-green-500{% endif %}">
-            <div class="flex items-start justify-between mb-4">
-                <div class="flex-1">
-                    <h3 class="text-xl font-bold text-gray-800">{{ quiz.title }}</h3>
-                    <p class="text-sm text-gray-500 mt-1">Uploaded: {{ quiz.created_at.strftime('%B %d, %Y') }}</p>
-                </div>
-                {% if quiz.is_active %}
-                <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Active</span>
-                {% else %}
-                <form method="POST" action="/admin/quiz/set-active/{{ quiz.id }}" class="inline">
-                    <button type="submit"
-                        class="bg-gray-300 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-gray-400 transition">
-                        Set Active
-                    </button>
-                </form>
-                {% endif %}
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="mb-4">
+                <h3 class="text-xl font-bold text-gray-800">{{ quiz.title }}</h3>
+                <p class="text-sm text-gray-500 mt-1">Uploaded: {{ quiz.created_at.strftime('%B %d, %Y') }}</p>
             </div>
 
             <div class="flex gap-2 mt-4">

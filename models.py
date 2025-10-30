@@ -21,7 +21,6 @@ class Quiz(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     filename = Column(String, unique=True, nullable=False)  # Stored in questions/ folder
-    is_active = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationship to results
