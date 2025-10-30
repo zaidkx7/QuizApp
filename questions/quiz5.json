@@ -1,0 +1,769 @@
+{
+    "title": "Web Engineering - Lecture 05: Web Design",
+    "fill_in_the_blanks": [
+      {
+        "question": "Web design involves structuring content, ensuring usability, and enhancing ______[cite: 6].",
+        "answer": "user experience"
+      },
+      {
+        "question": "The design principle of ______ involves keeping layouts clean and uncluttered[cite: 10].",
+        "answer": "Simplicity"
+      },
+      {
+        "question": "______ in web design creates familiarity and improves user trust[cite: 13, 14].",
+        "answer": "Consistency"
+      },
+      {
+        "question": "______ arranges elements to show importance, such as headings being larger than body text[cite: 17].",
+        "answer": "Visual Hierarchy"
+      },
+      {
+        "question": "Using size, color, and ______ can help guide the user's focus[cite: 18].",
+        "answer": "contrast"
+      },
+      {
+        "question": "The principle of Typography and Readability suggests choosing ______ and legible fonts[cite: 20].",
+        "answer": "web-safe"
+      },
+      {
+        "question": "______ means a website must adapt to different devices like mobile, tablet, and desktop[cite: 24].",
+        "answer": "Mobile Responsiveness"
+      },
+      {
+        "question": "Responsive frameworks like ______ or CSS Flex/Grid can be used to achieve responsiveness[cite: 25].",
+        "answer": "Bootstrap"
+      },
+      {
+        "question": "Breadcrumbs, search bars, and ______ menus enhance navigation usability[cite: 29].",
+        "answer": "sticky"
+      },
+      {
+        "question": "______ in web design means designing for all users, including those with disabilities[cite: 31].",
+        "answer": "Accessibility"
+      },
+      {
+        "question": "Using ______ for images is a key part of accessibility[cite: 32].",
+        "answer": "alt text"
+      },
+      {
+        "question": "Optimizing images and minimizing code helps improve ______[cite: 35].",
+        "answer": "Loading Speed"
+      },
+      {
+        "question": "A fast-loading website reduces ______ rates[cite: 36].",
+        "answer": "bounce"
+      },
+      {
+        "question": "______ design focuses on user needs, preferences, and feedback[cite: 38].",
+        "answer": "User-Centered"
+      },
+      {
+        "question": "The web platform is built primarily on HTML, CSS, and ______[cite: 51].",
+        "answer": "JavaScript"
+      },
+      {
+        "question": "Browser limitations are often intentional and enforced by the browser ______ for user protection[cite: 52].",
+        "answer": "sandbox"
+      },
+      {
+        "question": "______ refers to the issue of different browsers (Chrome, Firefox) interpreting code differently[cite: 54].",
+        "answer": "Browser Compatibility"
+      },
+      {
+        "question": "Local Storage and Session Storage have ______ storage capacity, usually 5-50 MB[cite: 58].",
+        "answer": "limited"
+      },
+      {
+        "question": "Web attacks like XSS, CSRF, and ______ are listed as security vulnerabilities[cite: 63].",
+        "answer": "SQL Injection"
+      },
+      {
+        "question": "The ______ is an international community led by Tim Berners-Lee that develops open web standards[cite: 84].",
+        "answer": "W3C"
+      }
+    ],
+    "true_false": [
+      {
+        "question": "Web design is only about creating visually attractive pages[cite: 6].",
+        "answer": false
+      },
+      {
+        "question": "Good design principles help build websites that are functional and accessible[cite: 7].",
+        "answer": true
+      },
+      {
+        "question": "The principle of Simplicity encourages using many different colors and fonts[cite: 11].",
+        "answer": false
+      },
+      {
+        "question": "Consistency in design can decrease user trust[cite: 14].",
+        "answer": false
+      },
+      {
+        "question": "Visual hierarchy can be achieved using size, color, and contrast[cite: 18].",
+        "answer": true
+      },
+      {
+        "question": "Any font is acceptable for web design, even if it's not web-safe[cite: 20].",
+        "answer": false
+      },
+      {
+        "question": "Mobile responsiveness is an optional feature for modern websites[cite: 24].",
+        "answer": false
+      },
+      {
+        "question": "Alt text for images and keyboard navigation are components of accessibility[cite: 32].",
+        "answer": true
+      },
+      {
+        "question": "A slow-loading website is good for keeping users engaged[cite: 36].",
+        "answer": false
+      },
+      {
+        "question": "User-Centered Design prioritizes the designer's preferences over the user's needs[cite: 38].",
+        "answer": false
+      },
+      {
+        "question": "A website should prioritize aesthetics over functionality[cite: 41].",
+        "answer": false
+      },
+      {
+        "question": "The web platform's limitations are always accidental and never intentional[cite: 52].",
+        "answer": false
+      },
+      {
+        "question": "Device fragmentation refers to the wide variety of devices and screen sizes[cite: 55].",
+        "answer": true
+      },
+      {
+        "question": "Web browsers provide unlimited local storage to web applications[cite: 58].",
+        "answer": false
+      },
+      {
+        "question": "The browser's sandboxed environment grants web pages direct access to the user's file system[cite: 61].",
+        "answer": false
+      },
+      {
+        "question": "Accessing sensitive hardware like the GPS or camera does not require user permission[cite: 64].",
+        "answer": false
+      },
+      {
+        "question": "Service workers can provide partial offline functionality for web platforms[cite: 68].",
+        "answer": true
+      },
+      {
+        "question": "Reliance on third-party APIs can introduce risk if those services fail[cite: 72].",
+        "answer": true
+      },
+      {
+        "question": "W3C is led by the inventor of the World Wide Web, Tim Berners-Lee[cite: 84].",
+        "answer": true
+      },
+      {
+        "question": "W3C Compliance has no impact on a website's Search Engine Optimization (SEO)[cite: 95].",
+        "answer": false
+      }
+    ],
+    "mcqs": [
+      {
+        "question": "What is the primary goal of web design as described in the lecture? [cite: 6]",
+        "options": [
+          "Only visual attraction",
+          "Structuring content, usability, and enhancing user experience",
+          "Only functionality",
+          "Only loading speed"
+        ],
+        "answer": "Structuring content, usability, and enhancing user experience"
+      },
+      {
+        "question": "Which design principle involves keeping layouts clean, uncluttered, and using minimal colors? [cite: 9, 10, 11]",
+        "options": [
+          "Visual Hierarchy",
+          "Simplicity",
+          "Accessibility",
+          "Loading Speed"
+        ],
+        "answer": "Simplicity"
+      },
+      {
+        "question": "Maintaining uniform navigation, colors, and typography across all pages refers to which principle? [cite: 13]",
+        "options": [
+          "Simplicity",
+          "Consistency",
+          "Mobile Responsiveness",
+          "User-Centered Design"
+        ],
+        "answer": "Consistency"
+      },
+      {
+        "question": "What is a key benefit of maintaining consistency in web design? [cite: 14]",
+        "options": [
+          "It makes the site load faster",
+          "It improves user trust",
+          "It makes the site more colorful",
+          "It replaces the need for accessibility"
+        ],
+        "answer": "It improves user trust"
+      },
+      {
+        "question": "Arranging elements to show their order of importance (e.g., headings > subheadings) is called: [cite: 17]",
+        "options": [
+          "Visual Hierarchy",
+          "Typography",
+          "Simplicity",
+          "Navigation"
+        ],
+        "answer": "Visual Hierarchy"
+      },
+      {
+        "question": "According to the lecture, what can be used to guide a user's focus in a visual hierarchy? [cite: 18]",
+        "options": [
+          "Size, color, and contrast",
+          "Alt text and keyboard navigation",
+          "Caching and code minification",
+          "Only font choice"
+        ],
+        "answer": "Size, color, and contrast"
+      },
+      {
+        "question": "Which principle emphasizes choosing web-safe fonts and ensuring sufficient line spacing? [cite: 19, 20, 21]",
+        "options": [
+          "Simplicity",
+          "Navigation",
+          "Typography and Readability",
+          "Loading Speed"
+        ],
+        "answer": "Typography and Readability"
+      },
+      {
+        "question": "What does 'Mobile Responsiveness' mean in web design? [cite: 24]",
+        "options": [
+          "The website works only on mobile phones",
+          "The website has a mobile app",
+          "The website adapts to different devices (mobile, tablet, desktop)",
+          "The website loads quickly on mobile"
+        ],
+        "answer": "The website adapts to different devices (mobile, tablet, desktop)"
+      },
+      {
+        "question": "Which of the following are tools mentioned for achieving mobile responsiveness? [cite: 25]",
+        "options": [
+          "Alt text and breadcrumbs",
+          "Bootstrap or CSS Flex/Grid",
+          "W3C validators",
+          "SQL and XSS"
+        ],
+        "answer": "Bootstrap or CSS Flex/Grid"
+      },
+      {
+        "question": "Easy-to-understand menus and clear paths to information are part of which design principle? [cite: 28]",
+        "options": [
+          "Navigation",
+          "Simplicity",
+          "Loading Speed",
+          "Visual Hierarchy"
+        ],
+        "answer": "Navigation"
+      },
+      {
+        "question": "What navigation aids are mentioned to enhance usability? [cite: 29]",
+        "options": [
+          "Caching and minimal code",
+          "Alt text and color contrast",
+          "Breadcrumbs, search bars, and sticky menus",
+          "Headings, subheadings, and body text"
+        ],
+        "answer": "Breadcrumbs, search bars, and sticky menus"
+      },
+      {
+        "question": "Designing for all users, including those with disabilities, is the core of which principle? [cite: 31]",
+        "options": [
+          "User-Centered Design",
+          "Accessibility",
+          "Mobile Responsiveness",
+          "Consistency"
+        ],
+        "answer": "Accessibility"
+      },
+      {
+        "question": "Which of the following is an example of an accessibility practice? [cite: 32]",
+        "options": [
+          "Using alt text for images",
+          "Using many different fonts",
+          "Optimizing images for speed",
+          "Focusing on aesthetics"
+        ],
+        "answer": "Using alt text for images"
+      },
+      {
+        "question": "Which of the following is NOT an accessibility practice mentioned in the lecture? [cite: 32]",
+        "options": [
+          "Alt text for images",
+          "Proper color contrast",
+          "Keyboard navigation",
+          "Using Bootstrap"
+        ],
+        "answer": "Using Bootstrap"
+      },
+      {
+        "question": "Optimizing images, using caching, and minimizing code are techniques for improving: [cite: 35]",
+        "options": [
+          "Accessibility",
+          "Consistency",
+          "Loading Speed",
+          "Navigation"
+        ],
+        "answer": "Loading Speed"
+      },
+      {
+        "question": "What is the benefit of a fast-loading website? [cite: 36]",
+        "options": [
+          "It improves visual hierarchy",
+          "It reduces bounce rates",
+          "It ensures W3C compliance",
+          "It helps with browser compatibility"
+        ],
+        "answer": "It reduces bounce rates"
+      },
+      {
+        "question": "Which design principle focuses on user needs, preferences, and feedback? [cite: 38]",
+        "options": [
+          "Simplicity",
+          "Accessibility",
+          "User-Centered Design",
+          "Loading Speed"
+        ],
+        "answer": "User-Centered Design"
+      },
+      {
+        "question": "The principle 'Balance of Aesthetics and Functionality' implies that a website: [cite: 41]",
+        "options": [
+          "Should look appealing but must also serve its purpose",
+          "Must prioritize looks over function",
+          "Must prioritize function over looks",
+          "Does not need to look appealing"
+        ],
+        "answer": "Should look appealing but must also serve its purpose"
+      },
+      {
+        "question": "Which of the following is listed as an application of web design principles? [cite: 43-49]",
+        "options": [
+          "E-Commerce Websites",
+          "Educational Platforms",
+          "Corporate and Business Websites",
+          "All of the above"
+        ],
+        "answer": "All of the above"
+      },
+      {
+        "question": "Which of the following is NOT listed as an application of web design principles? [cite: 43-49]",
+        "options": [
+          "Blogs and News Portals",
+          "Government Websites",
+          "Desktop Operating Systems",
+          "Social Media Platforms"
+        ],
+        "answer": "Desktop Operating Systems"
+      },
+      {
+        "question": "The web platform is primarily built on which three technologies? [cite: 51]",
+        "options": [
+          "Java, Python, and C++",
+          "HTML, CSS, and JavaScript",
+          "PHP, MySQL, and Apache",
+          "Swift, Kotlin, and React Native"
+        ],
+        "answer": "HTML, CSS, and JavaScript"
+      },
+      {
+        "question": "Limitations on the web platform are often enforced by the ______ for user protection[cite: 52].",
+        "options": [
+          "Browser sandbox",
+          "Web server",
+          "W3C",
+          "Operating system"
+        ],
+        "answer": "Browser sandbox"
+      },
+      {
+        "question": "What does 'Browser Compatibility' refer to? [cite: 54]",
+        "options": [
+          "All browsers being identical",
+          "Different browsers interpreting code slightly differently",
+          "A website working on all devices",
+          "A website being fast"
+        ],
+        "answer": "Different browsers interpreting code slightly differently"
+      },
+      {
+        "question": "The wide variety of screen sizes, resolutions, and capabilities is known as: [cite: 55]",
+        "options": [
+          "Device Fragmentation",
+          "Browser Compatibility",
+          "Storage Restrictions",
+          "Network Dependency"
+        ],
+        "answer": "Device Fragmentation"
+      },
+      {
+        "question": "Heavy scripts, large media, or inefficient code can cause what? [cite: 56]",
+        "options": [
+          "Better accessibility",
+          "Lag and crashes",
+          "W3C compliance",
+          "Improved security"
+        ],
+        "answer": "Lag and crashes"
+      },
+      {
+        "question": "What is the typical storage capacity limit for Local Storage per origin? [cite: 58]",
+        "options": [
+          "Unlimited",
+          "1-2 MB",
+          "5–50 MB",
+          "1 GB"
+        ],
+        "answer": "5–50 MB"
+      },
+      {
+        "question": "Which of the following is a technical constraint of the web platform? [cite: 59]",
+        "options": [
+          "Network Dependency",
+          "Data Privacy Concerns",
+          "Accessibility Issues",
+          "Maintenance Costs"
+        ],
+        "answer": "Network Dependency"
+      },
+      {
+        "question": "What does the 'Sandboxed Environment' of a browser restrict? [cite: 61]",
+        "options": [
+          "The use of HTML and CSS",
+          "The number of pages on a website",
+          "Direct access to system resources like files and hardware",
+          "The use of external APIs"
+        ],
+        "answer": "Direct access to system resources like files and hardware"
+      },
+      {
+        "question": "Which of the following is NOT a security vulnerability listed in the lecture? [cite: 63]",
+        "options": [
+          "Cross-Site Scripting (XSS)",
+          "Cross-Site Request Forgery (CSRF)",
+          "SQL Injection",
+          "Device Fragmentation"
+        ],
+        "answer": "Device Fragmentation"
+      },
+      {
+        "question": "Accessing sensitive hardware APIs like the camera or GPS typically requires: [cite: 64]",
+        "options": [
+          "No permission",
+          "Explicit user permission",
+          "A payment",
+          "A W3C certificate"
+        ],
+        "answer": "Explicit user permission"
+      },
+      {
+        "question": "Which of the following is a Security & Privacy limitation? [cite: 62]",
+        "options": [
+          "Browser Compatibility",
+          "Data Privacy Concerns",
+          "Offline Limitations",
+          "Monetization Restrictions"
+        ],
+        "answer": "Data Privacy Concerns"
+      },
+      {
+        "question": "Barriers faced by people with disabilities (e.g., screen reader users) are categorized as: [cite: 67]",
+        "options": [
+          "Technical Constraints",
+          "Security Limitations",
+          "Usability Constraints",
+          "Business Constraints"
+        ],
+        "answer": "Usability Constraints"
+      },
+      {
+        "question": "What technology is mentioned that can provide partial offline functionality for web platforms? [cite: 68]",
+        "options": [
+          "Service workers",
+          "SQL Injection",
+          "CSS Flex/Grid",
+          "W3C Validators"
+        ],
+        "answer": "Service workers"
+      },
+      {
+        "question": "Which of the following is a Usability Constraint? [cite: 68]",
+        "options": [
+          "Device Fragmentation",
+          "Offline Limitations",
+          "Third-Party Dependency",
+          "Content Restrictions"
+        ],
+        "answer": "Offline Limitations"
+      },
+      {
+        "question": "Payment gateways and subscriptions are mentioned under which constraint category? [cite: 70]",
+        "options": [
+          "Technical Constraints",
+          "Security & Privacy Limitations",
+          "Usability Constraints",
+          "Business & Development Constraints"
+        ],
+        "answer": "Business & Development Constraints"
+      },
+      {
+        "question": "The need for continuous updates due to changing browser standards is a: [cite: 71]",
+        "options": [
+          "Maintenance Cost",
+          "Security Vulnerability",
+          "Usability Issue",
+          "Technical Constraint"
+        ],
+        "answer": "Maintenance Cost"
+      },
+      {
+        "question": "Reliance on external APIs, CDNs, and frameworks is a: [cite: 72]",
+        "options": [
+          "Technical Constraint",
+          "Usability Constraint",
+          "Third-Party Dependency",
+          "Regulatory Constraint"
+        ],
+        "answer": "Third-Party Dependency"
+      },
+      {
+        "question": "Which of the following is a Business & Development Constraint? [cite: 71]",
+        "options": [
+          "Browser Compatibility",
+          "Maintenance Costs",
+          "Offline Limitations",
+          "Legal Restrictions"
+        ],
+        "answer": "Maintenance Costs"
+      },
+      {
+        "question": "Compliance with data protection laws like GDPR, CCPA, and HIPAA falls under: [cite: 74]",
+        "options": [
+          "Regulatory & Compliance Constraints",
+          "Technical Constraints",
+          "Usability Constraints",
+          "Business Constraints"
+        ],
+        "answer": "Regulatory & Compliance Constraints"
+      },
+      {
+        "question": "Regional censorship of certain web content is an example of a: [cite: 75]",
+        "options": [
+          "Technical Constraint",
+          "Usability Constraint",
+          "Business Constraint",
+          "Regulatory & Compliance Constraint"
+        ],
+        "answer": "Regulatory & Compliance Constraint"
+      },
+      {
+        "question": "What are Web Standards? [cite: 78]",
+        "options": [
+          "A set of guidelines, specifications, and best practices",
+          "A specific web browser",
+          "A type of server",
+          "A programming language"
+        ],
+        "answer": "A set of guidelines, specifications, and best practices"
+      },
+      {
+        "question": "What does 'Interoperable' mean in the context of web standards? [cite: 80]",
+        "options": [
+          "Usable by people with disabilities",
+          "Easy to update",
+          "Works consistently across all browsers and platforms",
+          "Optimized for performance"
+        ],
+        "answer": "Works consistently across all browsers and platforms"
+      },
+      {
+        "question": "Web standards aim to make websites 'Accessible', meaning: [cite: 79]",
+        "options": [
+          "Usable by people with different devices and abilities",
+          "Optimized for performance",
+          "Easy to update",
+          "Works in all browsers"
+        ],
+        "answer": "Usable by people with different devices and abilities"
+      },
+      {
+        "question": "Which of the following is NOT a goal of web standards? [cite: 79-82]",
+        "options": [
+          "Accessible",
+          "Interoperable",
+          "Maintainable",
+          "Monetized"
+        ],
+        "answer": "Monetized"
+      },
+      {
+        "question": "What does 'W3C' stand for? [cite: 83]",
+        "options": [
+          "World Web Consortium",
+          "Web Wide World Consortium",
+          "World Wide Web Consortium",
+          "World Web Community"
+        ],
+        "answer": "World Wide Web Consortium"
+      },
+      {
+        "question": "Who is the leader of the W3C? [cite: 84]",
+        "options": [
+          "Mohsin Mahmood",
+          "Helen Hayes",
+          "Tim Berners-Lee",
+          "The inventor of CSS"
+        ],
+        "answer": "Tim Berners-Lee"
+      },
+      {
+        "question": "What is Tim Berners-Lee famous for? [cite: 84]",
+        "options": [
+          "Inventing the World Wide Web",
+          "Creating JavaScript",
+          "Designing the Chrome browser",
+          "Writing the GDPR law"
+        ],
+        "answer": "Inventing the World Wide Web"
+      },
+      {
+        "question": "Which of the following is a key function of the W3C? [cite: 86]",
+        "options": [
+          "To build web browsers",
+          "To host websites",
+          "To define technical specifications (HTML, CSS, etc.)",
+          "To monetize web applications"
+        ],
+        "answer": "To define technical specifications (HTML, CSS, etc.)"
+      },
+      {
+        "question": "Which of the following is NOT a function of the W3C? [cite: 86-89]",
+        "options": [
+          "Promote accessibility",
+          "Provide validation tools",
+          "Ensure interoperability",
+          "Enforce legal compliance like GDPR"
+        ],
+        "answer": "Enforce legal compliance like GDPR"
+      },
+      {
+        "question": "What does 'W3C Compliance' mean? [cite: 91]",
+        "options": [
+          "The website follows W3C specifications and guidelines",
+          "The website is hosted on a W3C server",
+          "The website uses only HTML",
+          "The website was built by Tim Berners-Lee"
+        ],
+        "answer": "The website follows W3C specifications and guidelines"
+      },
+      {
+        "question": "Which of the following is listed as a benefit of W3C compliance? [cite: 93-96]",
+        "options": [
+          "Cross-browser compatibility",
+          "Accessibility",
+          "Better SEO",
+          "All of the above"
+        ],
+        "answer": "All of the above"
+      },
+      {
+        "question": "What does 'Future-proofing' as a benefit of compliance mean? [cite: 97]",
+        "options": [
+          "The website will never need updates",
+          "Avoiding obsolete code",
+          "The website will work on future devices",
+          "The website is secure"
+        ],
+        "answer": "Avoiding obsolete code"
+      },
+      {
+        "question": "Which benefit of W3C compliance relates to search engine ranking? [cite: 95]",
+        "options": [
+          "Accessibility",
+          "Better SEO",
+          "Improved security",
+          "Future-proofing"
+        ],
+        "answer": "Better SEO"
+      },
+      {
+        "question": "Which of the following is NOT a benefit of W3C compliance? [cite: 93-97]",
+        "options": [
+          "Better SEO",
+          "Accessibility",
+          "Improved performance",
+          "Guaranteed monetization"
+        ],
+        "answer": "Guaranteed monetization"
+      },
+      {
+        "question": "A user complains they cannot use your website because they rely on a screen reader. This is a failure of which design principle? [cite: 31, 67]",
+        "options": [
+          "Simplicity",
+          "Accessibility",
+          "Loading Speed",
+          "Consistency"
+        ],
+        "answer": "Accessibility"
+      },
+      {
+        "question": "You build a website that looks perfect in Chrome but is broken in Firefox. This is an example of what constraint? [cite: 54]",
+        "options": [
+          "Device Fragmentation",
+          "Browser Compatibility",
+          "Network Dependency",
+          "Storage Restrictions"
+        ],
+        "answer": "Browser Compatibility"
+      },
+      {
+        "question": "Your mobile app needs to store 1GB of data on the client's device. Why might the web platform be a bad choice for this? [cite: 58]",
+        "options": [
+          "Storage restrictions (e.g., Local Storage) are limited to ~5-50 MB",
+          "It has network dependency",
+          "It has browser compatibility issues",
+          "It requires W3C compliance"
+        ],
+        "answer": "Storage restrictions (e.g., Local Storage) are limited to ~5-50 MB"
+      },
+      {
+        "question": "You want to build a feature that automatically accesses a user's local C: drive files. Why is this blocked by the browser? [cite: 61]",
+        "options": [
+          "It's a technical constraint",
+          "It's a 'Sandboxed Environment' security feature",
+          "It's a usability constraint",
+          "It's a business constraint"
+        ],
+        "answer": "It's a 'Sandboxed Environment' security feature"
+      },
+      {
+        "question": "A new law (like GDPR) is passed, forcing you to update your website's privacy policy and data handling. This is an example of a: [cite: 74]",
+        "options": [
+          "Regulatory & Compliance Constraint",
+          "Technical Constraint",
+          "Usability Constraint",
+          "Business Constraint"
+        ],
+        "answer": "Regulatory & Compliance Constraint"
+      },
+      {
+        "question": "Your website relies on a free, external API to show weather data. The API service suddenly shuts down. This is a risk related to: [cite: 72]",
+        "options": [
+          "Third-Party Dependency",
+          "Maintenance Costs",
+          "Network Dependency",
+          "Browser Compatibility"
+        ],
+        "answer": "Third-Party Dependency"
+      }
+    ]
+  }

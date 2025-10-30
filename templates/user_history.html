@@ -7,8 +7,13 @@
 <a href="/logout" class="hover:text-blue-200 transition">Logout</a>
 {% endblock %}
 
+{% block nav_links_mobile %}
+<a href="/user/history" class="hover:text-blue-200 transition py-2">My History</a>
+<a href="/logout" class="hover:text-blue-200 transition py-2">Logout</a>
+{% endblock %}
+
 {% block content %}
-<div class="max-w-6xl mx-auto">
+<div class="max-w-8xl mx-auto">
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-2">Welcome, {{ username }}!</h1>
         <p class="text-gray-600">Available Quizzes and Your Submissions</p>
@@ -21,11 +26,8 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for quiz in quizzes %}
             <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                <div class="flex items-start justify-between mb-4">
-                    <h3 class="text-xl font-bold text-gray-800 flex-1">{{ quiz.title }}</h3>
-                    {% if quiz.is_active %}
-                    <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">Active</span>
-                    {% endif %}
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">{{ quiz.title }}</h3>
                 </div>
 
                 {% set user_submission = quiz.user_submissions|first if quiz.user_submissions else None %}

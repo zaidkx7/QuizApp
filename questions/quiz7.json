@@ -1,0 +1,769 @@
+{
+    "title": "Web Engineering - Lecture 07: Software as a Service(SaaS)",
+    "fill_in_the_blanks": [
+      {
+        "question": "______ means using software over the internet instead of installing it on your computer.",
+        "answer": "Software as a Service (SaaS)"
+      },
+      {
+        "question": "Google Docs is given as an example of ______, where Google stores your work and keeps the software updated.",
+        "answer": "SaaS"
+      },
+      {
+        "question": "SaaS is also called web-based-software or ______ software.",
+        "answer": "on-demand"
+      },
+      {
+        "question": "A major advantage of SaaS is ______ updates, as the provider handles them automatically.",
+        "answer": "Automatic"
+      },
+      {
+        "question": "The ______ advantage of SaaS allows users to access services and features on-demand.",
+        "answer": "Scalability"
+      },
+      {
+        "question": "A disadvantage of SaaS is the dependence on internet ______.",
+        "answer": "connectivity"
+      },
+      {
+        "question": "A ______ application runs on remote servers located in data centers (the cloud).",
+        "answer": "cloud-based web"
+      },
+      {
+        "question": "In a cloud-based application, the core logic and data storage are handled ______.",
+        "answer": "remotely"
+      },
+      {
+        "question": "Cloud-based web applications are typically paid for via a subscription or ______ model.",
+        "answer": "pay-as-you-go"
+      },
+      {
+        "question": "A ______ is a level of data storage that offers a specific balance of speed, capacity, and cost.",
+        "answer": "storage tier"
+      },
+      {
+        "question": "The ______ Tier is used for frequently accessed data and has a very high speed and cost.",
+        "answer": "Hot"
+      },
+      {
+        "question": "The Hot Tier typically uses very high-speed SSD or ______ drives.",
+        "answer": "NVMe"
+      },
+      {
+        "question": "AWS S3 Standard-IA (Infrequent Access) is an example of a ______ Tier.",
+        "answer": "Warm"
+      },
+      {
+        "question": "The ______ Tier is used for rarely accessed data like archives and old logs.",
+        "answer": "Cold"
+      },
+      {
+        "question": "In the ______ Tier, retrieval of data may take hours.",
+        "answer": "Deep Archive"
+      },
+      {
+        "question": "A ______ is an organized collection of data stored and accessed electronically.",
+        "answer": "database"
+      },
+      {
+        "question": "______ (Database Management System) is software used to manage databases, like MySQL or Oracle.",
+        "answer": "DBMS"
+      },
+      {
+        "question": "Databases support ______ operations, which stand for Create, Read, Update, Delete.",
+        "answer": "CRUD"
+      },
+      {
+        "question": "A ______ organizes and manages how data is stored and retrieved on storage devices (e.g., NTFS, ext4).",
+        "answer": "file system"
+      },
+      {
+        "question": "AI-Driven Layouts adapt for different devices, screen sizes, and user ______.",
+        "answer": "behaviors"
+      }
+    ],
+    "true_false": [
+      {
+        "question": "SaaS applications require the user to download, install, and maintain the software.",
+        "answer": false
+      },
+      {
+        "question": "SaaS is usually offered on a one-time purchase basis.",
+        "answer": false
+      },
+      {
+        "question": "SaaS applications cannot be accessed from any device with an internet connection.",
+        "answer": false
+      },
+      {
+        "question": "One advantage of SaaS is 'Reduced time' because users can run apps directly from their browser.",
+        "answer": true
+      },
+      {
+        "question": "SaaS offers unlimited customization and full control over data.",
+        "answer": false
+      },
+      {
+        "question": "A cloud-based web application must be installed on a user's local computer.",
+        "answer": false
+      },
+      {
+        "question": "Centralized management of cloud apps means the provider performs all updates and patches.",
+        "answer": true
+      },
+      {
+        "question": "Cloud servers cannot scale resources; they have a fixed capacity.",
+        "answer": false
+      },
+      {
+        "question": "Data is placed on storage tiers based on how often it needs to be accessed.",
+        "answer": true
+      },
+      {
+        "question": "The Hot Tier is the lowest cost tier and has the slowest speed.",
+        "answer": false
+      },
+      {
+        "question": "AWS S3 Standard is an example of a Hot Tier storage.",
+        "answer": true
+      },
+      {
+        "question": "The Warm Tier is used for frequently accessed, real-time data.",
+        "answer": false
+      },
+      {
+        "question": "The Cold Tier typically uses slow HDD or tape storage.",
+        "answer": true
+      },
+      {
+        "question": "Retrieval from a Deep Archive Tier is almost instantaneous.",
+        "answer": false
+      },
+      {
+        "question": "Storage tiering helps optimize performance versus cost.",
+        "answer": true
+      },
+      {
+        "question": "A DBMS is hardware used to store data tables.",
+        "answer": false
+      },
+      {
+        "question": "Databases can be relational (RDBMS) or non-relational (NoSQL).",
+        "answer": true
+      },
+      {
+        "question": "File systems like NTFS and FAT32 provide a flat structure, not a hierarchical one.",
+        "answer": false
+      },
+      {
+        "question": "Cloud storage integration enhances collaboration and data sharing.",
+        "answer": true
+      },
+      {
+        "question": "Smart UI/UX tools like Adobe Sensei can analyze heatmaps, clicks, and scroll data.",
+        "answer": true
+      }
+    ],
+    "mcqs": [
+      {
+        "question": "What does 'SaaS' stand for?",
+        "options": [
+          "Software as a Standard",
+          "Security as a Service",
+          "Software as a Service",
+          "System as a Service"
+        ],
+        "answer": "Software as a Service"
+      },
+      {
+        "question": "According to the lecture, what is the primary way a user accesses a SaaS application?",
+        "options": [
+          "By installing it from a CD-ROM",
+          "Over the internet via a web browser",
+          "By downloading an executable file",
+          "Through a dedicated hardware terminal"
+        ],
+        "answer": "Over the internet via a web browser"
+      },
+      {
+        "question": "Who is responsible for updates and maintenance in a SaaS model?",
+        "options": [
+          "The user",
+          "The company that provides the software",
+          "A third-party contractor hired by the user",
+          "The internet service provider"
+        ],
+        "answer": "The company that provides the software"
+      },
+      {
+        "question": "Which application is used as an example of SaaS?",
+        "options": [
+          "Microsoft Word (Desktop)",
+          "Google Docs",
+          "Adobe Photoshop (Installed)",
+          "NTFS File System"
+        ],
+        "answer": "Google Docs"
+      },
+      {
+        "question": "What is the typical payment model for SaaS?",
+        "options": [
+          "One-time perpetual license",
+          "Pay-as-you-go or subscription",
+          "Free with no charges",
+          "Hardware bundle"
+        ],
+        "answer": "Pay-as-you-go or subscription"
+      },
+      {
+        "question": "What is another name for SaaS?",
+        "options": [
+          "On-premise software",
+          "Locally-installed software",
+          "On-demand software",
+          "Legacy software"
+        ],
+        "answer": "On-demand software"
+      },
+      {
+        "question": "Which of the following is listed as an advantage of SaaS?",
+        "options": [
+          "Full control over data",
+          "No internet required",
+          "Accessibility from anywhere",
+          "High customization"
+        ],
+        "answer": "Accessibility from anywhere"
+      },
+      {
+        "question": "How does SaaS reduce time for the user?",
+        "options": [
+          "By running faster than local apps",
+          "By not requiring downloads or installation",
+          "By providing 24/7 customer support",
+          "By offering limited features"
+        ],
+        "answer": "By not requiring downloads or installation"
+      },
+      {
+        "question": "Which of the following is listed as a disadvantage of SaaS?",
+        "options": [
+          "Scalability",
+          "Automatic updates",
+          "Cost-Effective",
+          "Security concerns"
+        ],
+        "answer": "Security concerns"
+      },
+      {
+        "question": "Which of the following is NOT listed as a disadvantage of SaaS?",
+        "options": [
+          "Limited customization",
+          "Dependence on internet connectivity",
+          "Limited control over data",
+          "Scalability"
+        ],
+        "answer": "Scalability"
+      },
+      {
+        "question": "Where does a cloud-based web application run?",
+        "options": [
+          "On the user's local computer",
+          "On remote servers in the cloud",
+          "On a dedicated mobile device",
+          "On the web browser's cache"
+        ],
+        "answer": "On remote servers in the cloud"
+      },
+      {
+        "question": "Which of the following is a key characteristic of a cloud-based web application?",
+        "options": [
+          "Requires local installation",
+          "Updates are managed by the user",
+          "Universal access from any device with internet",
+          "Paid for with a large one-time purchase fee"
+        ],
+        "answer": "Universal access from any device with internet"
+      },
+      {
+        "question": "What does 'Centralized Management' mean for cloud-based applications?",
+        "options": [
+          "The user manages all settings",
+          "The provider performs all updates and maintenance",
+          "The application is stored in one central folder",
+          "The data is only accessible from one location"
+        ],
+        "answer": "The provider performs all updates and maintenance"
+      },
+      {
+        "question": "What is a 'storage tier'?",
+        "options": [
+          "A type of hard drive",
+          "A level of storage balancing speed, capacity, and cost",
+          "A cloud-based file system",
+          "A database backup method"
+        ],
+        "answer": "A level of storage balancing speed, capacity, and cost"
+      },
+      {
+        "question": "How is data typically placed on different storage tiers?",
+        "options": [
+          "Randomly",
+          "Alphabetically",
+          "Based on file size",
+          "Based on how often it needs to be accessed"
+        ],
+        "answer": "Based on how often it needs to be accessed"
+      },
+      {
+        "question": "Which of the following is NOT listed as a common storage tier?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Medium Tier",
+          "Cold Tier"
+        ],
+        "answer": "Medium Tier"
+      },
+      {
+        "question": "What are the characteristics of the 'Hot Tier'?",
+        "options": [
+          "Rarely accessed, slow speed, low cost",
+          "Frequently accessed, very high speed, high cost",
+          "Occasionally accessed, moderate speed, medium cost",
+          "Long-term storage, very slow speed, very low cost"
+        ],
+        "answer": "Frequently accessed, very high speed, high cost"
+      },
+      {
+        "question": "Which hardware is associated with the 'Hot Tier'?",
+        "options": [
+          "Tape drives",
+          "Slow HDDs",
+          "SATA SSDs",
+          "SSD or NVMe drives"
+        ],
+        "answer": "SSD or NVMe drives"
+      },
+      {
+        "question": "AWS S3 Standard-IA (Infrequent Access) is an example of which tier?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Cold Tier",
+          "Deep Archive Tier"
+        ],
+        "answer": "Warm Tier"
+      },
+      {
+        "question": "What type of data is stored in the 'Cold Tier'?",
+        "options": [
+          "Active applications",
+          "Real-time data",
+          "Rarely accessed data (archives, old logs)",
+          "Daily transactions"
+        ],
+        "answer": "Rarely accessed data (archives, old logs)"
+      },
+      {
+        "question": "AWS Glacier is an example of which storage tier?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Cold Tier",
+          "Primary Storage"
+        ],
+        "answer": "Cold Tier"
+      },
+      {
+        "question": "Which storage tier is characterized by 'very slow' retrieval that may take hours?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Cold Tier",
+          "Deep Archive Tier"
+        ],
+        "answer": "Deep Archive Tier"
+      },
+      {
+        "question": "AWS Glacier Deep Archive is an example of which tier?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Cold Tier",
+          "Deep Archive Tier"
+        ],
+        "answer": "Deep Archive Tier"
+      },
+      {
+        "question": "What is the primary purpose of storage tiering?",
+        "options": [
+          "To increase storage capacity",
+          "To optimize performance vs. cost",
+          "To make all data access very fast",
+          "To eliminate the need for backups"
+        ],
+        "answer": "To optimize performance vs. cost"
+      },
+      {
+        "question": "In the example use case, where are 'daily transactions' stored?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Cold Tier",
+          "Deep Archive Tier"
+        ],
+        "answer": "Hot Tier"
+      },
+      {
+        "question": "In the example use case, where are 'yearly summaries' archived?",
+        "options": [
+          "Hot Tier",
+          "Warm Tier",
+          "Cold Tier",
+          "On the local computer"
+        ],
+        "answer": "Cold Tier"
+      },
+      {
+        "question": "What is a 'database'?",
+        "options": [
+          "A physical storage device",
+          "A type of file system",
+          "An organized collection of data stored electronically",
+          "A software application for word processing"
+        ],
+        "answer": "An organized collection of data stored electronically"
+      },
+      {
+        "question": "What does 'DBMS' stand for?",
+        "options": [
+          "Data Backup Management Software",
+          "Database Management System",
+          "Data Manipulation Service",
+          "Database Module Server"
+        ],
+        "answer": "Database Management System"
+      },
+      {
+        "question": "What are 'records' and 'fields' in a database table?",
+        "options": [
+          "Rows and Columns",
+          "Columns and Rows",
+          "Tables and Files",
+          "Files and Tables"
+        ],
+        "answer": "Rows and Columns"
+      },
+      {
+        "question": "What does 'CRUD' stand for in database operations?",
+        "options": [
+          "Create, Run, Update, Delete",
+          "Connect, Read, Undo, Drop",
+          "Create, Read, Update, Delete",
+          "Copy, Read, Upload, Download"
+        ],
+        "answer": "Create, Read, Update, Delete"
+      },
+      {
+        "question": "Databases can be relational (RDBMS) or ______.",
+        "options": [
+          "Non-functional (NFSQL)",
+          "Sequential (SQL)",
+          "Non-relational (NoSQL)",
+          "File-based (FBSQL)"
+        ],
+        "answer": "Non-relational (NoSQL)"
+      },
+      {
+        "question": "What language is used for data manipulation in relational databases?",
+        "options": [
+          "Java",
+          "Python",
+          "SQL (Structured Query Language)",
+          "HTML"
+        ],
+        "answer": "SQL (Structured Query Language)"
+      },
+      {
+        "question": "Which of the following is NOT listed as an example of a database?",
+        "options": [
+          "MySQL",
+          "MongoDB",
+          "NTFS",
+          "Oracle"
+        ],
+        "answer": "NTFS"
+      },
+      {
+        "question": "What is the function of a 'file system'?",
+        "options": [
+          "To manage databases",
+          "To run applications in the cloud",
+          "To organize and manage how data is stored and retrieved on storage devices",
+          "To provide internet connectivity"
+        ],
+        "answer": "To organize and manage how data is stored and retrieved on storage devices"
+      },
+      {
+        "question": "Which of the following is an example of a file system?",
+        "options": [
+          "MySQL",
+          "NTFS",
+          "AWS S3",
+          "Google Docs"
+        ],
+        "answer": "NTFS"
+      },
+      {
+        "question": "Which of the following is NOT a feature of a file system?",
+        "options": [
+          "Provides a hierarchical structure",
+          "Manages database (CRUD) operations",
+          "Handles file naming and permissions",
+          "Supports metadata (file name, size, date)"
+        ],
+        "answer": "Manages database (CRUD) operations"
+      },
+      {
+        "question": "Where does 'cloud storage' store data?",
+        "options": [
+          "On the user's local device",
+          "On remote servers accessed via the internet",
+          "In the computer's RAM",
+          "On external hard drives"
+        ],
+        "answer": "On remote servers accessed via the internet"
+      },
+      {
+        "question": "Which of the following is an example of cloud storage?",
+        "options": [
+          "NTFS",
+          "ext4",
+          "Dropbox",
+          "MySQL"
+        ],
+        "answer": "Dropbox"
+      },
+      {
+        "question": "Which of the following is NOT listed as an example of cloud storage?",
+        "options": [
+          "Google Drive",
+          "MongoDB",
+          "OneDrive",
+          "AWS S3"
+        ],
+        "answer": "MongoDB"
+      },
+      {
+        "question": "What do cloud storage platforms provide to integrate with databases and applications?",
+        "options": [
+          "Free hardware",
+          "APIs and SDKs",
+          "Local file systems",
+          "DBMS software"
+        ],
+        "answer": "APIs and SDKs"
+      },
+      {
+        "question": "A key feature of cloud storage integration is that it reduces dependency on ______.",
+        "options": [
+          "the internet",
+          "local storage",
+          "databases",
+          "file systems"
+        ],
+        "answer": "local storage"
+      },
+      {
+        "question": "How does AI enhance web design, according to the overview?",
+        "options": [
+          "By increasing manual effort",
+          "By focusing only on server-side logic",
+          "By enhancing automation, creativity, and personalization",
+          "By replacing the need for HTML and CSS"
+        ],
+        "answer": "By enhancing automation, creativity, and personalization"
+      },
+      {
+        "question": "AI helps designers create responsive, user-centered, and ______ websites.",
+        "options": [
+          "static",
+          "offline-only",
+          "data-driven",
+          "complex"
+        ],
+        "answer": "data-driven"
+      },
+      {
+        "question": "How does AI in web design reduce manual effort?",
+        "options": [
+          "By writing all the code from scratch",
+          "By analyzing user behavior and preferences",
+          "By providing free web hosting",
+          "By designing hardware"
+        ],
+        "answer": "By analyzing user behavior and preferences"
+      },
+      {
+        "question": "What is the function of 'AI-Driven Layouts'?",
+        "options": [
+          "To analyze user behavior",
+          "To automatically generate page structures and layouts",
+          "To provide A/B testing",
+          "To generate color palettes"
+        ],
+        "answer": "To automatically generate page structures and layouts"
+      },
+      {
+        "question": "AI-Driven Layouts use ______ algorithms to optimize design elements.",
+        "options": [
+          "SQL",
+          "File system",
+          "Machine learning",
+          "CRUD"
+        ],
+        "answer": "Machine learning"
+      },
+      {
+        "question": "Which of the following is listed as a tool for AI-Driven Layouts?",
+        "options": [
+          "Adobe Sensei",
+          "Uizard",
+          "Wix ADI",
+          "Attention Insight"
+        ],
+        "answer": "Wix ADI"
+      },
+      {
+        "question": "Which of the following is NOT listed as a tool for AI-Driven Layouts?",
+        "options": [
+          "Wix ADI",
+          "Bookmark AIDA",
+          "Framer AI",
+          "Figma AI"
+        ],
+        "answer": "Figma AI"
+      },
+      {
+        "question": "What is a benefit of AI-Driven Layouts?",
+        "options": [
+          "Improves usability, accessibility, and conversion rates",
+          "Reduces cloud storage costs",
+          "Manages database integrity",
+          "Creates file system hierarchies"
+        ],
+        "answer": "Improves usability, accessibility, and conversion rates"
+      },
+      {
+        "question": "What do 'Smart UI/UX Tools' assist with?",
+        "options": [
+          "Managing storage tiers",
+          "Creating file systems",
+          "Designing, testing, and improving user interfaces",
+          "Database optimization"
+        ],
+        "answer": "Designing, testing, and improving user interfaces"
+      },
+      {
+        "question": "How do Smart UI/UX tools refine the user experience?",
+        "options": [
+          "By analyzing heatmaps, clicks, and scroll data",
+          "By automatically deploying the website",
+          "By optimizing the database schema",
+          "By creating new file systems"
+        ],
+        "answer": "By analyzing heatmaps, clicks, and scroll data"
+      },
+      {
+        "question": "Which of the following is a capability of Smart UI/UX tools?",
+        "options": [
+          "To manage storage tiers",
+          "To create CRUD operations",
+          "To generate color palettes and typography suggestions",
+          "To define file system permissions"
+        ],
+        "answer": "To generate color palettes and typography suggestions"
+      },
+      {
+        "question": "Smart UI/UX tools can provide A/B testing and ______ for better design decisions.",
+        "options": [
+          "cloud storage",
+          "predictive analytics",
+          "automatic updates",
+          "file systems"
+        ],
+        "answer": "predictive analytics"
+      },
+      {
+        "question": "Which of the following is listed as an example of a Smart UI/UX Tool?",
+        "options": [
+          "Wix ADI",
+          "Adobe Sensei",
+          "Bookmark AIDA",
+          "Framer AI"
+        ],
+        "answer": "Adobe Sensei"
+      },
+      {
+        "question": "Which of the following is NOT listed as an example of a Smart UI/UX Tool?",
+        "options": [
+          "Uizard",
+          "Figma AI",
+          "Attention Insight",
+          "AWS Glacier"
+        ],
+        "answer": "AWS Glacier"
+      },
+      {
+        "question": "What is 'Uizard' listed as an example of?",
+        "options": [
+          "An AI-Driven Layout tool",
+          "A Smart UI/UX Tool",
+          "A database",
+          "A cloud storage provider"
+        ],
+        "answer": "A Smart UI/UX Tool"
+      },
+      {
+        "question": "What is 'Framer AI' listed as an example of?",
+        "options": [
+          "An AI-Driven Layout tool",
+          "A Smart UI/UX Tool",
+          "A file system",
+          "A storage tier"
+        ],
+        "answer": "An AI-Driven Layout tool"
+      },
+      {
+        "question": "What is the primary advantage of the 'Hot Tier'?",
+        "options": [
+          "The application provider",
+          "The user",
+          "The internet service provider",
+          "No one"
+        ],
+        "answer": "The user"
+      },
+      {
+        "question": "What is the primary advantage of the 'Hot Tier'?",
+        "options": [
+          "Low cost",
+          "High capacity",
+          "Very high speed",
+          "Long-term archival"
+        ],
+        "answer": "Very high speed"
+      },
+      {
+        "question": "Which technology is used for data manipulation in RDBMS?",
+        "options": [
+          "NoSQL",
+          "SQL",
+          "NTFS",
+          "JSON"
+        ],
+        "answer": "SQL"
+      }
+    ]
+  }
