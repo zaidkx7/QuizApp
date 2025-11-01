@@ -310,10 +310,32 @@ def view_scores(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin_login"))
 
-    # Get all results with user info
-    results = db.query(Result).join(User).order_by(Result.submitted_at.desc()).all()
+    # Get all users (excluding admin)
+    users = db.query(User).filter(User.role == "user").order_by(User.user_id).all()
 
-    return render_template("scores.html", results=results)
+    # For each user, group their submissions by quiz
+    for user in users:
+        user_results = db.query(Result).filter(Result.user_id == user.id).order_by(Result.quiz_id, Result.submitted_at).all()
+
+        # Group results by quiz
+        quiz_groups = {}
+        for result in user_results:
+            quiz_id = result.quiz_id
+            if quiz_id not in quiz_groups:
+                quiz_groups[quiz_id] = {
+                    'quiz': result.quiz,
+                    'attempts': []
+                }
+            quiz_groups[quiz_id]['attempts'].append(result)
+
+        # Add attempt numbers to each result
+        for quiz_id, group in quiz_groups.items():
+            for idx, result in enumerate(group['attempts'], start=1):
+                result.attempt_number = idx
+
+        user.quiz_groups = quiz_groups
+
+    return render_template("scores.html", users=users)
 
 
 @app.route("/user/register", methods=["GET", "POST"])
@@ -367,9 +389,15 @@ def user_history(db):
         # Get all quizzes with user's submissions
         quizzes = db.query(Quiz).order_by(Quiz.created_at.desc()).all()
 
-        # For each quiz, attach user's submission if exists
+        # For each quiz, attach user's submissions with attempt numbers
         for quiz in quizzes:
-            quiz.user_submissions = [r for r in quiz.results if r.user_id == user.id]
+            user_submissions = [r for r in quiz.results if r.user_id == user.id]
+            # Sort by submission date
+            user_submissions.sort(key=lambda x: x.submitted_at)
+            # Add attempt numbers
+            for idx, submission in enumerate(user_submissions, start=1):
+                submission.attempt_number = idx
+            quiz.user_submissions = user_submissions
 
         # Get all user's results
         results = db.query(Result).filter(Result.user_id == user.id).order_by(Result.submitted_at.desc()).all()
@@ -397,22 +425,30 @@ def take_quiz(db, quiz_id):
         if not user:
             return redirect(url_for("user_register"))
 
-        # Check if user already submitted this quiz
-        existing_submission = db.query(Result).filter(
+        # Calculate attempt number for this quiz
+        attempt_count = db.query(Result).filter(
             Result.user_id == user.id,
             Result.quiz_id == quiz_id
-        ).first()
+        ).count()
 
-        if existing_submission:
-            session["message"] = "You have already submitted this quiz!"
-            return redirect(url_for("view_result", result_id=existing_submission.id))
+        # Check if user has reached maximum attempts (3)
+        if attempt_count >= 3:
+            session["message"] = "You have reached the maximum number of attempts (3) for this quiz!"
+            # Redirect to their most recent result
+            latest_result = db.query(Result).filter(
+                Result.user_id == user.id,
+                Result.quiz_id == quiz_id
+            ).order_by(Result.submitted_at.desc()).first()
+            return redirect(url_for("view_result", result_id=latest_result.id))
+
+        attempt_number = attempt_count + 1
 
         # Load quiz
         quiz, quiz_data = load_quiz_by_id(quiz_id, db)
         if not quiz or not quiz_data:
             return "<h1>Quiz not found or unavailable.</h1>", 404
 
-        return render_template("quiz.html", exam=quiz_data, quiz_id=quiz_id)
+        return render_template("quiz.html", exam=quiz_data, quiz_id=quiz_id, attempt_number=attempt_number)
     except Exception as e:
         print(f"ERROR in take_quiz: {str(e)}")
         import traceback
@@ -433,14 +469,19 @@ def submit_quiz(db, quiz_id):
     if not user:
         return redirect(url_for("user_register"))
 
-    # Check if user already submitted this quiz
-    existing_submission = db.query(Result).filter(
+    # Check if user has reached maximum attempts (3)
+    attempt_count = db.query(Result).filter(
         Result.user_id == user.id,
         Result.quiz_id == quiz_id
-    ).first()
+    ).count()
 
-    if existing_submission:
-        return redirect(url_for("view_result", result_id=existing_submission.id))
+    if attempt_count >= 3:
+        session["message"] = "You have reached the maximum number of attempts (3) for this quiz!"
+        latest_result = db.query(Result).filter(
+            Result.user_id == user.id,
+            Result.quiz_id == quiz_id
+        ).order_by(Result.submitted_at.desc()).first()
+        return redirect(url_for("view_result", result_id=latest_result.id))
 
     # Load quiz
     quiz, quiz_data = load_quiz_by_id(quiz_id, db)
@@ -486,13 +527,33 @@ def view_result(db, result_id):
     if not result:
         return redirect(url_for("user_history"))
 
+    # Calculate attempt number for this result
+    all_attempts = db.query(Result).filter(
+        Result.user_id == user.id,
+        Result.quiz_id == result.quiz_id
+    ).order_by(Result.submitted_at).all()
+
+    attempt_number = None
+    for idx, attempt in enumerate(all_attempts, start=1):
+        if attempt.id == result.id:
+            attempt_number = idx
+            break
+
+    # Check if user can retake (less than 3 attempts)
+    can_retake = len(all_attempts) < 3
+
     # Parse results from JSON
     results = json.loads(result.answers)
 
-    # Get quiz title from relationship
+    # Get quiz title and ID from relationship
     exam_title = result.quiz.title if result.quiz else "Exam"
+    quiz_id = result.quiz_id
 
-    return render_template("result.html", score=result.score, results=results, exam_title=exam_title)
+    # Get the message from session if any
+    message = session.pop("message", None)
+
+    return render_template("result.html", score=result.score, results=results, exam_title=exam_title,
+                         attempt_number=attempt_number, quiz_id=quiz_id, can_retake=can_retake, message=message)
 
 
 @app.route("/admin/quiz/preview/<int:quiz_id>")

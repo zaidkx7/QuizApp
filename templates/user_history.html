@@ -28,28 +28,61 @@
                     <h3 class="text-xl font-bold text-gray-800">{{ quiz.title }}</h3>
                 </div>
 
-                {% set user_submission = quiz.user_submissions|first if quiz.user_submissions else None %}
-                {% if user_submission %}
+                {% if quiz.user_submissions|length > 0 %}
+                <!-- Attempts Summary -->
                 <div class="mb-4">
-                    <p class="text-sm text-gray-600 mb-2">Your Score:</p>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                        {% if user_submission.score >= 90 %}bg-green-100 text-green-800
-                        {% elif user_submission.score >= 70 %}bg-blue-100 text-blue-800
-                        {% elif user_submission.score >= 50 %}bg-yellow-100 text-yellow-800
-                        {% else %}bg-red-100 text-red-800{% endif %}">
-                        {{ "%.1f"|format(user_submission.score) }}%
-                    </span>
-                    <p class="text-xs text-gray-500 mt-1">Submitted: {{ user_submission.submitted_at.strftime('%b %d, %Y') }}</p>
+                    <p class="text-sm text-gray-600 mb-2">
+                        Attempts: <span class="font-semibold">{{ quiz.user_submissions|length }}/3</span>
+                    </p>
+
+                    <!-- Collapsible Attempts List -->
+                    <details class="mt-3">
+                        <summary class="cursor-pointer text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                            View all {{ quiz.user_submissions|length }} attempt{{ 's' if quiz.user_submissions|length > 1 else '' }} ▼
+                        </summary>
+                        <div class="mt-3 space-y-2">
+                            {% for submission in quiz.user_submissions %}
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold text-gray-700">Attempt #{{ submission.attempt_number }}</p>
+                                    <p class="text-xs text-gray-500">{{ submission.submitted_at.strftime('%b %d, %Y %I:%M %p') }}</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                        {% if submission.score >= 90 %}bg-green-100 text-green-800
+                                        {% elif submission.score >= 70 %}bg-blue-100 text-blue-800
+                                        {% elif submission.score >= 50 %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ "%.1f"|format(submission.score) }}%
+                                    </span>
+                                    <a href="/user/result/{{ submission.id }}"
+                                        class="text-xs text-blue-600 hover:text-blue-800 font-semibold">
+                                        View →
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </details>
                 </div>
-                <a href="/user/result/{{ user_submission.id }}"
-                    class="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
-                    View Results
+
+                <!-- Action Button -->
+                {% if quiz.user_submissions|length < 3 %}
+                <a href="/user/quiz/{{ quiz.id }}"
+                    class="block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
+                    Retake Quiz (Attempt {{ quiz.user_submissions|length + 1 }}/3)
                 </a>
                 {% else %}
+                <div class="bg-red-50 border border-red-500 text-red-800 px-3 py-2 rounded-lg text-center text-sm font-semibold">
+                    Maximum attempts reached (3/3)
+                </div>
+                {% endif %}
+                {% else %}
+                <!-- No attempts yet -->
                 <p class="text-sm text-gray-500 mb-4">Not attempted yet</p>
                 <a href="/user/quiz/{{ quiz.id }}"
                     class="block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
-                    Take Quiz
+                    Take Quiz (Attempt 1/3)
                 </a>
                 {% endif %}
             </div>

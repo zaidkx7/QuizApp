@@ -12,9 +12,29 @@
 
 {% block content %}
 <div class="max-w-8xl mx-auto">
+    {% if attempt_number and attempt_number > 2 %}
+    <!-- Retake Banner -->
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg">
+        <div class="flex items-center">
+            <svg class="w-6 h-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <div>
+                <p class="font-bold text-red-800">This is Last and Final Attempt</p>
+                <p class="text-sm text-red-700">Take your time and answer carefully. Good luck!</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ exam.title }}</h1>
-        <p class="text-gray-600">Answer all questions and submit your answers</p>
+        <p class="text-gray-600">
+            Answer all questions and submit your answers
+            {% if attempt_number %}
+            <span class="ml-2 text-blue-600 font-semibold">(Attempt {{ attempt_number }}/3)</span>
+            {% endif %}
+        </p>
     </div>
 
     <form method="POST" action="/user/submit/{{ quiz_id }}">

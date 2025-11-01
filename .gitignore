@@ -3,3 +3,4 @@ venv/
 *.md
 *.db
 *.zip
+*.json

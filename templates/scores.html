@@ -22,46 +22,101 @@
 <div class="max-w-8xl mx-auto">
     <h1 class="text-4xl font-bold text-gray-800 mb-8">Student Scores</h1>
 
-    {% if results %}
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Student Name
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Score
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Submitted At
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                {% for result in results %}
-                <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location='/admin/submission/{{ result.id }}'">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">{{ result.user.username }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                                {% if result.score >= 90 %}bg-green-100 text-green-800
-                                {% elif result.score >= 70 %}bg-blue-100 text-blue-800
-                                {% elif result.score >= 50 %}bg-yellow-100 text-yellow-800
-                                {% else %}bg-red-100 text-red-800{% endif %}">
-                                {{ "%.2f"|format(result.score) }}%
-                            </span>
+    {% if users %}
+    <div class="space-y-6">
+        {% for user in users %}
+        {% if user.quiz_groups %}
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Student Header -->
+            <div class="bg-blue-50 px-6 py-4 border-b border-blue-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">{{ user.username }}</h3>
+                        <p class="text-sm text-gray-600">Student ID: {{ user.user_id if user.user_id else 'N/A' }}</p>
+                    </div>
+                    <div class="text-right">
+                        {% set total_submissions = namespace(count=0) %}
+                        {% for group in user.quiz_groups.values() %}
+                            {% set total_submissions.count = total_submissions.count + group.attempts|length %}
+                        {% endfor %}
+                        <p class="text-sm text-gray-600">Total Submissions: <span class="font-semibold">{{ total_submissions.count }}</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quizzes for this student -->
+            <div class="divide-y divide-gray-200">
+                {% for quiz_id, group in user.quiz_groups.items() %}
+                <details class="group">
+                    <summary class="cursor-pointer px-6 py-4 hover:bg-gray-50 transition">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">{{ group.quiz.title }}</h4>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    {{ group.attempts|length }} attempt{{ 's' if group.attempts|length > 1 else '' }}
+                                    {% if group.attempts %}
+                                    | Best Score:
+                                    {% set best_score = group.attempts|map(attribute='score')|max %}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                                        {% if best_score >= 90 %}bg-green-100 text-green-800
+                                        {% elif best_score >= 70 %}bg-blue-100 text-blue-800
+                                        {% elif best_score >= 50 %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ "%.1f"|format(best_score) }}%
+                                    </span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <span class="text-blue-600 text-sm font-semibold">View Details ▼</span>
                         </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {{ result.submitted_at.strftime('%Y-%m-%d %H:%M:%S') }}
-                    </td>
-                </tr>
+                    </summary>
+
+                    <!-- Attempts Table -->
+                    <div class="px-6 py-4 bg-gray-50">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Attempt</th>
+                                    <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Score</th>
+                                    <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Submitted At</th>
+                                    <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for attempt in group.attempts %}
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-700 font-medium">
+                                        #{{ attempt.attempt_number }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                            {% if attempt.score >= 90 %}bg-green-100 text-green-800
+                                            {% elif attempt.score >= 70 %}bg-blue-100 text-blue-800
+                                            {% elif attempt.score >= 50 %}bg-yellow-100 text-yellow-800
+                                            {% else %}bg-red-100 text-red-800{% endif %}">
+                                            {{ "%.1f"|format(attempt.score) }}%
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">
+                                        {{ attempt.submitted_at.strftime('%b %d, %Y %I:%M %p') }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <a href="/admin/submission/{{ attempt.id }}"
+                                            class="text-blue-600 hover:text-blue-800 font-semibold">
+                                            View Details →
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
     </div>
     {% else %}
     <div class="bg-white rounded-lg shadow-lg p-12 text-center">
