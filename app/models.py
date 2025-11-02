@@ -36,6 +36,7 @@ class Result(Base):
     score = Column(Float, nullable=False)
     submitted_at = Column(DateTime, default=datetime.utcnow)
     answers = Column(Text, nullable=False)  # Store as JSON string
+    email_sent = Column(Boolean, default=False, nullable=False)  # Track if email was sent
 
     # Relationships
     user = relationship("User", back_populates="results")

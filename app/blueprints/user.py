@@ -183,18 +183,7 @@ def submit_quiz(db, quiz_id):
     # Calculate attempt number
     attempt_number = attempt_count + 1
 
-    # Save result to database
-    result = Result(
-        user_id=user.id,
-        quiz_id=quiz_id,
-        score=score,
-        answers=json.dumps(results)
-    )
-    db.add(result)
-    db.commit()
-    db.refresh(result)
-
-    # Send result email if user has email
+    # Send result email if user has email (before saving to database)
     email_sent = False
     if user.email:
         user_name = user.user_id if user.user_id else user.username
@@ -212,22 +201,25 @@ def submit_quiz(db, quiz_id):
             if item.get('is_correct')
         )
 
-        # Prepare email context
-        email_context = {
-            'user_name': user_name,
-            'quiz_title': quiz.title,
-            'score': score,
-            'attempt_number': attempt_number,
-            'timestamp': datetime.now().strftime('%B %d, %Y at %I:%M %p'),
-            'passed': score >= 70,
-            'results': results,
-            'result_id': result.id,
-            'total_questions': total_questions,
-            'correct_count': correct_count
-        }
-
         # Send email using SMTPMailer with templates (if SMTP is enabled)
         if is_smtp_enabled(db):
+            # Create a temporary result ID (will be set after commit)
+            temp_result_id = 0
+
+            # Prepare email context
+            email_context = {
+                'user_name': user_name,
+                'quiz_title': quiz.title,
+                'score': score,
+                'attempt_number': attempt_number,
+                'timestamp': datetime.now().strftime('%B %d, %Y at %I:%M %p'),
+                'passed': score >= 70,
+                'results': results,
+                'result_id': temp_result_id,
+                'total_questions': total_questions,
+                'correct_count': correct_count
+            }
+
             try:
                 mailer = SMTPMailer()
                 email_sent = mailer.send_template(
@@ -242,9 +234,17 @@ def submit_quiz(db, quiz_id):
         else:
             print(f"SMTP is disabled. Email not sent to {user.email}")
 
-    # Store email status in session for toast notification
-    if email_sent:
-        session["show_email_toast"] = True
+    # Save result to database with email_sent status
+    result = Result(
+        user_id=user.id,
+        quiz_id=quiz_id,
+        score=score,
+        answers=json.dumps(results),
+        email_sent=email_sent
+    )
+    db.add(result)
+    db.commit()
+    db.refresh(result)
 
     return redirect(url_for("user.view_result", result_id=result.id))
 
@@ -293,10 +293,10 @@ def view_result(db, result_id):
     # Get the message from session if any
     message = session.pop("message", None)
 
-    # Check if we should show email toast
-    show_email_toast = session.pop("show_email_toast", False)
+    # Get email_sent status from result
+    email_sent = result.email_sent if hasattr(result, 'email_sent') else False
 
     return render_template("user/result.html", score=result.score, results=results, exam_title=exam_title,
                          attempt_number=attempt_number, quiz_id=quiz_id, can_retake=can_retake, message=message,
-                         show_email_toast=show_email_toast)
+                         email_sent=email_sent)
 
