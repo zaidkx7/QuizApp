@@ -111,9 +111,12 @@ def upload_quiz(db):
         import time
         filename = f"quiz_{int(time.time())}_{file.filename}"
 
-        # Save to questions folder
-        os.makedirs("questions", exist_ok=True)
-        quiz_path = f"questions/{filename}"
+        # Save to questions folder (app/data/questions)
+        # Get app directory (parent of blueprints directory)
+        app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        questions_dir = os.path.join(app_dir, "data", "questions")
+        os.makedirs(questions_dir, exist_ok=True)
+        quiz_path = os.path.join(questions_dir, filename)
         with open(quiz_path, "w", encoding="utf-8") as f:
             json.dump(quiz_data, f, indent=2)
 
@@ -146,8 +149,9 @@ def delete_quiz(db, quiz_id):
 
     quiz = db.query(Quiz).filter(Quiz.id == quiz_id).first()
     if quiz:
-        # Delete quiz file
-        quiz_path = f"questions/{quiz.filename}"
+        # Delete quiz file from app/data/questions
+        app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        quiz_path = os.path.join(app_dir, "data", "questions", quiz.filename)
         if os.path.exists(quiz_path):
             os.remove(quiz_path)
 
