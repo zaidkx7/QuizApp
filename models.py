@@ -10,6 +10,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     user_id = Column(String, index=True, nullable=True)  # Student ID for students
     password = Column(String, nullable=True)  # Password for students
+    email = Column(String, nullable=True)  # Email for sending results
     role = Column(String, nullable=False)  # "admin" or "user"
 
     # Relationship to results
@@ -39,3 +40,10 @@ class Result(Base):
     # Relationships
     user = relationship("User", back_populates="results")
     quiz = relationship("Quiz", back_populates="results")
+
+class Settings(Base):
+    __tablename__ = "settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    max_attempts = Column(Integer, default=3, nullable=False)  # Maximum quiz attempts per user
+    smtp_enabled = Column(Boolean, default=True, nullable=False)  # Enable/disable email sending

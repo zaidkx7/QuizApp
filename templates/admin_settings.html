@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Quiz App{% endblock %}
+
+{% block nav_links %}
+<a href="/admin/dashboard" class="hover:text-blue-200 transition mr-4">Dashboard</a>
+<a href="/admin/quizzes" class="hover:text-blue-200 transition mr-4">Manage Quizzes</a>
+<a href="/admin/scores" class="hover:text-blue-200 transition mr-4">View Scores</a>
+<a href="/admin/users" class="hover:text-blue-200 transition mr-4">Manage Users</a>
+<a href="/admin/settings" class="hover:text-blue-200 transition mr-4">Settings</a>
+<a href="/logout" class="hover:text-blue-200 transition">Logout</a>
+{% endblock %}
+
+{% block nav_links_mobile %}
+<a href="/admin/dashboard" class="hover:text-blue-200 transition py-2">Dashboard</a>
+<a href="/admin/quizzes" class="hover:text-blue-200 transition py-2">Manage Quizzes</a>
+<a href="/admin/scores" class="hover:text-blue-200 transition py-2">View Scores</a>
+<a href="/admin/users" class="hover:text-blue-200 transition py-2">Manage Users</a>
+<a href="/admin/settings" class="hover:text-blue-200 transition py-2">Settings</a>
+<a href="/logout" class="hover:text-blue-200 transition py-2">Logout</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-8xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Application Settings</h1>
+
+    {% if message %}
+    <div class="{% if 'Error' in message or 'Warning' in message %}bg-yellow-100 border-yellow-400 text-yellow-700{% else %}bg-green-100 border-green-400 text-green-700{% endif %} border px-4 py-3 rounded mb-6">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <!-- Settings Form -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <form method="POST" action="/admin/settings/update">
+
+            <!-- Maximum Attempts Setting -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Quiz Attempt Limits</h2>
+                <div class="mb-4">
+                    <label for="max_attempts" class="block text-gray-700 font-semibold mb-2">
+                        Maximum Attempts Per Quiz
+                    </label>
+                    <input
+                        type="number"
+                        id="max_attempts"
+                        name="max_attempts"
+                        min="1"
+                        max="999"
+                        value="{{ settings.max_attempts }}"
+                        required
+                        class="w-full md:w-1/3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                    >
+                    <p class="text-sm text-gray-600 mt-2">
+                        Set how many times a student can attempt each quiz (1-999). Currently set to <strong>{{ settings.max_attempts }}</strong> attempts.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SMTP Email Settings -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Email Notifications</h2>
+
+                <!-- SMTP Enable/Disable Toggle -->
+                <div class="mb-4">
+                    <label class="flex items-center cursor-pointer">
+                        <div class="relative">
+                            <input
+                                type="checkbox"
+                                id="smtp_enabled"
+                                name="smtp_enabled"
+                                class="sr-only"
+                                {% if settings.smtp_enabled %}checked{% endif %}
+                            >
+                            <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
+                            <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                        </div>
+                        <div class="ml-3 text-gray-700 font-semibold">
+                            Enable Email Notifications
+                        </div>
+                    </label>
+                    <p class="text-sm text-gray-600 mt-2 ml-0">
+                        When enabled, students will receive quiz results via email after submission.
+                    </p>
+                </div>
+
+                <!-- SMTP Configuration Status -->
+                <div class="mt-4 p-4 {% if smtp_configured %}bg-green-50 border-green-200{% else %}bg-red-50 border-red-200{% endif %} border rounded-lg">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            {% if smtp_configured %}
+                            <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            {% else %}
+                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium {% if smtp_configured %}text-green-800{% else %}text-red-800{% endif %}">
+                                SMTP Configuration Status
+                            </h3>
+                            <div class="mt-2 text-sm {% if smtp_configured %}text-green-700{% else %}text-red-700{% endif %}">
+                                {% if smtp_configured %}
+                                <p>SMTP credentials are properly configured in your .env file.</p>
+                                {% else %}
+                                <p class="font-semibold mb-2">Missing SMTP configuration!</p>
+                                <p class="mb-2">Email notifications cannot be sent because the following environment variables are not configured:</p>
+                                <ul class="list-disc list-inside space-y-1">
+                                    {% if not smtp_configured %}
+                                    <li>Check EMAIL_USERNAME in .env</li>
+                                    <li>Check EMAIL_PASSWORD in .env</li>
+                                    <li>Check EMAIL_HOST in .env</li>
+                                    <li>Check EMAIL_FROM in .env</li>
+                                    {% endif %}
+                                </ul>
+                                <p class="mt-2">Please configure these values in your <code class="bg-red-100 px-1 rounded">.env</code> file before enabling email notifications.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="flex justify-end">
+                <button
+                    type="submit"
+                    class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-lg shadow-lg"
+                >
+                    Save Settings
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Additional Information Card -->
+    <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-blue-900 mb-2">About Settings</h3>
+        <ul class="text-sm text-blue-800 space-y-2">
+            <li><strong>Maximum Attempts:</strong> Controls how many times a student can retake each quiz. Changes apply immediately to all quizzes.</li>
+            <li><strong>Email Notifications:</strong> When enabled and properly configured, students receive detailed quiz results via email after each submission.</li>
+            <li><strong>Settings Persistence:</strong> All settings are stored in the database and persist across server restarts.</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    /* Custom toggle switch styling */
+    input:checked ~ .block {
+        background-color: #3b82f6;
+    }
+    input:checked ~ .dot {
+        transform: translateX(100%);
+        background-color: #ffffff;
+    }
+</style>
+{% endblock %}

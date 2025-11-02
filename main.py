@@ -1,15 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-from sqlalchemy.orm import Session
-from functools import wraps
 import json
 import os
 import re
+
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from sqlalchemy.orm import Session
+from functools import wraps
 from datetime import datetime
-from typing import Optional
 from rapidfuzz import fuzz
 
 from database import engine, SessionLocal, Base
-from models import User, Result, Quiz
+from models import User, Result, Quiz, Settings
+from mail import SMTPMailer
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -20,14 +21,13 @@ app = Flask(__name__)
 # Configure session
 # IMPORTANT: Change this secret key before deploying to production!
 # Generate with: python3 -c "import secrets; print(secrets.token_hex(32))"
-SECRET_KEY = "689eaa035980f7a2f09caaef195600c3b8f589a1a36cc696dae3425fefe587d5"
-app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Admin credentials
-ADMIN_USERNAME = "zaid.sh"
-ADMIN_PASSWORD = "admin@zaid.sh"
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 
 # Database session decorator
@@ -50,6 +50,29 @@ def get_current_user(db: Session):
     if user_id:
         return db.query(User).filter(User.id == user_id).first()
     return None
+
+
+def get_or_create_settings(db: Session):
+    """Get settings from database or create default if not exists"""
+    settings = db.query(Settings).first()
+    if not settings:
+        settings = Settings(max_attempts=3, smtp_enabled=True)
+        db.add(settings)
+        db.commit()
+        db.refresh(settings)
+    return settings
+
+
+def get_max_attempts(db: Session):
+    """Get the maximum number of quiz attempts from settings"""
+    settings = get_or_create_settings(db)
+    return settings.max_attempts
+
+
+def is_smtp_enabled(db: Session):
+    """Check if SMTP email sending is enabled"""
+    settings = get_or_create_settings(db)
+    return settings.smtp_enabled
 
 
 def normalize(text: str) -> str:
@@ -431,9 +454,10 @@ def take_quiz(db, quiz_id):
             Result.quiz_id == quiz_id
         ).count()
 
-        # Check if user has reached maximum attempts (3)
-        if attempt_count >= 3:
-            session["message"] = "You have reached the maximum number of attempts (3) for this quiz!"
+        # Check if user has reached maximum attempts
+        max_attempts = get_max_attempts(db)
+        if attempt_count >= max_attempts:
+            session["message"] = f"You have reached the maximum number of attempts ({max_attempts}) for this quiz!"
             # Redirect to their most recent result
             latest_result = db.query(Result).filter(
                 Result.user_id == user.id,
@@ -469,14 +493,15 @@ def submit_quiz(db, quiz_id):
     if not user:
         return redirect(url_for("user_register"))
 
-    # Check if user has reached maximum attempts (3)
+    # Check if user has reached maximum attempts
     attempt_count = db.query(Result).filter(
         Result.user_id == user.id,
         Result.quiz_id == quiz_id
     ).count()
 
-    if attempt_count >= 3:
-        session["message"] = "You have reached the maximum number of attempts (3) for this quiz!"
+    max_attempts = get_max_attempts(db)
+    if attempt_count >= max_attempts:
+        session["message"] = f"You have reached the maximum number of attempts ({max_attempts}) for this quiz!"
         latest_result = db.query(Result).filter(
             Result.user_id == user.id,
             Result.quiz_id == quiz_id
@@ -495,6 +520,9 @@ def submit_quiz(db, quiz_id):
     # Calculate score
     score, results = calculate_score(quiz_data, user_answers)
 
+    # Calculate attempt number
+    attempt_number = attempt_count + 1
+
     # Save result to database
     result = Result(
         user_id=user.id,
@@ -505,6 +533,52 @@ def submit_quiz(db, quiz_id):
     db.add(result)
     db.commit()
     db.refresh(result)
+
+    # Send result email if user has email
+    if user.email:
+        user_name = user.user_id if user.user_id else user.username
+
+        # Calculate total questions and correct count
+        total_questions = (
+            len(results.get('fill_in_the_blanks', [])) +
+            len(results.get('true_false', [])) +
+            len(results.get('mcqs', []))
+        )
+
+        correct_count = sum(
+            1 for section in results.values()
+            for item in section
+            if item.get('is_correct')
+        )
+
+        # Prepare email context
+        email_context = {
+            'user_name': user_name,
+            'quiz_title': quiz.title,
+            'score': score,
+            'attempt_number': attempt_number,
+            'timestamp': datetime.now().strftime('%B %d, %Y at %I:%M %p'),
+            'passed': score >= 70,
+            'results': results,
+            'result_id': result.id,
+            'total_questions': total_questions,
+            'correct_count': correct_count
+        }
+
+        # Send email using SMTPMailer with templates (if SMTP is enabled)
+        if is_smtp_enabled(db):
+            try:
+                mailer = SMTPMailer()
+                mailer.send_template(
+                    to_email=user.email,
+                    subject=f"Quiz Result: {quiz.title}",
+                    template_name='quiz_result',
+                    context=email_context
+                )
+            except Exception as e:
+                print(f"Failed to send email: {str(e)}")
+        else:
+            print(f"SMTP is disabled. Email not sent to {user.email}")
 
     return redirect(url_for("view_result", result_id=result.id))
 
@@ -539,8 +613,9 @@ def view_result(db, result_id):
             attempt_number = idx
             break
 
-    # Check if user can retake (less than 3 attempts)
-    can_retake = len(all_attempts) < 3
+    # Check if user can retake (less than max attempts)
+    max_attempts = get_max_attempts(db)
+    can_retake = len(all_attempts) < max_attempts
 
     # Parse results from JSON
     results = json.loads(result.answers)
@@ -656,6 +731,7 @@ def admin_add_user(db):
 
     user_id = request.form.get("user_id")
     password = request.form.get("password")
+    email = request.form.get("email")
 
     # Check if user already exists
     existing_user = db.query(User).filter(User.user_id == user_id).first()
@@ -668,6 +744,7 @@ def admin_add_user(db):
         username=f"Student_{user_id}",
         user_id=user_id,
         password=password,
+        email=email,
         role="user"
     )
     db.add(new_user)
@@ -688,6 +765,7 @@ def admin_edit_user(db):
     user_db_id = request.form.get("user_db_id", type=int)
     user_id = request.form.get("user_id")
     password = request.form.get("password")
+    email = request.form.get("email")
 
     # Get user
     user = db.query(User).filter(User.id == user_db_id).first()
@@ -704,6 +782,7 @@ def admin_edit_user(db):
     # Update user
     user.user_id = user_id
     user.password = password
+    user.email = email
     user.username = f"Student_{user_id}"
     db.commit()
 
@@ -734,6 +813,74 @@ def admin_delete_user(db, user_db_id):
 
     session["message"] = "User deleted successfully!"
     return redirect(url_for("admin_users"))
+
+
+@app.route("/admin/settings", methods=["GET"])
+@with_db
+def admin_settings(db):
+    """Admin settings page"""
+    # Check if user is admin
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    # Get current settings
+    settings = get_or_create_settings(db)
+
+    # Check SMTP configuration
+    smtp_configured = all([
+        os.getenv("EMAIL_USERNAME"),
+        os.getenv("EMAIL_PASSWORD"),
+        os.getenv("EMAIL_HOST"),
+        os.getenv("EMAIL_FROM")
+    ])
+
+    # Get message from session if available
+    message = session.pop("message", None)
+
+    return render_template(
+        "admin_settings.html",
+        settings=settings,
+        smtp_configured=smtp_configured,
+        message=message
+    )
+
+
+@app.route("/admin/settings/update", methods=["POST"])
+@with_db
+def admin_settings_update(db):
+    """Update admin settings"""
+    # Check if user is admin
+    if session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    # Get form data
+    max_attempts = request.form.get("max_attempts", type=int)
+    smtp_enabled = request.form.get("smtp_enabled") == "on"
+
+    # Validate max_attempts
+    if not max_attempts or max_attempts < 1 or max_attempts > 999:
+        session["message"] = "Error: Maximum attempts must be between 1 and 999!"
+        return redirect(url_for("admin_settings"))
+
+    # Check SMTP configuration if enabling SMTP
+    if smtp_enabled:
+        smtp_configured = all([
+            os.getenv("EMAIL_USERNAME"),
+            os.getenv("EMAIL_PASSWORD"),
+            os.getenv("EMAIL_HOST"),
+            os.getenv("EMAIL_FROM")
+        ])
+        if not smtp_configured:
+            session["message"] = "Warning: SMTP enabled but credentials are not fully configured in .env file!"
+
+    # Update settings
+    settings = get_or_create_settings(db)
+    settings.max_attempts = max_attempts
+    settings.smtp_enabled = smtp_enabled
+    db.commit()
+
+    session["message"] = "Settings updated successfully!"
+    return redirect(url_for("admin_settings"))
 
 
 @app.route("/logout")

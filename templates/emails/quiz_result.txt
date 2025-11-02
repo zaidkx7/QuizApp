@@ -1,0 +1,94 @@
+================================================================================
+QUIZ RESULT NOTIFICATION
+Quiz App - Educational Platform
+================================================================================
+
+Dear {{ user_name }},
+
+Congratulations on completing your quiz! Here are your results:
+
+--------------------------------------------------------------------------------
+{{ quiz_title }}
+--------------------------------------------------------------------------------
+
+YOUR SCORE: {{ "%.1f"|format(score) }}%
+Attempt #{{ attempt_number }} of 3
+
+{% if passed %}
+✅ Great job! You passed this quiz!
+{% else %}
+Keep practicing! {% if attempt_number < 3 %}You have {{ 3 - attempt_number }} more attempt(s) remaining.{% else %}You've used all 3 attempts.{% endif %}
+{% endif %}
+
+================================================================================
+QUIZ SUMMARY
+================================================================================
+
+Total Questions: {{ total_questions }}
+Correct Answers: {{ correct_count }}
+
+{% if results.fill_in_the_blanks %}
+• Fill in the Blanks: {% set fib_correct = results.fill_in_the_blanks|selectattr('is_correct')|list|length %}{{ fib_correct }}/{{ results.fill_in_the_blanks|length }}
+{% endif %}
+{% if results.true_false %}
+• True/False: {% set tf_correct = results.true_false|selectattr('is_correct')|list|length %}{{ tf_correct }}/{{ results.true_false|length }}
+{% endif %}
+{% if results.mcqs %}
+• Multiple Choice: {% set mcq_correct = results.mcqs|selectattr('is_correct')|list|length %}{{ mcq_correct }}/{{ results.mcqs|length }}
+{% endif %}
+
+================================================================================
+YOUR ANSWERS
+================================================================================
+
+{% if results.fill_in_the_blanks %}
+--- Fill in the Blanks ---
+{% for item in results.fill_in_the_blanks %}
+
+Q{{ loop.index }}: {{ item.question }}
+Your Answer: {{ item.user_answer if item.user_answer else "(Not answered)" }} {% if item.is_correct %}✅{% else %}❌{% endif %}
+{% if not item.is_correct %}Correct Answer: {{ item.correct_answer }} ✓{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if results.true_false %}
+--- True/False ---
+{% for item in results.true_false %}
+
+Q{{ loop.index }}: {{ item.question }}
+{% if item.is_correct %}
+Answer: {{ "True" if item.correct_answer else "False" }} ✅ Correct
+{% else %}
+Your Answer: {{ "True" if item.user_answer else "False" }} ❌
+Correct Answer: {{ "True" if item.correct_answer else "False" }} ✓
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if results.mcqs %}
+--- Multiple Choice ---
+{% for item in results.mcqs %}
+
+Q{{ loop.index }}: {{ item.question }}
+{% if item.is_correct %}
+✅ {{ item.correct_answer }}
+{% else %}
+Options:
+{% for option in item.options %}
+  {{ option }}{% if option == item.correct_answer %} ✓ Correct{% endif %}{% if option == item.user_answer and not item.is_correct %} ❌ Your Answer{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+================================================================================
+
+🔗 VIEW FULL RESULTS ONLINE
+Visit: {{ base_url }}/user/result/{{ result_id }}
+
+--------------------------------------------------------------------------------
+Submitted: {{ timestamp }}
+--------------------------------------------------------------------------------
+
+This is an automated email notification. Please do not reply to this message.
+© 2025 Quiz App - Educational Project
