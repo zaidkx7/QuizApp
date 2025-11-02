@@ -70,8 +70,13 @@ def admin_quizzes(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
-    # Get all quizzes
-    quizzes = db.query(Quiz).order_by(Quiz.created_at.desc()).all()
+    try:
+        # Get all quizzes
+        quizzes = db.query(Quiz).order_by(Quiz.created_at.desc()).all()
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        quizzes = []
+        session["message"] = "Database error. Please ensure the database is initialized."
 
     message = session.pop("message", None)
     return render_template("admin/quizzes.html", quizzes=quizzes, message=message)
@@ -168,30 +173,35 @@ def view_scores(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
-    # Get all users (excluding admin)
-    users = db.query(User).filter(User.role == "user").order_by(User.user_id).all()
+    try:
+        # Get all users (excluding admin)
+        users = db.query(User).filter(User.role == "user").order_by(User.user_id).all()
 
-    # For each user, group their submissions by quiz
-    for user in users:
-        user_results = db.query(Result).filter(Result.user_id == user.id).order_by(Result.quiz_id, Result.submitted_at).all()
+        # For each user, group their submissions by quiz
+        for user in users:
+            user_results = db.query(Result).filter(Result.user_id == user.id).order_by(Result.quiz_id, Result.submitted_at).all()
 
-        # Group results by quiz
-        quiz_groups = {}
-        for result in user_results:
-            quiz_id = result.quiz_id
-            if quiz_id not in quiz_groups:
-                quiz_groups[quiz_id] = {
-                    'quiz': result.quiz,
-                    'attempts': []
-                }
-            quiz_groups[quiz_id]['attempts'].append(result)
+            # Group results by quiz
+            quiz_groups = {}
+            for result in user_results:
+                quiz_id = result.quiz_id
+                if quiz_id not in quiz_groups:
+                    quiz_groups[quiz_id] = {
+                        'quiz': result.quiz,
+                        'attempts': []
+                    }
+                quiz_groups[quiz_id]['attempts'].append(result)
 
-        # Add attempt numbers to each result
-        for quiz_id, group in quiz_groups.items():
-            for idx, result in enumerate(group['attempts'], start=1):
-                result.attempt_number = idx
+            # Add attempt numbers to each result
+            for quiz_id, group in quiz_groups.items():
+                for idx, result in enumerate(group['attempts'], start=1):
+                    result.attempt_number = idx
 
-        user.quiz_groups = quiz_groups
+            user.quiz_groups = quiz_groups
+
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        users = []
 
     return render_template("admin/scores.html", users=users)
 
@@ -278,8 +288,13 @@ def admin_users(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
-    # Get all users (excluding admin)
-    users = db.query(User).filter(User.role == "user").order_by(User.user_id).all()
+    try:
+        # Get all users (excluding admin)
+        users = db.query(User).filter(User.role == "user").order_by(User.user_id).all()
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        users = []
+        session["message"] = "Database error. Please ensure the database is initialized."
 
     message = session.pop("message", None)
     return render_template("admin/users.html", users=users, message=message)
