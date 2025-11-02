@@ -1,9 +1,11 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from app.config import Config
 
-# SQLite database URL
-SQLALCHEMY_DATABASE_URL = "sqlite:///./quiz_app.db"
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
+# SQLite database URL from config
+SQLALCHEMY_DATABASE_URL = Config.SQLALCHEMY_DATABASE_URI
 
 # Create engine
 engine = create_engine(

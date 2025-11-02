@@ -1,8 +1,41 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
 venv/
-*.md
-*.db
-*.zip
+env/
+ENV/
+
+# json files
 *.json
+
+# Flask
+instance/
+flask_session/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
 .env
-.env.example
+
+# Database
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Don't ignore these important files
+!.env.example

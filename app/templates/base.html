@@ -43,6 +43,14 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0 flex items-center space-x-3 z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+        <span id="toast-message">Result sent to email, check your inbox!</span>
+    </div>
+
     <footer class="bg-gray-800 text-white py-4 mt-auto">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 Quiz App - Educational Project by Muhammad Zaid ❤️</p>
@@ -61,6 +69,31 @@
             menuIcon.classList.toggle('hidden');
             closeIcon.classList.toggle('hidden');
         });
+
+        // Toast notification function
+        function showToast(message, duration = 4000) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+
+            toastMessage.textContent = message;
+
+            // Show toast
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            toast.classList.add('translate-x-0', 'opacity-100');
+
+            // Hide toast after duration
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, duration);
+        }
+
+        // Check for toast message in URL params or session
+        {% if show_email_toast %}
+        window.addEventListener('DOMContentLoaded', function() {
+            showToast('Result sent to email, check your inbox!');
+        });
+        {% endif %}
     </script>
 </body>
 </html>

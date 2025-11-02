@@ -1,26 +1,23 @@
-import os
 import smtplib
 
-from dotenv import load_dotenv
+from app.config import Config
 from flask import render_template
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
-
 class SMTPMailer:
     """Reusable SMTP client for sending HTML + text emails."""
 
     def __init__(self):
-        load_dotenv()
-        # Use EMAIL_* prefix for consistency with existing configuration
-        self.username = os.getenv("EMAIL_USERNAME")
-        self.password = os.getenv("EMAIL_PASSWORD")
-        self.host = os.getenv("EMAIL_HOST")
-        self.port = int(os.getenv("EMAIL_PORT"))
-        self.sender = os.getenv("EMAIL_FROM")
-        self.base_url = os.getenv("BASE_URL")
+        # Use configuration from Config class
+        self.username = Config.EMAIL_USERNAME
+        self.password = Config.EMAIL_PASSWORD
+        self.host = Config.EMAIL_HOST
+        self.port = Config.EMAIL_PORT
+        self.sender = Config.EMAIL_FROM
+        self.base_url = Config.BASE_URL
 
     def create_message(self, to_email: str, subject: str, text: str, html: str) -> MIMEMultipart:
         """Create a multipart email message."""
