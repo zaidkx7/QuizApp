@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Quiz App{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS for beautiful math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
     <nav class="bg-blue-600 text-white shadow-lg">
@@ -50,6 +53,10 @@
         </div>
     </footer>
 
+    <!-- KaTeX JavaScript for math rendering - Load synchronously for production reliability -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
     <script>
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -62,6 +69,39 @@
             menuIcon.classList.toggle('hidden');
             closeIcon.classList.toggle('hidden');
         });
+
+        // KaTeX auto-render - Convert LaTeX to beautiful math equations
+        // Multiple loading strategies for maximum production compatibility
+        function renderMathEquations() {
+            if (typeof renderMathInElement === 'undefined') {
+                console.log('KaTeX auto-render not loaded yet, retrying...');
+                return;
+            }
+
+            try {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},   // Block math
+                        {left: "$", right: "$", display: false}      // Inline math
+                    ],
+                    throwOnError: false,  // Don't break page if LaTeX has errors
+                    strict: false
+                });
+                console.log('KaTeX rendering completed successfully');
+            } catch (error) {
+                console.error('KaTeX rendering error:', error);
+            }
+        }
+
+        // Strategy 1: Try immediately (works if scripts loaded synchronously)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderMathEquations);
+        } else {
+            renderMathEquations();
+        }
+
+        // Strategy 2: Fallback after a short delay (for production caching issues)
+        setTimeout(renderMathEquations, 100);
     </script>
 </body>
 </html>
