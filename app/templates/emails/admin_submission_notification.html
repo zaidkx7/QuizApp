@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2563eb;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .content {
+            background-color: #f9fafb;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+        }
+        .info-box {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #2563eb;
+        }
+        .info-row {
+            margin: 12px 0;
+        }
+        .label {
+            font-weight: bold;
+            color: #4b5563;
+        }
+        .value {
+            color: #1f2937;
+        }
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .passed {
+            color: #10b981;
+        }
+        .failed {
+            color: #ef4444;
+        }
+        .button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0;">Student Quiz Submission</h1>
+    </div>
+
+    <div class="content">
+        <p>Hello Admin,</p>
+
+        <p>A student has submitted a quiz. Here are the details:</p>
+
+        <div class="info-box">
+            <div class="info-row">
+                <span class="label">Student Name:</span>
+                <span class="value">{{ student_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Student ID:</span>
+                <span class="value">{{ student_id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Quiz Title:</span>
+                <span class="value">{{ quiz_title }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Attempt Number:</span>
+                <span class="value">{{ attempt_number }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Submitted At:</span>
+                <span class="value">{{ timestamp }}</span>
+            </div>
+        </div>
+
+        <div class="score {% if passed %}passed{% else %}failed{% endif %}">
+            {{ "%.2f"|format(score) }}%
+        </div>
+
+        <div style="text-align: center;">
+            <strong>Status:</strong>
+            {% if passed %}
+                <span style="color: #10b981;">✓ PASSED</span>
+            {% else %}
+                <span style="color: #ef4444;">✗ FAILED</span>
+            {% endif %}
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <p><strong>Quiz Performance:</strong></p>
+            <p>{{ correct_count }} out of {{ total_questions }} questions correct</p>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{{ base_url }}/admin/scores" class="button">View All Submissions</a>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated notification from Quiz App</p>
+            <p>&copy; 2025 Quiz App - Educational Project</p>
+        </div>
+    </div>
+</body>
+</html>

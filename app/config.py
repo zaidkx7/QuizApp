@@ -12,6 +12,7 @@ class Config:
     # Admin credentials
     ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+    ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
     
     # Database
     basedir = os.path.abspath(os.path.dirname(__file__))

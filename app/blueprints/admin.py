@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.config import Config
 from app.database import SessionLocal
 from app.models import User, Quiz, Result
-from app.utils import get_or_create_settings, load_quiz_by_id
+from app.utils import get_or_create_settings, load_quiz_by_id, is_smtp_enabled, get_max_attempts
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -127,8 +127,55 @@ def upload_quiz(db):
         )
         db.add(new_quiz)
         db.commit()
+        db.refresh(new_quiz)  # Refresh to get the new quiz ID
 
-        session["message"] = f"Quiz '{quiz_data['title']}' uploaded successfully!"
+        # Send email notification to all students about new quiz
+        email_count = 0
+        if is_smtp_enabled(db):
+            from app.mail import SMTPMailer
+            from app.config import Config
+
+            # Get all students with email addresses
+            students = db.query(User).filter(
+                User.role == "user",
+                User.email.isnot(None),
+                User.email != ""
+            ).all()
+
+            if students:
+                mailer = SMTPMailer()
+
+                # Get max attempts setting
+                max_attempts = get_max_attempts(db)
+
+                # Prepare email context
+                email_context = {
+                    'quiz_title': quiz_data['title'],
+                    'quiz_id': new_quiz.id,
+                    'max_attempts': max_attempts,
+                    'base_url': Config.BASE_URL
+                }
+
+                # Send email to each student
+                for student in students:
+                    try:
+                        success = mailer.send_template(
+                            to_email=student.email,
+                            subject=f"New Quiz Available: {quiz_data['title']}",
+                            template_name='student_quiz_reminder',
+                            context=email_context
+                        )
+                        if success:
+                            email_count += 1
+                    except Exception as e:
+                        print(f"Failed to send email to {student.email}: {str(e)}")
+
+                session["message"] = f"Quiz '{quiz_data['title']}' uploaded successfully! Email notifications sent to {email_count} student(s)."
+            else:
+                session["message"] = f"Quiz '{quiz_data['title']}' uploaded successfully! (No students with email addresses)"
+        else:
+            session["message"] = f"Quiz '{quiz_data['title']}' uploaded successfully!"
+
         return redirect(url_for("admin.admin_quizzes"))
 
     except json.JSONDecodeError:

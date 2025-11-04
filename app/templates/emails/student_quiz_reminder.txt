@@ -1,0 +1,26 @@
+NEW QUIZ AVAILABLE!
+==================
+
+Hello Student,
+
+Great news! A new quiz has been uploaded and is now available for you to take.
+
+QUIZ DETAILS
+------------
+Quiz Title: {{ quiz_title }}
+
+TAKE THE QUIZ NOW
+-----------------
+Click here to start: {{ base_url }}/user/quiz/{{ quiz_id }}
+
+QUICK INFO
+----------
+You can attempt this quiz and see your results immediately after submission.
+
+REMINDER: Don't forget to complete the quiz!
+
+---
+This is an automated notification from Quiz App
+© 2025 Quiz App - Educational Project
+
+View your quiz history: {{ base_url }}/user/history

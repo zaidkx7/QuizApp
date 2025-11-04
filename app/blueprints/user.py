@@ -183,56 +183,59 @@ def submit_quiz(db, quiz_id):
     # Calculate attempt number
     attempt_number = attempt_count + 1
 
-    # Send result email if user has email (before saving to database)
+    # Send notification email to ADMIN when student submits quiz
     email_sent = False
-    if user.email:
-        user_name = user.user_id if user.user_id else user.username
+    user_name = user.user_id if user.user_id else user.username
 
-        # Calculate total questions and correct count
-        total_questions = (
-            len(results.get('fill_in_the_blanks', [])) +
-            len(results.get('true_false', [])) +
-            len(results.get('mcqs', []))
-        )
+    # Calculate total questions and correct count
+    total_questions = (
+        len(results.get('fill_in_the_blanks', [])) +
+        len(results.get('true_false', [])) +
+        len(results.get('mcqs', []))
+    )
 
-        correct_count = sum(
-            1 for section in results.values()
-            for item in section
-            if item.get('is_correct')
-        )
+    correct_count = sum(
+        1 for section in results.values()
+        for item in section
+        if item.get('is_correct')
+    )
 
-        # Send email using SMTPMailer with templates (if SMTP is enabled)
-        if is_smtp_enabled(db):
-            # Create a temporary result ID (will be set after commit)
-            temp_result_id = 0
+    # Send email to admin if SMTP is enabled and admin email is configured
+    if is_smtp_enabled(db):
+        from app.config import Config
 
-            # Prepare email context
-            email_context = {
-                'user_name': user_name,
+        if Config.ADMIN_EMAIL:
+            # Prepare email context for admin notification
+            admin_email_context = {
+                'student_name': user_name,
+                'student_id': user.user_id if user.user_id else user.username,
                 'quiz_title': quiz.title,
                 'score': score,
                 'attempt_number': attempt_number,
                 'timestamp': datetime.now().strftime('%B %d, %Y at %I:%M %p'),
                 'passed': score >= 70,
-                'results': results,
-                'result_id': temp_result_id,
                 'total_questions': total_questions,
-                'correct_count': correct_count
+                'correct_count': correct_count,
+                'base_url': Config.BASE_URL
             }
 
             try:
                 mailer = SMTPMailer()
                 email_sent = mailer.send_template(
-                    to_email=user.email,
-                    subject=f"Quiz Result: {quiz.title}",
-                    template_name='quiz_result',
-                    context=email_context
+                    to_email=Config.ADMIN_EMAIL,
+                    subject=f"Student Submission: {user_name} - {quiz.title}",
+                    template_name='admin_submission_notification',
+                    context=admin_email_context
                 )
+                if email_sent:
+                    print(f"Admin notification sent for {user_name}'s submission of {quiz.title}")
             except Exception as e:
-                print(f"Failed to send email: {str(e)}")
+                print(f"Failed to send admin notification: {str(e)}")
                 email_sent = False
         else:
-            print(f"SMTP is disabled. Email not sent to {user.email}")
+            print(f"ADMIN_EMAIL not configured. No notification sent.")
+    else:
+        print(f"SMTP is disabled. No notification sent.")
 
     # Save result to database with email_sent status
     result = Result(
@@ -293,10 +296,6 @@ def view_result(db, result_id):
     # Get the message from session if any
     message = session.pop("message", None)
 
-    # Get email_sent status from result
-    email_sent = result.email_sent if hasattr(result, 'email_sent') else False
-
     return render_template("user/result.html", score=result.score, results=results, exam_title=exam_title,
-                         attempt_number=attempt_number, quiz_id=quiz_id, can_retake=can_retake, message=message,
-                         email_sent=email_sent)
+                         attempt_number=attempt_number, quiz_id=quiz_id, can_retake=can_retake, message=message)
 

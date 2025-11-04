@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 30px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .content {
+            background-color: #f9fafb;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+        }
+        .quiz-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .quiz-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 15px 0;
+        }
+        .button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .info-badge {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 10px 5px;
+            font-size: 14px;
+        }
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .icon {
+            font-size: 48px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="icon">📝</div>
+        <h1 style="margin: 0;">New Quiz Available!</h1>
+    </div>
+
+    <div class="content">
+        <p>Hello Student,</p>
+
+        <p>Great news! A new quiz has been uploaded and is now available for you to take.</p>
+
+        <div class="quiz-box">
+            <div style="color: #6b7280; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Quiz Title</div>
+            <div class="quiz-title">{{ quiz_title }}</div>
+
+            <div style="margin: 20px 0;">
+                <a href="{{ base_url }}/user/quiz/{{ quiz_id }}" class="button" style="color: white;">Take Quiz Now</a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <p style="color: #4b5563; margin: 10px 0;">
+                <strong>📌 Quick Info:</strong>
+            </p>
+            <p style="color: #6b7280; font-size: 14px;">
+                You can attempt this quiz and see your results immediately after submission.
+            </p>
+        </div>
+
+        <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 4px; margin: 20px 0;">
+            <p style="margin: 0; color: #92400e;">
+                <strong>⏰ Reminder:</strong> Don't forget to complete the quiz! Click the button above to get started.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>This is an automated notification from Quiz App</p>
+            <p>&copy; 2025 Quiz App - Educational Project</p>
+            <p style="margin-top: 10px;">
+                <a href="{{ base_url }}/user/history" style="color: #2563eb; text-decoration: none;">View Your Quiz History</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -80,7 +80,7 @@
                         </div>
                     </label>
                     <p class="text-sm text-gray-600 mt-2 ml-0">
-                        When enabled, students will receive quiz results via email after submission.
+                        When enabled, the system will send email notifications for quiz activities (admin receives student submissions, students receive new quiz alerts).
                     </p>
                 </div>
 
@@ -104,7 +104,12 @@
                             </h3>
                             <div class="mt-2 text-sm {% if smtp_configured %}text-green-700{% else %}text-red-700{% endif %}">
                                 {% if smtp_configured %}
-                                <p>SMTP credentials are properly configured in your .env file.</p>
+                                <p class="mb-2">SMTP credentials are properly configured in your .env file.</p>
+                                <p class="font-semibold">✓ Required for email notifications:</p>
+                                <ul class="list-disc list-inside space-y-1 ml-2 mt-1">
+                                    <li>EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_HOST, EMAIL_FROM - Configured</li>
+                                    <li>ADMIN_EMAIL - Required for receiving student submission notifications</li>
+                                </ul>
                                 {% else %}
                                 <p class="font-semibold mb-2">Missing SMTP configuration!</p>
                                 <p class="mb-2">Email notifications cannot be sent because the following environment variables are not configured:</p>
@@ -114,6 +119,7 @@
                                     <li>Check EMAIL_PASSWORD in .env</li>
                                     <li>Check EMAIL_HOST in .env</li>
                                     <li>Check EMAIL_FROM in .env</li>
+                                    <li>Check ADMIN_EMAIL in .env (for receiving student submissions)</li>
                                     {% endif %}
                                 </ul>
                                 <p class="mt-2">Please configure these values in your <code class="bg-red-100 px-1 rounded">.env</code> file before enabling email notifications.</p>
@@ -141,7 +147,13 @@
         <h3 class="text-lg font-semibold text-blue-900 mb-2">About Settings</h3>
         <ul class="text-sm text-blue-800 space-y-2">
             <li><strong>Maximum Attempts:</strong> Controls how many times a student can retake each quiz. Changes apply immediately to all quizzes.</li>
-            <li><strong>Email Notifications:</strong> When enabled and properly configured, students receive detailed quiz results via email after each submission.</li>
+            <li><strong>Email Notifications:</strong> When enabled and properly configured:
+                <ul class="list-disc list-inside ml-4 mt-1">
+                    <li>Admin receives notifications when students submit quizzes (with scores and submission details)</li>
+                    <li>Students receive notifications when new quizzes are uploaded (with direct links to take the quiz)</li>
+                    <li>Requires SMTP configuration (EMAIL_* variables) and ADMIN_EMAIL in .env file</li>
+                </ul>
+            </li>
             <li><strong>Settings Persistence:</strong> All settings are stored in the database and persist across server restarts.</li>
         </ul>
     </div>

@@ -1,0 +1,26 @@
+STUDENT QUIZ SUBMISSION
+========================
+
+Hello Admin,
+
+A student has submitted a quiz. Here are the details:
+
+SUBMISSION DETAILS
+------------------
+Student Name: {{ student_name }}
+Student ID: {{ student_id }}
+Quiz Title: {{ quiz_title }}
+Attempt Number: {{ attempt_number }}
+Submitted At: {{ timestamp }}
+
+SCORE: {{ "%.2f"|format(score) }}%
+
+Status: {% if passed %}PASSED ✓{% else %}FAILED ✗{% endif %}
+
+Quiz Performance: {{ correct_count }} out of {{ total_questions }} questions correct
+
+To view all submissions, visit: {{ base_url }}/admin/scores
+
+---
+This is an automated notification from Quiz App
+© 2025 Quiz App - Educational Project
