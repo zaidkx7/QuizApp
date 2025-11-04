@@ -153,6 +153,21 @@ def submit_quiz(db, quiz_id):
     if not user:
         return redirect(url_for("user.user_register"))
 
+    # DUPLICATE SUBMISSION PREVENTION: Check if user submitted this quiz very recently (within last 5 seconds)
+    from datetime import datetime, timedelta
+    five_seconds_ago = datetime.utcnow() - timedelta(seconds=5)
+    recent_submission = db.query(Result).filter(
+        Result.user_id == user.id,
+        Result.quiz_id == quiz_id,
+        Result.submitted_at >= five_seconds_ago
+    ).first()
+
+    if recent_submission:
+        # Duplicate submission detected - redirect to the recent result
+        print(f"Duplicate submission prevented for user {user.id} on quiz {quiz_id}")
+        session["message"] = "Your quiz has already been submitted. Here are your results."
+        return redirect(url_for("user.view_result", result_id=recent_submission.id))
+
     # Check if user has reached maximum attempts
     attempt_count = db.query(Result).filter(
         Result.user_id == user.id,
