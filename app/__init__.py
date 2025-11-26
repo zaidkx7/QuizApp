@@ -10,8 +10,11 @@ def create_app(config_name='default'):
 
     # Load configuration
     app.config.from_object(config[config_name])
+    
+    # Session cookie settings - only require HTTPS in production
+    is_production = config_name == 'production'
     app.config.update(
-        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_SECURE=is_production,  # Only require HTTPS in production
         SESSION_COOKIE_SAMESITE='Lax',
         SESSION_COOKIE_HTTPONLY=True
         )
