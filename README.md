@@ -163,15 +163,50 @@ The application will be available at `http://localhost:8080`
 Quizzes are stored as JSON files in `app/data/questions/`. Format:
 ```json
 {
-  "title": "Quiz Title",
-  "questions": [
-    {
-      "question": "Question text with optional LaTeX: $E=mc^2$",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "correct": 0
-    }
-  ]
-}
+    "title": "Quiz - Sample",
+    "true_false": [
+      {
+        "question": "The Earth is flat.",
+        "answer": false
+      },
+      {
+        "question": "Water boils at 100 degrees Celsius at sea level.",
+        "answer": true
+      },
+      {
+        "question": "JavaScript and Java are the same programming language.",
+        "answer": false
+      },
+      {
+        "question": "The Great Wall of China is visible from space with the naked eye.",
+        "answer": false
+      },
+      {
+        "question": "SQL stands for Structured Query Language.",
+        "answer": true
+      },
+      {
+        "question": "There are 12 months in a year.",
+        "answer": true
+      },
+      {
+        "question": "Gold is the most abundant metal in Earth's crust.",
+        "answer": false
+      }
+    ],
+    "mcqs": [
+      {
+        "question": "What is the largest planet in our solar system?",
+        "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+        "answer": "Jupiter"
+      },
+      {
+        "question": "Which programming language is known as the 'language of the web'?",
+        "options": ["Python", "JavaScript", "C++", "Ruby"],
+        "answer": "JavaScript"
+      }
+    ]
+  }
 ```
 
 ## Configuration
