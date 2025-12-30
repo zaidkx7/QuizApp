@@ -172,26 +172,6 @@ Quizzes are stored as JSON files in `app/data/questions/`. Format:
       {
         "question": "Water boils at 100 degrees Celsius at sea level.",
         "answer": true
-      },
-      {
-        "question": "JavaScript and Java are the same programming language.",
-        "answer": false
-      },
-      {
-        "question": "The Great Wall of China is visible from space with the naked eye.",
-        "answer": false
-      },
-      {
-        "question": "SQL stands for Structured Query Language.",
-        "answer": true
-      },
-      {
-        "question": "There are 12 months in a year.",
-        "answer": true
-      },
-      {
-        "question": "Gold is the most abundant metal in Earth's crust.",
-        "answer": false
       }
     ],
     "mcqs": [
