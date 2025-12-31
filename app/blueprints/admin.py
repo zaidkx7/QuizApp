@@ -27,6 +27,12 @@ def with_db(f):
 @with_db
 def admin_login(db):
     """Admin login page and handler"""
+    
+    if session.get("role") == "admin":
+        return redirect(url_for("admin.admin_dashboard"))
+    if session.get("role") == "user":
+        return redirect(url_for("user.user_history"))
+    
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")

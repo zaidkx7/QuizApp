@@ -25,6 +25,12 @@ def with_db(f):
 @with_db
 def user_register(db):
     """User registration/login page and handler"""
+
+    if session.get("role") == "admin":
+        return redirect(url_for("admin.admin_dashboard"))
+    if session.get("role") == "user":
+        return redirect(url_for("user.user_history"))
+
     if request.method == "POST":
         user_id = request.form.get("user_id", "").strip()
         password = request.form.get("password", "").strip()
