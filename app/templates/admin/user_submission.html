@@ -55,7 +55,7 @@
         <div class="space-y-4">
             {% for item in results.fill_in_the_blanks %}
             <div
-                class="p-5 rounded-lg border-l-4 {% if item.is_correct %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %} hover:shadow-md transition-shadow">
+                class="p-5 rounded border-l-4 {% if item.is_correct %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %} hover:shadow-md transition-shadow">
                 <div class="flex items-start">
                     <div class="flex-shrink-0 mt-1">
                         {% if item.is_correct %}
@@ -116,7 +116,7 @@
         <div class="space-y-4">
             {% for item in results.true_false %}
             <div
-                class="p-5 rounded-lg border-l-4 {% if item.is_correct %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %} hover:shadow-md transition-shadow">
+                class="p-5 rounded border-l-4 {% if item.is_correct %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %} hover:shadow-md transition-shadow">
                 <div class="flex items-start">
                     <div class="flex-shrink-0 mt-1">
                         {% if item.is_correct %}
@@ -178,7 +178,7 @@
         <div class="space-y-4">
             {% for item in results.mcqs %}
             <div
-                class="p-5 rounded-lg border-l-4 {% if item.is_correct %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %} hover:shadow-md transition-shadow">
+                class="p-5 rounded border-l-4 {% if item.is_correct %}bg-green-50 border-green-500{% else %}bg-red-50 border-red-500{% endif %} hover:shadow-md transition-shadow">
                 <div class="flex items-start">
                     <div class="flex-shrink-0 mt-1">
                         {% if item.is_correct %}

@@ -2,191 +2,240 @@
 
 {% block title %}Quiz Results - Quiz App{% endblock %}
 
-{% block nav_links %}
-<a href="/user/history" class="hover:text-blue-200 transition mr-4">Home</a>
-<a href="/logout" class="hover:text-blue-200 transition">Logout</a>
-{% endblock %}
-
-{% block nav_links_mobile %}
-<a href="/user/history" class="hover:text-blue-200 transition py-2">Home</a>
-<a href="/logout" class="hover:text-blue-200 transition py-2">Logout</a>
-{% endblock %}
-
 {% block content %}
-<div class="max-w-8xl mx-auto">
-    <!-- Message Alert -->
-    {% if message %}
-    <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-6 text-center font-semibold">
-        {{ message }}
-    </div>
-    {% endif %}
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Score Card -->
-    <div class="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-        <div class="mb-4">
-            {% if attempt_number %}
-            <span class="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
-                Attempt #{{ attempt_number }}
-            </span>
-            {% endif %}
-        </div>
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">{{ exam_title }}</h1>
-        <div class="mb-4">
-            <span class="text-6xl font-bold
-                {% if score >= 90 %}text-green-600
-                {% elif score >= 70 %}text-blue-600
-                {% elif score >= 50 %}text-yellow-600
-                {% else %}text-red-600{% endif %}">
-                {{ "%.2f"|format(score) }}%
-            </span>
-        </div>
-        <p class="text-xl text-gray-600">Your Score</p>
-    </div>
+        <!-- Score Card -->
+        <div class="bg-white rounded shadow-lg border border-slate-100 overflow-hidden mb-8 text-center relative">
+            <div
+                class="absolute top-0 left-0 w-full h-2 {% if score >= 70 %}bg-green-500{% elif score >= 50 %}bg-yellow-500{% else %}bg-red-500{% endif %}">
+            </div>
+            <div class="p-10">
+                <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ exam_title }}</h1>
+                <p class="text-slate-500 mb-8">Quiz Results & Feedback</p>
 
-    <!-- Detailed Results -->
-    <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Detailed Results</h2>
+                <div class="inline-flex items-center justify-center relative">
+                    <svg class="h-40 w-40 transform -rotate-90">
+                        <circle class="text-slate-100" stroke-width="8" stroke="currentColor" fill="transparent" r="70"
+                            cx="80" cy="80" />
+                        <circle
+                            class="{% if score >= 90 %}text-green-500{% elif score >= 70 %}text-blue-500{% elif score >= 50 %}text-yellow-500{% else %}text-red-500{% endif %} transition-all duration-1000 ease-out"
+                            stroke-width="8" stroke-dasharray="440" stroke-dashoffset="{{ 440 - (score / 100 * 440) }}"
+                            stroke-linecap="round" stroke="currentColor" fill="transparent" r="70" cx="80" cy="80" />
+                    </svg>
+                    <div class="absolute top-0 left-0 h-full w-full flex flex-col items-center justify-center">
+                        <span class="text-4xl font-extrabold text-slate-800">{{ "%.1f"|format(score) }}%</span>
+                        <span class="text-sm font-semibold text-slate-400 uppercase tracking-widest mt-1">Score</span>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    {% if score >= 90 %}
+                    <div
+                        class="inline-block px-6 py-2 bg-green-100 text-green-800 rounded-full font-bold text-lg animate-bounce-short">
+                        Outstanding Work! 🏆
+                    </div>
+                    {% elif score >= 70 %}
+                    <div class="inline-block px-6 py-2 bg-blue-100 text-blue-800 rounded-full font-bold text-lg">
+                        Great Job! 👏
+                    </div>
+                    {% elif score >= 50 %}
+                    <div class="inline-block px-6 py-2 bg-yellow-100 text-yellow-800 rounded-full font-bold text-lg">
+                        Good Effort! 👍
+                    </div>
+                    {% else %}
+                    <div class="inline-block px-6 py-2 bg-red-100 text-red-800 rounded-full font-bold text-lg">
+                        Keep Practicing! 💪
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Feedback -->
+        <h2 class="text-2xl font-bold text-slate-800 mb-6 px-2">Detailed Analysis</h2>
 
         <!-- Fill in the Blanks Results -->
         {% if results.fill_in_the_blanks %}
         <div class="mb-8">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Fill in the Blanks</h3>
-            {% for item in results.fill_in_the_blanks %}
-            <div class="mb-4 p-4 rounded-lg {% if item.is_correct %}bg-green-50 border-2 border-green-200{% else %}bg-red-50 border-2 border-red-200{% endif %}">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
+            <h3 class="text-lg font-semibold text-slate-600 mb-4 px-2 flex items-center">
+                <span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span> Fill in the Blanks
+            </h3>
+            <div class="space-y-4">
+                {% for item in results.fill_in_the_blanks %}
+                <div
+                    class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-start gap-4 transition-all hover:shadow-md">
+                    <div class="flex-shrink-0 mt-1">
                         {% if item.is_correct %}
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                            <i class="fas fa-check"></i>
+                        </div>
                         {% else %}
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                        <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                            <i class="fas fa-times"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    <div class="ml-3 flex-1">
-                        <p class="font-semibold {% if item.is_correct %}text-green-800{% else %}text-red-800{% endif %}">
-                            {{ item.question }}
-                        </p>
-                        <p class="mt-2 text-sm">
-                            <span class="font-semibold">Your Answer:</span>
-                            <span class="{% if item.is_correct %}text-green-700{% else %}text-red-700{% endif %}">
-                                {{ item.user_answer if item.user_answer else "(Not answered)" }}
-                            </span>
-                        </p>
-                        {% if not item.is_correct %}
-                        <p class="mt-1 text-sm">
-                            <span class="font-semibold">Correct Answer:</span>
-                            <span class="text-green-700">{{ item.correct_answer }}</span>
-                        </p>
-                        {% endif %}
+                    <div class="flex-1">
+                        <p class="text-lg font-medium text-slate-800 mb-3">{{ item.question }}</p>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your
+                                    Answer</span>
+                                <span
+                                    class="font-semibold {% if item.is_correct %}text-green-600{% else %}text-red-600{% endif %}">
+                                    {{ item.user_answer }}
+                                </span>
+                            </div>
+                            {% if not item.is_correct %}
+                            <div class="p-3 bg-green-50 rounded-lg border border-green-100">
+                                <span
+                                    class="block text-xs font-bold text-green-600 uppercase tracking-wider mb-1">Correct
+                                    Answer</span>
+                                <span class="font-semibold text-green-800">
+                                    {{ item.correct_answer }}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% endif %}
 
         <!-- True/False Results -->
         {% if results.true_false %}
         <div class="mb-8">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">True or False</h3>
-            {% for item in results.true_false %}
-            <div class="mb-4 p-4 rounded-lg {% if item.is_correct %}bg-green-50 border-2 border-green-200{% else %}bg-red-50 border-2 border-red-200{% endif %}">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
+            <h3 class="text-lg font-semibold text-slate-600 mb-4 px-2 flex items-center">
+                <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> True or False
+            </h3>
+            <div class="space-y-4">
+                {% for item in results.true_false %}
+                <div
+                    class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-start gap-4 transition-all hover:shadow-md">
+                    <div class="flex-shrink-0 mt-1">
                         {% if item.is_correct %}
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                            <i class="fas fa-check"></i>
+                        </div>
                         {% else %}
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                        <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                            <i class="fas fa-times"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    <div class="ml-3 flex-1">
-                        <p class="font-semibold {% if item.is_correct %}text-green-800{% else %}text-red-800{% endif %}">
-                            {{ item.question }}
-                        </p>
-                        <p class="mt-2 text-sm">
-                            <span class="font-semibold">Your Answer:</span>
-                            <span class="{% if item.is_correct %}text-green-700{% else %}text-red-700{% endif %}">
-                                {{ "True" if item.user_answer else "False" if item.user_answer != None else "(Not answered)" }}
-                            </span>
-                        </p>
-                        {% if not item.is_correct %}
-                        <p class="mt-1 text-sm">
-                            <span class="font-semibold">Correct Answer:</span>
-                            <span class="text-green-700">{{ "True" if item.correct_answer else "False" }}</span>
-                        </p>
-                        {% endif %}
+                    <div class="flex-1">
+                        <p class="text-lg font-medium text-slate-800 mb-3">{{ item.question }}</p>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your
+                                    Answer</span>
+                                <span
+                                    class="font-semibold {% if item.is_correct %}text-green-600{% else %}text-red-600{% endif %}">
+                                    {{ "True" if item.user_answer else "False" }}
+                                </span>
+                            </div>
+                            {% if not item.is_correct %}
+                            <div class="p-3 bg-green-50 rounded-lg border border-green-100">
+                                <span
+                                    class="block text-xs font-bold text-green-600 uppercase tracking-wider mb-1">Correct
+                                    Answer</span>
+                                <span class="font-semibold text-green-800">
+                                    {{ "True" if item.correct_answer else "False" }}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% endif %}
 
         <!-- MCQ Results -->
         {% if results.mcqs %}
         <div class="mb-8">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Multiple Choice Questions</h3>
-            {% for item in results.mcqs %}
-            <div class="mb-4 p-4 rounded-lg {% if item.is_correct %}bg-green-50 border-2 border-green-200{% else %}bg-red-50 border-2 border-red-200{% endif %}">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
+            <h3 class="text-lg font-semibold text-slate-600 mb-4 px-2 flex items-center">
+                <span class="w-2 h-2 rounded-full bg-orange-500 mr-2"></span> Multiple Choice
+            </h3>
+            <div class="space-y-4">
+                {% for item in results.mcqs %}
+                <div
+                    class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-start gap-4 transition-all hover:shadow-md">
+                    <div class="flex-shrink-0 mt-1">
                         {% if item.is_correct %}
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                            <i class="fas fa-check"></i>
+                        </div>
                         {% else %}
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                        <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                            <i class="fas fa-times"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    <div class="ml-3 flex-1">
-                        <p class="font-semibold {% if item.is_correct %}text-green-800{% else %}text-red-800{% endif %}">
-                            {{ item.question }}
-                        </p>
-                        <p class="mt-2 text-sm">
-                            <span class="font-semibold">Your Answer:</span>
-                            <span class="{% if item.is_correct %}text-green-700{% else %}text-red-700{% endif %}">
-                                {{ item.user_answer if item.user_answer else "(Not answered)" }}
-                            </span>
-                        </p>
-                        {% if not item.is_correct %}
-                        <p class="mt-1 text-sm">
-                            <span class="font-semibold">Correct Answer:</span>
-                            <span class="text-green-700">{{ item.correct_answer }}</span>
-                        </p>
-                        {% endif %}
+                    <div class="flex-1">
+                        <p class="text-lg font-medium text-slate-800 mb-3">{{ item.question }}</p>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your
+                                    Answer</span>
+                                <span
+                                    class="font-semibold {% if item.is_correct %}text-green-600{% else %}text-red-600{% endif %}">
+                                    {{ item.user_answer }}
+                                </span>
+                            </div>
+                            {% if not item.is_correct %}
+                            <div class="p-3 bg-green-50 rounded-lg border border-green-100">
+                                <span
+                                    class="block text-xs font-bold text-green-600 uppercase tracking-wider mb-1">Correct
+                                    Answer</span>
+                                <span class="font-semibold text-green-800">
+                                    {{ item.correct_answer }}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% endif %}
-    </div>
 
-    <!-- Action Buttons -->
-    <div class="flex gap-4">
-        <a href="/user/history"
-            class="flex-1 text-center bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
-            Back to Home
-        </a>
-        {% if can_retake %}
-        <a href="/user/quiz/{{ quiz_id }}"
-            class="flex-1 text-center bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold">
-            Retake Quiz
-        </a>
-        {% endif %}
-        <a href="/logout"
-            class="flex-1 text-center bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition font-semibold">
-            Logout
-        </a>
+        <!-- Actions -->
+        <div class="flex justify-center gap-4 mt-12 pb-12">
+            <a href="/logout"
+                class="px-8 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 transition font-semibold">
+                Sign Out
+            </a>
+            <!-- Usually there would be a link to 'My Dashboard' or 'History' but currently user workflow might end here or go to register (home) -->
+            <a href="/"
+                class="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-semibold shadow-lg hover:shadow-blue-500/30">
+                Back to Home
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    @keyframes bounce-short {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .animate-bounce-short {
+        animation: bounce-short 1s ease-in-out 1;
+    }
+</style>
 {% endblock %}

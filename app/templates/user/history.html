@@ -3,133 +3,196 @@
 {% block title %}My Quiz History - Quiz App{% endblock %}
 
 {% block nav_links %}
-<a href="/logout" class="hover:text-blue-200 transition">Logout</a>
-{% endblock %}
-
-{% block nav_links_mobile %}
-<a href="/logout" class="hover:text-blue-200 transition py-2">Logout</a>
+<!-- Nav links are handled in base.html logic now, but here we can add specific ones if needed -->
 {% endblock %}
 
 {% block content %}
-<div class="max-w-8xl mx-auto">
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Welcome, {{ username }}!</h1>
-        <p class="text-gray-600">Available Quizzes and Your Submissions</p>
-    </div>
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Available Quizzes -->
-    {% if quizzes %}
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Available Quizzes</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for quiz in quizzes %}
-            <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                <div class="mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">{{ quiz.title }}</h3>
+        <!-- Header -->
+        <div
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800 mb-2">Welcome Back, {{ username }}! <span
+                        class="text-2xl">👋</span></h1>
+                <p class="text-slate-500">Here are your assigned quizzes and past performance.</p>
+            </div>
+            <div class="hidden md:block">
+                <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i class="fas fa-user-graduate text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+
+            <!-- Left Column: Available Quizzes -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-slate-800"><i
+                            class="fas fa-clipboard-list text-blue-500 mr-2"></i> Available Quizzes</h2>
                 </div>
 
-                {% if quiz.user_submissions|length > 0 %}
-                <!-- Attempts Summary -->
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600 mb-2">
-                        Attempts: <span class="font-semibold">{{ quiz.user_submissions|length }}/3</span>
-                    </p>
-
-                    <!-- Collapsible Attempts List -->
-                    <details class="mt-3">
-                        <summary class="cursor-pointer text-blue-600 hover:text-blue-800 font-semibold text-sm">
-                            View all {{ quiz.user_submissions|length }} attempt{{ 's' if quiz.user_submissions|length > 1 else '' }} ▼
-                        </summary>
-                        <div class="mt-3 space-y-2">
-                            {% for submission in quiz.user_submissions %}
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <div class="flex-1">
-                                    <p class="text-sm font-semibold text-gray-700">Attempt #{{ submission.attempt_number }}</p>
-                                    <p class="text-xs text-gray-500">{{ submission.submitted_at.strftime('%b %d, %Y %I:%M %p') }}</p>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                        {% if submission.score >= 90 %}bg-green-100 text-green-800
-                                        {% elif submission.score >= 70 %}bg-blue-100 text-blue-800
-                                        {% elif submission.score >= 50 %}bg-yellow-100 text-yellow-800
-                                        {% else %}bg-red-100 text-red-800{% endif %}">
-                                        {{ "%.1f"|format(submission.score) }}%
+                {% if quizzes %}
+                <div class="grid gap-6">
+                    {% for quiz in quizzes %}
+                    <div
+                        class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold text-slate-800 mb-1">{{ quiz.title }}</h3>
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        {{ quiz.questions_count if quiz.questions_count else 'Unknown' }} Questions
                                     </span>
+                                </div>
+                                <div
+                                    class="bg-slate-50 p-2 rounded-lg border border-slate-100 text-center min-w-[80px]">
+                                    <span class="block text-xs text-slate-500 uppercase font-bold">Attempts</span>
+                                    <span class="block text-xl font-bold text-slate-700">{{ quiz.user_submissions|length
+                                        }}/3</span>
+                                </div>
+                            </div>
+
+                            <!-- Action Area -->
+                            <div class="mt-6 flex items-center justify-between">
+                                {% if quiz.user_submissions|length < 3 %} <a href="/user/quiz/{{ quiz.id }}"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    {% if quiz.user_submissions|length == 0 %}
+                                    Start Quiz
+                                    {% else %}
+                                    Retake Quiz
+                                    {% endif %}
+                                    <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                    {% else %}
+                                    <button disabled
+                                        class="inline-flex items-center px-4 py-2 bg-slate-300 border border-transparent rounded-lg font-semibold text-xs text-slate-500 uppercase tracking-widest cursor-not-allowed">
+                                        Max Attempts Reached
+                                    </button>
+                                    {% endif %}
+
+                                    {% if quiz.user_submissions|length > 0 %}
+                                    <button
+                                        onclick="document.getElementById('attempts-{{ quiz.id }}').classList.toggle('hidden')"
+                                        class="text-sm text-slate-500 hover:text-blue-600 underline decoration-dotted underline-offset-2 transition-colors">
+                                        View History
+                                    </button>
+                                    {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Collapsible History -->
+                        {% if quiz.user_submissions|length > 0 %}
+                        <div id="attempts-{{ quiz.id }}"
+                            class="hidden bg-slate-50 border-t border-slate-100 p-4 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Past Attempts
+                            </h4>
+                            {% for submission in quiz.user_submissions %}
+                            <div
+                                class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs
+                                        {% if submission.score >= 70 %}bg-green-100 text-green-700
+                                        {% elif submission.score >= 50 %}bg-yellow-100 text-yellow-700
+                                        {% else %}bg-red-100 text-red-700{% endif %}">
+                                        #{{ submission.attempt_number }}
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-700">{{
+                                            submission.submitted_at.strftime('%b %d, %Y') }}</p>
+                                        <p class="text-xs text-slate-400">{{ submission.submitted_at.strftime('%I:%M
+                                            %p') }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="font-bold text-slate-700">{{ "%.1f"|format(submission.score) }}%</span>
                                     <a href="/user/result/{{ submission.id }}"
-                                        class="text-xs text-blue-600 hover:text-blue-800 font-semibold">
-                                        View →
+                                        class="text-slate-400 hover:text-blue-600 transition-colors">
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
-                    </details>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
-
-                <!-- Action Button -->
-                {% if quiz.user_submissions|length < 3 %}
-                <a href="/user/quiz/{{ quiz.id }}"
-                    class="block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
-                    Retake Quiz (Attempt {{ quiz.user_submissions|length + 1 }}/3)
-                </a>
                 {% else %}
-                <div class="bg-red-50 border border-red-500 text-red-800 px-3 py-2 rounded-lg text-center text-sm font-semibold">
-                    Maximum attempts reached (3/3)
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-12 text-center">
+                    <div
+                        class="h-20 w-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                        <i class="fas fa-box-open text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-slate-900">No Quizzes Available</h3>
+                    <p class="text-slate-500 mt-1">Check back later for new assignments.</p>
                 </div>
-                {% endif %}
-                {% else %}
-                <!-- No attempts yet -->
-                <p class="text-sm text-gray-500 mb-4">Not attempted yet</p>
-                <a href="/user/quiz/{{ quiz.id }}"
-                    class="block text-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
-                    Take Quiz (Attempt 1/3)
-                </a>
                 {% endif %}
             </div>
-            {% endfor %}
+
+            <!-- Right Column: Recent Activity / Stats -->
+            <div class="space-y-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-slate-800"><i class="fas fa-history text-purple-500 mr-2"></i>
+                        Recent Activity</h2>
+                </div>
+
+                {% if results %}
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="divide-y divide-slate-100">
+                        {% for result in results[:5] %} <!-- Show only last 5 -->
+                        <div class="p-4 hover:bg-slate-50 transition-colors group">
+                            <a href="/user/result/{{ result.id }}" class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 rounded-full flex items-center justify-center
+                                        {% if result.score >= 90 %}bg-green-100 text-green-600
+                                        {% elif result.score >= 70 %}bg-blue-100 text-blue-600
+                                        {% elif result.score >= 50 %}bg-yellow-100 text-yellow-600
+                                        {% else %}bg-red-100 text-red-600{% endif %}">
+                                        <span class="font-bold text-xs">{{ "%.0f"|format(result.score) }}%</span>
+                                    </div>
+                                    <div>
+                                        <h4
+                                            class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                                            {{ result.quiz.title }}</h4>
+                                        <p class="text-xs text-slate-500">{{ result.submitted_at.strftime('%b %d') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-slate-300 group-hover:text-blue-400"></i>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if results|length > 5 %}
+                    <div class="p-3 bg-slate-50 text-center border-t border-slate-100">
+                        <span class="text-xs text-slate-500">Showing last 5 of {{ results|length }} results</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 text-center">
+                    <p class="text-slate-500 text-sm">No recent activity found.</p>
+                </div>
+                {% endif %}
+
+                <!-- Help Card -->
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg p-6 text-white">
+                    <h3 class="text-lg font-bold mb-2">Need Help?</h3>
+                    <p class="text-blue-100 text-sm mb-4">
+                        If you have issues with a quiz or believe there is a mistake, contact your administrator.
+                    </p>
+                    <a href="mailto:admin@example.com"
+                        class="inline-block bg-white text-blue-600 text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors">
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+
         </div>
-    </div>
-    {% endif %}
-
-    <!-- Past Submissions History -->
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">All Your Submissions</h2>
-
-    {% if results %}
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for result in results %}
-        <a href="/user/result/{{ result.id }}" class="block">
-            <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition cursor-pointer">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">{{ result.quiz.title }}</h3>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                        {% if result.score >= 90 %}bg-green-100 text-green-800
-                        {% elif result.score >= 70 %}bg-blue-100 text-blue-800
-                        {% elif result.score >= 50 %}bg-yellow-100 text-yellow-800
-                        {% else %}bg-red-100 text-red-800{% endif %}">
-                        {{ "%.1f"|format(result.score) }}%
-                    </span>
-                </div>
-                <div class="text-sm text-gray-600">
-                    <p>{{ result.submitted_at.strftime('%B %d, %Y') }}</p>
-                    <p class="text-xs text-gray-500">{{ result.submitted_at.strftime('%I:%M %p') }}</p>
-                </div>
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <p class="text-sm text-blue-600 font-semibold">View Details →</p>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="bg-white rounded-lg shadow-lg p-12 text-center">
-        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Submissions Yet</h3>
-        <p class="text-gray-500">You haven't taken any quizzes yet. Start with the available quizzes above!</p>
-    </div>
-    {% endif %}
     </div>
 </div>
 {% endblock %}
