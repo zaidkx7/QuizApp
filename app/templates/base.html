@@ -1,61 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Quiz App{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use same FontAwesome and Google Fonts as Admin for consistency -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- KaTeX CSS for beautiful math rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+        integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Quiz App</h1>
 
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex-shrink-0 flex items-center gap-2">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                            <i class="fas fa-graduation-cap text-lg"></i>
+                        </div>
+                        <span class="font-bold text-xl text-gray-800 tracking-tight">Quiz App</span>
+                    </a>
 
-                <!-- Desktop menu -->
-                <div class="hidden md:flex space-x-4">
-                    {% block nav_links %}
-                    <a href="/" class="hover:text-blue-200 transition">Home</a>
-                    {% endblock %}
+                    <div class="hidden md:ml-8 md:flex md:space-x-8">
+                        {% block nav_links %}
+                        {% if session.get('role') == 'user' %}
+                        <!-- Links for logged in students would go here if needed, usually they see dashboard/history -->
+                        {% else %}
+                        <a href="/"
+                            class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Home
+                        </a>
+                        {% endif %}
+                        {% endblock %}
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    {% if session.get('user_id') %}
+                    <div class="flex items-center gap-4">
+                        <div class="hidden md:flex flex-col items-end mr-2">
+                            <span class="text-sm font-medium text-gray-700">{{ session.get('username', 'Student')
+                                }}</span>
+                            <span class="text-xs text-gray-500">Studnet</span>
+                        </div>
+                        <a href="/logout"
+                            class="bg-slate-100 text-slate-700 hover:bg-red-50 hover:text-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center gap-3">
+                        <a href="/admin/login"
+                            class="text-gray-500 hover:text-blue-600 text-sm font-medium px-3 py-2 transition-colors">
+                            Admin Access
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <!-- Mobile Menu Button -->
+                    <div class="-mr-2 flex items-center md:hidden ml-4">
+                        <button id="mobile-menu-button" type="button"
+                            class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <span class="sr-only">Open main menu</span>
+                            <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                            <i class="fas fa-times text-xl hidden" id="close-icon"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2">
-                <div class="flex flex-col space-y-2">
-                    {% block nav_links_mobile %}
-                    <a href="/" class="hover:text-blue-200 transition py-2">Home</a>
-                    {% endblock %}
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                {% block nav_links_mobile %}
+                <a href="/"
+                    class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 text-base font-medium">Home</a>
+                {% endblock %}
+            </div>
+            {% if session.get('user_id') %}
+            <div class="pt-4 pb-4 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <div class="text-base font-medium text-gray-800">{{ session.get('username') }}</div>
+                        <div class="text-sm font-medium text-gray-500">Student</div>
+                    </div>
+                    <a href="/logout"
+                        class="ml-auto bg-white flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </a>
                 </div>
             </div>
+            {% endif %}
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <!-- Main Content -->
+    <main class="flex-grow">
         {% block content %}{% endblock %}
     </main>
 
-
-    <footer class="bg-gray-800 text-white py-4 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2025 Quiz App - Educational Project by Muhammad Zaid ❤️</p>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-sm text-gray-500">
+                &copy; 2025 Quiz App. All rights reserved.
+            </p>
         </div>
     </footer>
 
-    <!-- KaTeX JavaScript for math rendering - Load synchronously for production reliability -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <!-- KaTeX JavaScript for math rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+        integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+        crossorigin="anonymous"></script>
 
     <script>
         // Mobile menu toggle
@@ -64,44 +143,37 @@
         const menuIcon = document.getElementById('menu-icon');
         const closeIcon = document.getElementById('close-icon');
 
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-            menuIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
-        });
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+                menuIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+        }
 
-        // KaTeX auto-render - Convert LaTeX to beautiful math equations
-        // Multiple loading strategies for maximum production compatibility
+        // KaTeX auto-render
         function renderMathEquations() {
-            if (typeof renderMathInElement === 'undefined') {
-                console.log('KaTeX auto-render not loaded yet, retrying...');
-                return;
-            }
-
+            if (typeof renderMathInElement === 'undefined') return;
             try {
                 renderMathInElement(document.body, {
                     delimiters: [
-                        {left: "$$", right: "$$", display: true},   // Block math
-                        {left: "$", right: "$", display: false}      // Inline math
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false }
                     ],
-                    throwOnError: false,  // Don't break page if LaTeX has errors
-                    strict: false
+                    throwOnError: false
                 });
-                console.log('KaTeX rendering completed successfully');
             } catch (error) {
                 console.error('KaTeX rendering error:', error);
             }
         }
 
-        // Strategy 1: Try immediately (works if scripts loaded synchronously)
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', renderMathEquations);
         } else {
             renderMathEquations();
         }
-
-        // Strategy 2: Fallback after a short delay (for production caching issues)
         setTimeout(renderMathEquations, 100);
     </script>
 </body>
+
 </html>

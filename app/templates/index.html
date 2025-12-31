@@ -3,40 +3,49 @@
 {% block title %}Home - Quiz App{% endblock %}
 
 {% block content %}
-<div class="max-w-8xl mx-auto mt-12">
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Quiz App</h1>
-        <p class="text-xl text-gray-600">Choose your role to continue</p>
-    </div>
+<div class="min-h-[calc(100vh-64px)] flex flex-col md:flex-row bg-white">
 
-    <div class="grid md:grid-cols-2 gap-8">
-        <!-- Admin Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition">
-            <div class="text-center">
-                <svg class="w-20 h-20 mx-auto mb-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Admin</h2>
-                <p class="text-gray-600 mb-6">Upload exams and manage student scores</p>
-                <a href="/admin/login" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
-                    Admin Login
-                </a>
-            </div>
+    <!-- Student Section -->
+    <a href="/user/register"
+        class="group flex-1 flex flex-col items-center justify-center p-12 border-b md:border-b-0 md:border-r border-gray-200 hover:bg-slate-900 transition-colors duration-300 cursor-pointer text-center">
+        <div
+            class="mb-8 p-6 rounded-full border-2 border-slate-900 text-slate-900 group-hover:border-white group-hover:text-white transition-colors duration-300">
+            <i class="fas fa-user-graduate text-4xl"></i>
         </div>
+        <h2
+            class="text-4xl font-bold text-slate-900 group-hover:text-white mb-4 tracking-tight transition-colors duration-300">
+            Student Portal
+        </h2>
+        <p class="text-lg text-slate-500 group-hover:text-slate-300 max-w-sm transition-colors duration-300">
+            Access exams and view results.
+        </p>
+        <div
+            class="mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <span class="text-white font-semibold uppercase tracking-widest text-sm border-b border-white pb-1">Enter
+                Portal</span>
+        </div>
+    </a>
 
-        <!-- User Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition">
-            <div class="text-center">
-                <svg class="w-20 h-20 mx-auto mb-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Student</h2>
-                <p class="text-gray-600 mb-6">Take exams and view your results</p>
-                <a href="/user/register" class="inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
-                    Start Quiz
-                </a>
-            </div>
+    <!-- Admin Section -->
+    <a href="/admin/login"
+        class="group flex-1 flex flex-col items-center justify-center p-12 hover:bg-slate-900 transition-colors duration-300 cursor-pointer text-center">
+        <div
+            class="mb-8 p-6 rounded-full border-2 border-slate-900 text-slate-900 group-hover:border-white group-hover:text-white transition-colors duration-300">
+            <i class="fas fa-chalkboard-teacher text-4xl"></i>
         </div>
-    </div>
+        <h2
+            class="text-4xl font-bold text-slate-900 group-hover:text-white mb-4 tracking-tight transition-colors duration-300">
+            Admin Portal
+        </h2>
+        <p class="text-lg text-slate-500 group-hover:text-slate-300 max-w-sm transition-colors duration-300">
+            Manage system and quizzes.
+        </p>
+        <div
+            class="mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <span class="text-white font-semibold uppercase tracking-widest text-sm border-b border-white pb-1">Enter
+                Portal</span>
+        </div>
+    </a>
+
 </div>
 {% endblock %}

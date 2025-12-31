@@ -59,7 +59,23 @@ def admin_dashboard(db):
         return redirect(url_for("admin.admin_login"))
 
     message = session.pop("message", None)
-    return render_template("admin/dashboard.html", message=message)
+
+    # Calculate stats
+    try:
+        total_quizzes = db.query(Quiz).count()
+        total_users = db.query(User).filter(User.role == "user").count()
+        total_submissions = db.query(Result).count()
+    except Exception as e:
+        print(f"Error calculating stats: {str(e)}")
+        total_quizzes = 0
+        total_users = 0
+        total_submissions = 0
+
+    return render_template("admin/dashboard.html", 
+                         message=message,
+                         total_quizzes=total_quizzes,
+                         total_users=total_users,
+                         total_submissions=total_submissions)
 
 
 @admin.route("/quizzes")
@@ -279,7 +295,8 @@ def admin_delete_all_quizzes(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
-    # Delete all quizzes
+    # Delete all quizzes and associated results
+    db.query(Result).delete()
     db.query(Quiz).delete()
     db.commit()
 
