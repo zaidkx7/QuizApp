@@ -1,95 +1,110 @@
-{% extends "base.html" %}
+{% extends "admin/layout.html" %}
 
 {% block title %}Admin Dashboard - Quiz App{% endblock %}
-
-{% block nav_links %}
-<a href="/admin/dashboard" class="hover:text-blue-200 transition mr-4">Dashboard</a>
-<a href="/admin/quizzes" class="hover:text-blue-200 transition mr-4">Manage Quizzes</a>
-<a href="/admin/scores" class="hover:text-blue-200 transition mr-4">View Scores</a>
-<a href="/admin/users" class="hover:text-blue-200 transition mr-4">Manage Users</a>
-<a href="/admin/settings" class="hover:text-blue-200 transition mr-4">Settings</a>
-<a href="/logout" class="hover:text-blue-200 transition">Logout</a>
-{% endblock %}
-
-{% block nav_links_mobile %}
-<a href="/admin/dashboard" class="hover:text-blue-200 transition py-2">Dashboard</a>
-<a href="/admin/quizzes" class="hover:text-blue-200 transition py-2">Manage Quizzes</a>
-<a href="/admin/scores" class="hover:text-blue-200 transition py-2">View Scores</a>
-<a href="/admin/users" class="hover:text-blue-200 transition py-2">Manage Users</a>
-<a href="/admin/settings" class="hover:text-blue-200 transition py-2">Settings</a>
-<a href="/logout" class="hover:text-blue-200 transition py-2">Logout</a>
-{% endblock %}
+{% block header_title %}Dashboard Overview{% endblock %}
 
 {% block content %}
-<div class="max-w-8xl mx-auto">
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">Admin Dashboard</h1>
 
-    {% if message %}
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-        {{ message }}
-    </div>
-    {% endif %}
+{% if message %}
+<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 shadow-sm rounded-r" role="alert">
+    <p class="font-bold">Info</p>
+    <p>{{ message }}</p>
+</div>
+{% endif %}
 
-    <div class="grid md:grid-cols-2 gap-8">
-        <!-- Manage Quizzes Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Manage Quizzes</h2>
-            <p class="text-gray-600 mb-6">Upload, manage, and set active quizzes</p>
-
-            <a href="/admin/quizzes"
-                class="block text-center bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold mb-4">
-                Manage Quizzes
-            </a>
-
-            
-            <form method="POST" action="/admin/quizzes/delete-all" onsubmit="return confirm('Are you sure you want to delete ALL quizzes? This cannot be undone!')">
-                <button type="submit"
-                    class="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-semibold">
-                    Delete All Quizzes
-                </button>
-            </form>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Total Quizzes -->
+    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center border border-slate-100">
+        <div class="p-4 rounded-full bg-purple-100 text-purple-600 mr-4">
+            <i class="fas fa-book-open text-2xl"></i>
         </div>
-
-        <!-- View Scores Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Student Scores</h2>
-            <p class="text-gray-600 mb-6">View all student submissions and scores</p>
-
-            <a href="/admin/scores"
-                class="block text-center bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold mb-3">
-                View All Scores
-            </a>
-
-            <form method="POST" action="/admin/submissions/delete-all" onsubmit="return confirm('Are you sure you want to delete ALL student submissions? This cannot be undone!')">
-                <button type="submit"
-                    class="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-semibold">
-                    Delete All Submissions
-                </button>
-            </form>
+        <div>
+            <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Total Quizzes</p>
+            <h3 class="text-2xl font-bold text-gray-800">{{ total_quizzes }}</h3>
         </div>
     </div>
 
-    <!-- Second Row: Manage Users and Settings -->
-    <div class="grid md:grid-cols-2 gap-8 mt-8">
-        <!-- Manage Users Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Manage Users</h2>
-            <p class="text-gray-600 mb-6">Add, edit, or remove student accounts</p>
-            <a href="/admin/users"
-                class="block text-center bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
-                Manage Users
-            </a>
+    <!-- Total Users -->
+    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center border border-slate-100">
+        <div class="p-4 rounded-full bg-blue-100 text-blue-600 mr-4">
+            <i class="fas fa-users text-2xl"></i>
         </div>
+        <div>
+            <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Total Students</p>
+            <h3 class="text-2xl font-bold text-gray-800">{{ total_users }}</h3>
+        </div>
+    </div>
 
-        <!-- Settings Card -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Settings</h2>
-            <p class="text-gray-600 mb-6">Configure attempt limits and email notifications</p>
-            <a href="/admin/settings"
-                class="block text-center bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
-                Configure Settings
-            </a>
+    <!-- Total Submissions -->
+    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center border border-slate-100">
+        <div class="p-4 rounded-full bg-green-100 text-green-600 mr-4">
+            <i class="fas fa-clipboard-check text-2xl"></i>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Total Submissions</p>
+            <h3 class="text-2xl font-bold text-gray-800">{{ total_submissions }}</h3>
         </div>
     </div>
 </div>
+
+<!-- Actions Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- Quick Actions Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-bold text-slate-800">Quick Actions</h3>
+            <span class="text-xs font-semibold bg-slate-200 text-slate-600 px-2 py-1 rounded">Admin</span>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="/admin/quizzes"
+                    class="flex flex-col items-center justify-center p-4 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group">
+                    <i
+                        class="fas fa-plus-circle text-2xl text-blue-500 mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium text-slate-700">Add New Quiz</span>
+                </a>
+
+                <a href="/admin/users"
+                    class="flex flex-col items-center justify-center p-4 rounded-lg border border-slate-200 hover:border-purple-500 hover:bg-purple-50 transition-all group">
+                    <i
+                        class="fas fa-user-plus text-2xl text-purple-500 mb-2 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium text-slate-700">Add Student</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger Zone Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="bg-red-50 px-6 py-4 border-b border-red-100 flex justify-between items-center">
+            <h3 class="font-bold text-red-800">Danger Zone</h3>
+            <i class="fas fa-exclamation-triangle text-red-500"></i>
+        </div>
+        <div class="p-6 space-y-4">
+            <p class="text-sm text-gray-600 mb-4">These actions are irreversible. Please proceed with caution.</p>
+
+            <div class="flex flex-col space-y-3">
+                <form method="POST" action="/admin/quizzes/delete-all"
+                    onsubmit="return confirm('Are you sure you want to delete ALL quizzes? This cannot be undone!')">
+                    <button type="submit"
+                        class="w-full flex items-center justify-center px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-trash-alt mr-2"></i> Delete All Quizzes
+                    </button>
+                </form>
+
+                <form method="POST" action="/admin/submissions/delete-all"
+                    onsubmit="return confirm('Are you sure you want to delete ALL student submissions? This cannot be undone!')">
+                    <button type="submit"
+                        class="w-full flex items-center justify-center px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-eraser mr-2"></i> Delete All Submissions
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}
