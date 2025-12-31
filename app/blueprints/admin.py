@@ -295,7 +295,8 @@ def admin_delete_all_quizzes(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
-    # Delete all quizzes
+    # Delete all quizzes and associated results
+    db.query(Result).delete()
     db.query(Quiz).delete()
     db.commit()
 
