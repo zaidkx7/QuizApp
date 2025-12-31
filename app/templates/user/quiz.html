@@ -2,16 +2,13 @@
 
 {% block title %}Take Quiz - Quiz App{% endblock %}
 
-{% block nav_links %}
-{% endblock %}
-
 {% block content %}
 <div class="bg-gray-50 min-h-screen py-12">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {% if attempt_number and attempt_number > 2 %}
         <!-- Retake Banner -->
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm animate-pulse-slow">
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-r-lg shadow-sm animate-pulse-slow">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
                     <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
@@ -19,202 +16,274 @@
                 <div class="ml-3">
                     <p class="font-bold text-red-800">Final Attempt Warning</p>
                     <p class="text-sm text-red-700">This is your last attempt for this quiz. Please review your answers
-                        carefully before submitting.</p>
+                        carefully.</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Attempt Banner -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-8 rounded-r-lg shadow-sm animate-pulse-slow">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-yellow-500 text-xl"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="font-bold text-yellow-800">Attempt Warning</p>
+                    <p class="text-sm text-yellow-700">This is your attempt {{ attempt_number }} for this quiz. Please
+                        review your answers
+                        carefully.</p>
                 </div>
             </div>
         </div>
         {% endif %}
 
-        <!-- Header -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 mb-8 text-center md:text-left">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <span
-                        class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wider mb-2">Quiz</span>
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">{{ exam.title }}</h1>
-                    <p class="text-slate-500">Please answer all questions below.</p>
-                </div>
-                {% if attempt_number %}
-                <div class="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
-                    <i class="fas fa-redo-alt text-slate-400"></i>
-                    <span class="text-sm font-semibold text-slate-600">Attempt {{ attempt_number }}/3</span>
-                </div>
-                {% endif %}
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex justify-between text-sm font-medium text-slate-500 mb-2">
+                <span id="progressText">Question 1 of --</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                    style="width: 0%"></div>
             </div>
         </div>
 
-        <form method="POST" action="/user/submit/{{ quiz_id }}" class="space-y-8">
+        <form method="POST" action="/user/submit/{{ quiz_id }}" id="quizForm" class="relative min-h-[400px]">
 
-            <!-- Fill in the Blanks Section -->
-            {% if exam.fill_in_the_blanks %}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="bg-purple-50 px-8 py-4 border-b border-purple-100 flex items-center">
-                    <span
-                        class="flex-shrink-0 w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-pen-alt"></i>
-                    </span>
-                    <h2 class="text-xl font-bold text-slate-800">Fill in the Blanks</h2>
-                </div>
-                <div class="p-8 space-y-6">
-                    {% for question in exam.fill_in_the_blanks %}
-                    <div class="pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-                        <label class="block text-slate-800 font-semibold text-lg mb-3">
-                            <span class="text-slate-400 mr-2">{{ loop.index }}.</span> {{ question.question }}
-                        </label>
-                        <input type="text" name="fib_{{ loop.index0 }}" required
-                            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400 text-slate-800 bg-slate-50 focus:bg-white"
-                            placeholder="Type your answer here...">
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
+            {% set step_counter = namespace(value=1) %}
 
-            <!-- True/False Section -->
-            {% if exam.true_false %}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="bg-blue-50 px-8 py-4 border-b border-blue-100 flex items-center">
-                    <span
-                        class="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-check-circle"></i>
-                    </span>
-                    <h2 class="text-xl font-bold text-slate-800">True or False</h2>
-                </div>
-                <div class="p-8 space-y-8">
-                    {% for question in exam.true_false %}
-                    <div class="pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-                        <p class="text-slate-800 font-semibold text-lg mb-4">
-                            <span class="text-slate-400 mr-2">{{ loop.index }}.</span> {{ question.question }}
-                        </p>
-                        <div class="flex gap-4 sm:gap-8">
-                            <label class="relative flex-1 cursor-pointer group">
-                                <input type="radio" name="tf_{{ loop.index0 }}" value="true" required
-                                    class="peer sr-only">
-                                <div
-                                    class="p-4 rounded-xl border-2 border-slate-200 peer-checked:border-green-500 peer-checked:bg-green-50 hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-                                    <i class="fas fa-check text-slate-300 peer-checked:text-green-600"></i>
-                                    <span class="font-bold text-slate-600 peer-checked:text-green-700">True</span>
-                                </div>
+            <!-- Questions Container -->
+            <div id="questionsContainer">
+
+                <!-- Fill in the Blanks -->
+                {% if exam.fill_in_the_blanks %}
+                {% for question in exam.fill_in_the_blanks %}
+                <div class="question-step hidden" data-step="{{ step_counter.value }}">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="bg-purple-50 px-6 py-3 border-b border-purple-100 flex items-center">
+                            <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Fill in the
+                                Blank</span>
+                        </div>
+                        <div class="p-8">
+                            <label class="block text-slate-900 font-bold text-xl mb-6 leading-relaxed">
+                                {{ question.question }}
                             </label>
-                            <label class="relative flex-1 cursor-pointer group">
-                                <input type="radio" name="tf_{{ loop.index0 }}" value="false" required
-                                    class="peer sr-only">
-                                <div
-                                    class="p-4 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50 hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-                                    <i class="fas fa-times text-slate-300 peer-checked:text-red-600"></i>
-                                    <span class="font-bold text-slate-600 peer-checked:text-red-700">False</span>
-                                </div>
-                            </label>
+                            <input type="text" name="fib_{{ loop.index0 }}"
+                                class="w-full px-5 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400 text-slate-800 bg-slate-50 focus:bg-white text-lg"
+                                placeholder="Type your answer here..." oninput="validateCurrentStep()">
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </div>
-            {% endif %}
+                {% set step_counter.value = step_counter.value + 1 %}
+                {% endfor %}
+                {% endif %}
 
-            <!-- Multiple Choice Questions Section -->
-            {% if exam.mcqs %}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="bg-orange-50 px-8 py-4 border-b border-orange-100 flex items-center">
-                    <span
-                        class="flex-shrink-0 w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-list-ul"></i>
-                    </span>
-                    <h2 class="text-xl font-bold text-slate-800">Multiple Choice</h2>
-                </div>
-                <div class="p-8 space-y-8">
-                    {% for question in exam.mcqs %}
-                    {% set question_index = loop.index0 %}
-                    <div class="pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-                        <p class="text-slate-800 font-semibold text-lg mb-4">
-                            <span class="text-slate-400 mr-2">{{ loop.index }}.</span> {{ question.question }}
-                        </p>
-                        <div class="space-y-3">
-                            {% for option in question.options %}
-                            <label
-                                class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:shadow-sm">
-                                <input type="radio" name="mcq_{{ question_index }}" value="{{ option }}" required
-                                    class="w-5 h-5 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                <span class="ml-3 text-slate-700 font-medium">{{ option }}</span>
-                            </label>
-                            {% endfor %}
+                <!-- True/False -->
+                {% if exam.true_false %}
+                {% for question in exam.true_false %}
+                <div class="question-step hidden" data-step="{{ step_counter.value }}">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="bg-blue-50 px-6 py-3 border-b border-blue-100 flex items-center">
+                            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">True or False</span>
+                        </div>
+                        <div class="p-8">
+                            <p class="text-slate-900 font-bold text-xl mb-8 leading-relaxed">
+                                {{ question.question }}
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label class="relative cursor-pointer group">
+                                    <input type="radio" name="tf_{{ loop.index0 }}" value="true" class="peer sr-only"
+                                        onchange="validateCurrentStep()">
+                                    <div
+                                        class="p-5 rounded-xl border-2 border-slate-200 peer-checked:border-green-500 peer-checked:bg-green-50 hover:bg-slate-50 transition-all flex items-center justify-center gap-3">
+                                        <i class="fas fa-check text-slate-300 peer-checked:text-green-600 text-xl"></i>
+                                        <span
+                                            class="font-bold text-slate-600 peer-checked:text-green-700 text-lg">True</span>
+                                    </div>
+                                </label>
+                                <label class="relative cursor-pointer group">
+                                    <input type="radio" name="tf_{{ loop.index0 }}" value="false" class="peer sr-only"
+                                        onchange="validateCurrentStep()">
+                                    <div
+                                        class="p-5 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50 hover:bg-slate-50 transition-all flex items-center justify-center gap-3">
+                                        <i class="fas fa-times text-slate-300 peer-checked:text-red-600 text-xl"></i>
+                                        <span
+                                            class="font-bold text-slate-600 peer-checked:text-red-700 text-lg">False</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </div>
-            {% endif %}
+                {% set step_counter.value = step_counter.value + 1 %}
+                {% endfor %}
+                {% endif %}
 
-            <!-- Submit Button -->
-            <div class="sticky bottom-6 z-10 w-full">
-                <div
-                    class="bg-white p-4 rounded-xl shadow-2xl border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="text-sm text-slate-500 text-center sm:text-left">
-                        <i class="fas fa-info-circle mr-1"></i> Ensure all questions are answered.
+                <!-- MCQs -->
+                {% if exam.mcqs %}
+                {% for question in exam.mcqs %}
+                {% set question_index = loop.index0 %}
+                <div class="question-step hidden" data-step="{{ step_counter.value }}">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="bg-orange-50 px-6 py-3 border-b border-orange-100 flex items-center">
+                            <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Multiple
+                                Choice</span>
+                        </div>
+                        <div class="p-8">
+                            <p class="text-slate-900 font-bold text-xl mb-8 leading-relaxed">
+                                {{ question.question }}
+                            </p>
+                            <div class="space-y-4">
+                                {% for option in question.options %}
+                                <label
+                                    class="flex items-center p-5 border-2 border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:shadow-sm">
+                                    <input type="radio" name="mcq_{{ question_index }}" value="{{ option }}"
+                                        class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                        onchange="validateCurrentStep()">
+                                    <span class="ml-4 text-slate-700 font-medium text-lg">{{ option }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
+                </div>
+                {% set step_counter.value = step_counter.value + 1 %}
+                {% endfor %}
+                {% endif %}
+
+            </div>
+
+            <!-- Navigation Bar -->
+            <div class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
+                <div class="max-w-3xl mx-auto flex items-center justify-between">
+                    <button type="button" id="prevBtn" onclick="changeStep(-1)"
+                        class="px-6 py-2.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+
+                    <button type="button" id="nextBtn" onclick="changeStep(1)"
+                        class="px-8 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg shadow-blue-200">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+
                     <button type="submit" id="submitBtn"
-                        class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-bold text-lg shadow-lg hover:shadow-blue-500/30 flex items-center justify-center disabled:opacity-75 disabled:cursor-not-allowed">
-                        <span id="submitText">Submit Answers</span>
-                        <i class="fas fa-paper-plane ml-2 text-sm"></i>
-                        <svg id="submitLoader" class="hidden animate-spin ml-3 h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75" fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                            </path>
-                        </svg>
+                        class="hidden px-8 py-2.5 rounded-lg font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow-lg shadow-green-200">
+                        Submit Quiz <i class="fas fa-check ml-2"></i>
                     </button>
                 </div>
             </div>
+
+            <!-- Padding for fixed footer -->
+            <div class="h-24"></div>
+
         </form>
     </div>
 </div>
 
-<style>
-    @keyframes pulse-slow {
-
-        0%,
-        100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.8;
-        }
-    }
-
-    .animate-pulse-slow {
-        animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-</style>
-
 <script>
-    // Prevent duplicate form submissions
-    const quizForm = document.querySelector('form[action^="/user/submit/"]');
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.question-step');
+    const totalSteps = steps.length;
+
+    // Elements
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
-    const submitText = document.getElementById('submitText');
-    const submitLoader = document.getElementById('submitLoader');
-    let isSubmitting = false;
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const progressPercent = document.getElementById('progressPercent');
 
-    if (quizForm && submitBtn) {
-        quizForm.addEventListener('submit', function (e) {
-            // Check if already submitting
-            if (isSubmitting) {
-                e.preventDefault();
-                return false;
-            }
-
-            // Set submitting state
-            isSubmitting = true;
-            submitBtn.disabled = true;
-            submitText.textContent = 'Submitting...';
-            submitLoader.classList.remove('hidden');
-
-            // Allow form to submit
-            return true;
-        });
+    function initQuiz() {
+        if (totalSteps > 0) {
+            showStep(0);
+        } else {
+            // Handle case with no questions
+            alert('This quiz has no questions!');
+        }
     }
-</script>
 
+    function showStep(index) {
+        // Bounds check
+        if (index < 0 || index >= totalSteps) return;
+
+        // Hide all steps
+        steps.forEach(step => step.classList.add('hidden'));
+
+        // Show current step
+        steps[index].classList.remove('hidden');
+
+        // Update current index
+        currentStep = index;
+
+        // Update Progress
+        const progress = ((index + 1) / totalSteps) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressText.innerText = `Question ${index + 1} of ${totalSteps}`;
+        progressPercent.innerText = `${Math.round(progress)}%`;
+
+        // Update Buttons
+        prevBtn.disabled = index === 0;
+
+        if (index === totalSteps - 1) {
+            nextBtn.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            submitBtn.classList.add('hidden');
+        }
+
+        // Validate to enable/disable Next button
+        validateCurrentStep();
+
+        // Scroll to top of question container
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changeStep(n) {
+        if (n === 1 && !validateCurrentStep()) {
+            // Shake effect or alert could go here
+            return;
+        }
+        showStep(currentStep + n);
+    }
+
+    function validateCurrentStep() {
+        const currentStepEl = steps[currentStep];
+        const inputs = currentStepEl.querySelectorAll('input');
+        let isValid = false;
+
+        inputs.forEach(input => {
+            if (input.type === 'radio') {
+                if (input.checked) isValid = true;
+            } else if (input.type === 'text') {
+                if (input.value.trim() !== '') isValid = true;
+            }
+        });
+
+        const nextButton = document.getElementById('nextBtn');
+        nextButton.disabled = !isValid;
+
+        // Also disable submit if on last step and invalid
+        if (currentStep === totalSteps - 1) {
+            document.getElementById('submitBtn').disabled = !isValid;
+        }
+
+        return isValid;
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', initQuiz);
+
+    // Add enter key support for text inputs
+    document.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent default form submit
+            if (!document.getElementById('nextBtn').disabled && !document.getElementById('nextBtn').classList.contains('hidden')) {
+                changeStep(1);
+            }
+        }
+    });
+
+</script>
 {% endblock %}

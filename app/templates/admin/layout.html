@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex">
 
     <!-- Sidebar -->
@@ -26,31 +28,36 @@
         <nav class="flex-1 overflow-y-auto py-4">
             <ul class="space-y-2 px-2">
                 <li>
-                    <a href="/admin/dashboard" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_dashboard' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
-                        <i class="fas fa-th-large w-5 text-center"></i>
+                    <a href="/admin/dashboard"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_dashboard' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                        <i class="fas fa-home w-5 text-center"></i>
                         <span class="font-medium">Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/quizzes" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_quizzes' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/quizzes"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_quizzes' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-book-open w-5 text-center"></i>
                         <span class="font-medium">Quizzes</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/scores" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.view_scores' or request.endpoint == 'admin.admin_view_submission' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/scores"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.view_scores' or request.endpoint == 'admin.admin_view_submission' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-chart-bar w-5 text-center"></i>
                         <span class="font-medium">Scores</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/users" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_users' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/users"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_users' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-users w-5 text-center"></i>
                         <span class="font-medium">Users</span>
                     </a>
                 </li>
                 <li class="pt-4 mt-4 border-t border-slate-700">
-                    <a href="/admin/settings" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_settings' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/settings"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_settings' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-cog w-5 text-center"></i>
                         <span class="font-medium">Settings</span>
                     </a>
@@ -59,7 +66,8 @@
         </nav>
 
         <div class="p-4 border-t border-slate-700">
-            <a href="/logout" class="flex items-center space-x-3 px-4 py-2 text-red-400 hover:text-red-300 transition-colors">
+            <a href="/logout"
+                class="flex items-center space-x-3 px-4 py-2 text-red-400 hover:text-red-300 transition-colors">
                 <i class="fas fa-sign-out-alt w-5 text-center"></i>
                 <span class="font-medium">Logout</span>
             </a>
@@ -67,10 +75,12 @@
     </aside>
 
     <!-- Mobile Sidebar Backdrop -->
-    <div id="sidebarBackdrop" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"
+        onclick="toggleSidebar()"></div>
 
     <!-- Mobile Sidebar -->
-    <aside id="mobileSidebar" class="fixed inset-y-0 left-0 bg-slate-800 text-white w-64 transform -translate-x-full transition-transform duration-300 md:hidden z-30 flex flex-col">
+    <aside id="mobileSidebar"
+        class="fixed inset-y-0 left-0 bg-slate-800 text-white w-64 transform -translate-x-full transition-transform duration-300 md:hidden z-30 flex flex-col">
         <div class="h-16 flex items-center justify-between px-4 border-b border-slate-700">
             <h1 class="text-xl font-bold tracking-wider">QUIZ ADMIN</h1>
             <button onclick="toggleSidebar()" class="text-gray-300 hover:text-white">
@@ -79,41 +89,47 @@
         </div>
         <!-- Copy of Nav (Simplified for this file, could specificy a block or component) -->
         <nav class="flex-1 overflow-y-auto py-4">
-             <ul class="space-y-2 px-2">
+            <ul class="space-y-2 px-2">
                 <li>
-                    <a href="/admin/dashboard" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_dashboard' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
-                        <i class="fas fa-th-large w-5 text-center"></i>
+                    <a href="/admin/dashboard"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_dashboard' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                        <i class="fas fa-home w-5 text-center"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/quizzes" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_quizzes' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/quizzes"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_quizzes' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-book-open w-5 text-center"></i>
                         <span>Quizzes</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/scores" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.view_scores' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/scores"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.view_scores' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-chart-bar w-5 text-center"></i>
                         <span>Scores</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/users" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_users' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                    <a href="/admin/users"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_users' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-users w-5 text-center"></i>
                         <span>Users</span>
                     </a>
                 </li>
-                 <li class="pt-4 mt-4 border-t border-slate-700">
-                    <a href="/admin/settings" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_settings' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
+                <li class="pt-4 mt-4 border-t border-slate-700">
+                    <a href="/admin/settings"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-700 transition-colors {% if request.endpoint == 'admin.admin_settings' %}bg-blue-600 text-white shadow-md{% else %}text-gray-300{% endif %}">
                         <i class="fas fa-cog w-5 text-center"></i>
                         <span>Settings</span>
                     </a>
                 </li>
             </ul>
         </nav>
-          <div class="p-4 border-t border-slate-700">
-            <a href="/logout" class="flex items-center space-x-3 px-4 py-2 text-red-400 hover:text-red-300 transition-colors">
+        <div class="p-4 border-t border-slate-700">
+            <a href="/logout"
+                class="flex items-center space-x-3 px-4 py-2 text-red-400 hover:text-red-300 transition-colors">
                 <i class="fas fa-sign-out-alt w-5 text-center"></i>
                 <span class="font-medium">Logout</span>
             </a>
@@ -123,27 +139,28 @@
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden">
-        
+
         <!-- Header -->
         <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
             <div class="flex items-center">
-                <button onclick="toggleSidebar()" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none mr-4">
+                <button onclick="toggleSidebar()"
+                    class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none mr-4">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
                 <h2 class="text-xl font-semibold text-gray-800">
                     {% block header_title %}Dashboard{% endblock %}
                 </h2>
             </div>
-            
+
             <div class="flex items-center space-x-4">
-               <div class="relative">
-                   <div class="flex items-center space-x-2 text-gray-600">
-                       <span class="text-sm font-medium hidden sm:block">Admin</span>
-                       <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
-                           <i class="fas fa-user-shield text-sm"></i>
-                       </div>
-                   </div>
-               </div>
+                <div class="relative">
+                    <div class="flex items-center space-x-2 text-gray-600">
+                        <span class="text-sm font-medium hidden sm:block">Admin</span>
+                        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
+                            <i class="fas fa-user-shield text-sm"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -157,7 +174,7 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('mobileSidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
-            
+
             if (sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.remove('-translate-x-full');
                 backdrop.classList.remove('hidden');
@@ -168,4 +185,5 @@
         }
     </script>
 </body>
+
 </html>
