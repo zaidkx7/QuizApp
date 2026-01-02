@@ -104,8 +104,9 @@
                                         </div>
                                         <div>
                                             <p class="text-sm font-medium text-slate-700">{{
-                                                submission.submitted_at.strftime('%b %d, %Y') }}</p>
-                                            <p class="text-xs text-slate-400">{{ submission.submitted_at.strftime('%I:%M
+                                                (submission.submitted_at | pkt_date).strftime('%b %d, %Y') }}</p>
+                                            <p class="text-xs text-slate-400">{{ (submission.submitted_at |
+                                                pkt_date).strftime('%I:%M
                                                 %p') }}</p>
                                         </div>
                                     </div>
@@ -162,8 +163,8 @@
                                         <h4
                                             class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
                                             {{ result.quiz.title }}</h4>
-                                        <p class="text-xs text-slate-500">{{ result.submitted_at.strftime('%b %d, %Y')
-                                            }}
+                                        <p class="text-xs text-slate-500">{{ (result.submitted_at |
+                                            pkt_date).strftime('%b %d, %Y') }}
                                         </p>
                                     </div>
                                 </div>

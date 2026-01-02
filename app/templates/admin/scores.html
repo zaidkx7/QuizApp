@@ -112,7 +112,7 @@
                                         </span>
                                     </td>
                                     <td class="px-4 py-3 text-sm text-slate-500">
-                                        {{ attempt.submitted_at.strftime('%b %d, %Y %I:%M %p') }}
+                                        {{ (attempt.submitted_at | pkt_date).strftime('%b %d, %Y %I:%M %p') }}
                                     </td>
                                     <td class="px-4 py-3 text-right text-sm">
                                         <a href="/admin/submission/{{ attempt.id }}"

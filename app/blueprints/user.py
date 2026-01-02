@@ -170,9 +170,37 @@ def submit_quiz(db, quiz_id):
 
     if recent_submission:
         # Duplicate submission detected - redirect to the recent result
-        print(f"Duplicate submission prevented for user {user.id} on quiz {quiz_id}")
+        print(f"Duplicate submission prevented (5s check) for user {user.id} on quiz {quiz_id}")
         session["message"] = "Your quiz has already been submitted. Here are your results."
         return redirect(url_for("user.view_result", result_id=recent_submission.id))
+
+    # ATTEMPT ID VALIDATION (Robust Check)
+    # Check if we already have a result for this attempt number
+    submitted_attempt_id = request.form.get("attempt_id")
+    if submitted_attempt_id:
+        try:
+            current_attempt_num = int(submitted_attempt_id)
+            existing_attempts_count = db.query(Result).filter(
+                Result.user_id == user.id,
+                Result.quiz_id == quiz_id
+            ).count()
+            
+            # If we are trying to submit attempt X, but we already have X (or more) results,
+            # then this is a duplicate submission of an old form.
+            if current_attempt_num <= existing_attempts_count:
+                print(f"Stale submission prevented (Attempt {current_attempt_num} <= {existing_attempts_count}) for user {user.id}")
+                session["message"] = "This attempt has already been submitted."
+                
+                # Find the result corresponding to this attempt (or just the latest one)
+                # We'll just show the latest result to be safe
+                latest_result = db.query(Result).filter(
+                    Result.user_id == user.id,
+                    Result.quiz_id == quiz_id
+                ).order_by(Result.submitted_at.desc()).first()
+                
+                return redirect(url_for("user.view_result", result_id=latest_result.id))
+        except ValueError:
+            pass # invalid attempt_id, ignore and proceed with normal logic
 
     # Check if user has reached maximum attempts
     attempt_count = db.query(Result).filter(

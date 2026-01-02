@@ -37,4 +37,15 @@ def create_app(config_name='default'):
     app.register_blueprint(user)
     app.register_blueprint(admin)
 
+    # Register Jinja2 filter for PKT Timezones
+    @app.template_filter('pkt_date')
+    def pkt_date_filter(dt):
+        if not dt:
+            return ""
+        from datetime import timedelta
+        # UTC to PKT is +5 hours
+        pkt_time = dt + timedelta(hours=5)
+        # Return formatted string directly or datetime object (Jinja handles objects well if chained)
+        return pkt_time
+
     return app

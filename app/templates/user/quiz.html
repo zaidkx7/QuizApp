@@ -50,6 +50,7 @@
         </div>
 
         <form method="POST" action="/user/submit/{{ quiz_id }}" id="quizForm" class="relative min-h-[400px]">
+            <input type="hidden" name="attempt_id" value="{{ attempt_number }}">
 
             {% set step_counter = namespace(value=1) %}
 
@@ -284,6 +285,26 @@
             }
         }
     });
+
+    // Prevent duplicate form submissions
+    const quizForm = document.getElementById('quizForm');
+    let isSubmitting = false;
+
+    if (quizForm) {
+        quizForm.addEventListener('submit', function (e) {
+            if (isSubmitting) {
+                e.preventDefault();
+                return false;
+            }
+            isSubmitting = true;
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Submitting... <i class="fas fa-spinner fa-spin ml-2"></i>';
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            }
+        });
+    }
 
 </script>
 {% endblock %}
