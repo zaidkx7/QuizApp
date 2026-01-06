@@ -153,12 +153,34 @@
             </div>
 
             <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <div class="flex items-center space-x-2 text-gray-600">
-                        <span class="text-sm font-medium hidden sm:block">Admin</span>
-                        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <span class="text-sm font-medium hidden sm:block">{{ session.get('full_name') or
+                            session.get('username') }}</span>
+                        <div
+                            class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 overflow-hidden ring-2 ring-transparent group-hover:ring-blue-100 transition-all">
+                            {% if session.get('profile_pic') %}
+                            <img src="{{ url_for('static', filename='uploads/profiles/' + session.get('profile_pic')) }}"
+                                alt="Profile" class="h-full w-full object-cover">
+                            {% else %}
                             <i class="fas fa-user-shield text-sm"></i>
+                            {% endif %}
                         </div>
+                    </button>
+                    <!-- Dropdown -->
+                    <div
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 hidden group-hover:block hover:block z-50">
+                        <div class="px-4 py-3 border-b border-slate-50">
+                            <p class="text-sm text-slate-500">Signed in as</p>
+                            <p class="text-sm font-bold text-slate-800 truncate">{{ session.get('username') }}</p>
+                        </div>
+                        <a href="{{ url_for('auth.profile') }}"
+                            class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
+                            <i class="fas fa-user-circle mr-2 w-4"></i> Your Profile
+                        </a>
+                        <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <i class="fas fa-sign-out-alt mr-2 w-4"></i> Logout
+                        </a>
                     </div>
                 </div>
             </div>

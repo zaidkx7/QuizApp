@@ -12,6 +12,15 @@ class User(Base):
     password = Column(String, nullable=True)  # Password for students
     email = Column(String, nullable=True)  # Email for sending results
     role = Column(String, nullable=False)  # "admin" or "user"
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    profile_pic = Column(String, nullable=True)  # Path relative to static folder
+
+    @property
+    def full_name(self):
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        return self.username
 
     # Relationship to results
     results = relationship("Result", back_populates="user")

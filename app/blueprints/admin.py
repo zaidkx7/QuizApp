@@ -49,6 +49,9 @@ def admin_login(db):
             # Set session
             session["user_id"] = admin_user.id
             session["role"] = "admin"
+            session["full_name"] = admin_user.full_name
+            session["profile_pic"] = admin_user.profile_pic
+            
             return redirect(url_for("admin.admin_dashboard"))
 
         return render_template("admin/login.html", error="Invalid credentials")

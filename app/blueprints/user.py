@@ -55,6 +55,8 @@ def user_register(db):
         # Set session
         session["user_id"] = user.id
         session["role"] = "user"
+        session["full_name"] = user.full_name
+        session["profile_pic"] = user.profile_pic
 
         return redirect(url_for("user.user_history"))
 

@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Quiz App{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <!-- Header -->
+        <div class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-slate-800">My Profile</h1>
+            <p class="text-slate-500 mt-2">Manage your account information and preferences</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+            <!-- Form -->
+            <form method="POST" enctype="multipart/form-data" class="p-8 sm:p-12 space-y-8">
+
+                <!-- Profile Picture Section -->
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <div class="relative group">
+                        <div
+                            class="h-32 w-32 rounded-full overflow-hidden ring-4 ring-slate-100 shadow-lg bg-slate-200">
+                            {% if user.profile_pic %}
+                            <img src="{{ url_for('static', filename='uploads/profiles/' + user.profile_pic) }}"
+                                alt="Profile Picture" class="h-full w-full object-cover">
+                            {% else %}
+                            <div
+                                class="h-full w-full flex items-center justify-center bg-blue-100 text-blue-500 text-4xl font-bold">
+                                {{ user.username[0]|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <label for="profile_pic"
+                            class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-lg cursor-pointer hover:bg-blue-700 transition-transform hover:scale-105 active:scale-95">
+                            <i class="fas fa-camera text-sm"></i>
+                        </label>
+                        <input type="file" id="profile_pic" name="profile_pic" class="hidden" accept="image/*"
+                            onchange="previewImage(this)">
+                    </div>
+                    <p class="text-xs text-slate-400">Click camera icon to uploading new photo</p>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- Personal Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- First Name -->
+                    <div>
+                        <label for="first_name" class="block text-sm font-semibold text-slate-700 mb-2">First
+                            Name</label>
+                        <input type="text" id="first_name" name="first_name" value="{{ user.first_name or '' }}"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none bg-slate-50"
+                            placeholder="Enter first name">
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label for="last_name" class="block text-sm font-semibold text-slate-700 mb-2">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" value="{{ user.last_name or '' }}"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none bg-slate-50"
+                            placeholder="Enter last name">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="md:col-span-2">
+                        <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-slate-400"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" name="email" value="{{ user.email or '' }}"
+                                class="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none bg-slate-50"
+                                placeholder="your.email@example.com">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- Read Only Info -->
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-200/60">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Username / ID</label>
+                        <div class="font-mono text-slate-600 font-medium">{{ user.username }}</div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Role</label>
+                        <div
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                            {% if user.role == 'admin' %}bg-purple-100 text-purple-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                            {{ user.role|capitalize }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Change (Optional) -->
+                <div>
+                    <button type="button" onclick="togglePasswordSection()"
+                        class="text-blue-600 text-sm font-semibold hover:text-blue-700 flex items-center gap-2">
+                        <i class="fas fa-lock"></i> Change Password
+                    </button>
+
+                    <div id="passwordSection"
+                        class="hidden mt-6 space-y-4 p-6 bg-slate-50 rounded-xl border border-slate-200">
+                        <div>
+                            <label for="new_password" class="block text-sm font-semibold text-slate-700 mb-2">New
+                                Password</label>
+                            <input type="password" id="new_password" name="new_password"
+                                class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none bg-white"
+                                placeholder="Leave blank to keep current">
+                        </div>
+                        <div>
+                            <label for="confirm_password"
+                                class="block text-sm font-semibold text-slate-700 mb-2">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password"
+                                class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none bg-white"
+                                placeholder="Confirm new password">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-end gap-4 pt-4">
+                    <a href="{{ url_for('user.user_history') if user.role == 'user' else url_for('admin.admin_dashboard') }}"
+                        class="px-6 py-2.5 rounded-lg font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                        class="px-8 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all active:scale-95">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePasswordSection() {
+        const section = document.getElementById('passwordSection');
+        section.classList.toggle('hidden');
+    }
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // Find the img tag or the div with initials
+                const container = input.closest('.group').querySelector('.rounded-full');
+                let img = container.querySelector('img');
+
+                if (!img) {
+                    // Create img if it doesn't exist (replacing initials)
+                    img = document.createElement('img');
+                    img.className = "h-full w-full object-cover";
+                    container.innerHTML = '';
+                    container.appendChild(img);
+                }
+
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

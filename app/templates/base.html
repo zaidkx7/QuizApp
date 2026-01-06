@@ -52,15 +52,42 @@
                 <div class="flex items-center">
                     {% if session.get('user_id') %}
                     <div class="flex items-center gap-4">
-                        <div class="hidden md:flex flex-col items-end mr-2">
-                            <span class="text-sm font-medium text-gray-700">{{ session.get('username', 'Student')
-                                }}</span>
-                            <span class="text-xs text-gray-500">Studnet</span>
+                        <div class="relative group">
+                            <button class="flex items-center gap-3 focus:outline-none">
+                                <div class="hidden md:flex flex-col items-end">
+                                    <span class="text-sm font-bold text-gray-700">{{ session.get('full_name') or
+                                        session.get('username', 'Student') }}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">Student</span>
+                                </div>
+                                <div
+                                    class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 overflow-hidden ring-2 ring-transparent group-hover:ring-blue-200 transition-all shadow-sm">
+                                    {% if session.get('profile_pic') %}
+                                    <img src="{{ url_for('static', filename='uploads/profiles/' + session.get('profile_pic')) }}"
+                                        alt="Profile" class="h-full w-full object-cover">
+                                    {% else %}
+                                    <i class="fas fa-user"></i>
+                                    {% endif %}
+                                </div>
+                            </button>
+                            <!-- Dropdown -->
+                            <div
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-1 hidden group-hover:block hover:block z-50 transform origin-top-right transition-all">
+                                <div class="px-4 py-3 border-b border-slate-50 md:hidden">
+                                    <p class="text-sm text-slate-500">Signed in as</p>
+                                    <p class="text-sm font-bold text-slate-800 truncate">{{ session.get('username') }}
+                                    </p>
+                                </div>
+                                <a href="{{ url_for('auth.profile') }}"
+                                    class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                                    <i class="fas fa-user-circle mr-2 w-4"></i> My Profile
+                                </a>
+                                <div class="border-t border-slate-50 my-1"></div>
+                                <a href="/logout"
+                                    class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                    <i class="fas fa-sign-out-alt mr-2 w-4"></i> Logout
+                                </a>
+                            </div>
                         </div>
-                        <a href="/logout"
-                            class="bg-slate-100 text-slate-700 hover:bg-red-50 hover:text-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
                     </div>
                     {% else %}
                     <div class="flex items-center gap-3">
