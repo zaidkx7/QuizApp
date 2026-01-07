@@ -301,6 +301,23 @@ def admin_delete_all_quizzes(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
+    # Delete all quiz files
+    quizzes = db.query(Quiz).all()
+    
+    # Get questions directory
+    app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    questions_dir = os.path.join(app_dir, "data", "questions")
+    
+    for quiz in quizzes:
+        if quiz.filename:
+            file_path = os.path.join(questions_dir, quiz.filename)
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    print(f"Deleted file: {file_path}")
+            except Exception as e:
+                print(f"Error deleting file {quiz.filename}: {str(e)}")
+
     # Delete all quizzes and associated results
     db.query(Result).delete()
     db.query(Quiz).delete()
