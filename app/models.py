@@ -48,3 +48,4 @@ class Settings(Base):
     id = Column(Integer, primary_key=True, index=True)
     max_attempts = Column(Integer, default=3, nullable=False)  # Maximum quiz attempts per user
     smtp_enabled = Column(Boolean, default=True, nullable=False)  # Enable/disable email sending
+    full_page_submission = Column(Boolean, default=False, nullable=False)  # Enable full page submission mode

@@ -60,7 +60,8 @@
                 <!-- Fill in the Blanks -->
                 {% if exam.fill_in_the_blanks %}
                 {% for question in exam.fill_in_the_blanks %}
-                <div class="question-step hidden" data-step="{{ step_counter.value }}">
+                <div class="question-step {% if not full_page_submission %}hidden{% endif %} mb-8"
+                    data-step="{{ step_counter.value }}">
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                         <div class="bg-purple-50 px-6 py-3 border-b border-purple-100 flex items-center">
                             <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Fill in the
@@ -83,7 +84,8 @@
                 <!-- True/False -->
                 {% if exam.true_false %}
                 {% for question in exam.true_false %}
-                <div class="question-step hidden" data-step="{{ step_counter.value }}">
+                <div class="question-step {% if not full_page_submission %}hidden{% endif %} mb-8"
+                    data-step="{{ step_counter.value }}">
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                         <div class="bg-blue-50 px-6 py-3 border-b border-blue-100 flex items-center">
                             <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">True or False</span>
@@ -125,7 +127,8 @@
                 {% if exam.mcqs %}
                 {% for question in exam.mcqs %}
                 {% set question_index = loop.index0 %}
-                <div class="question-step hidden" data-step="{{ step_counter.value }}">
+                <div class="question-step {% if not full_page_submission %}hidden{% endif %} mb-8"
+                    data-step="{{ step_counter.value }}">
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                         <div class="bg-orange-50 px-6 py-3 border-b border-orange-100 flex items-center">
                             <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Multiple
@@ -158,6 +161,7 @@
             <!-- Navigation Bar -->
             <div class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
                 <div class="max-w-3xl mx-auto flex items-center justify-between">
+                    {% if not full_page_submission %}
                     <button type="button" id="prevBtn" onclick="changeStep(-1)"
                         class="px-6 py-2.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                         <i class="fas fa-arrow-left mr-2"></i> Previous
@@ -167,9 +171,10 @@
                         class="px-8 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg shadow-blue-200">
                         Next <i class="fas fa-arrow-right ml-2"></i>
                     </button>
+                    {% endif %}
 
                     <button type="submit" id="submitBtn"
-                        class="hidden px-8 py-2.5 rounded-lg font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow-lg shadow-green-200">
+                        class="{% if not full_page_submission %}hidden{% endif %} px-8 py-2.5 rounded-lg font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow-lg shadow-green-200 ml-auto">
                         Submit Quiz <i class="fas fa-check ml-2"></i>
                     </button>
                 </div>
@@ -195,9 +200,20 @@
     const progressText = document.getElementById('progressText');
     const progressPercent = document.getElementById('progressPercent');
 
+    const isFullPage = {{ 'true' if full_page_submission else 'false' }};
+
     function initQuiz() {
         if (totalSteps > 0) {
-            showStep(0);
+            if (!isFullPage) {
+                showStep(0);
+            } else {
+                // In full page mode, hide progress bar
+                if (document.querySelector('.w-full.bg-slate-200.rounded-full')) {
+                    document.querySelector('.w-full.bg-slate-200.rounded-full').parentElement.style.display = 'none';
+                }
+                // Validate initially to disable submit button if empty
+                validateAll();
+            }
         } else {
             // Handle case with no questions
             alert('This quiz has no questions!');
@@ -205,6 +221,8 @@
     }
 
     function showStep(index) {
+        if (isFullPage) return;
+
         // Bounds check
         if (index < 0 || index >= totalSteps) return;
 
@@ -241,6 +259,34 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function validateAll() {
+        let allValid = true;
+        steps.forEach(step => {
+            const inputs = step.querySelectorAll('input');
+            let stepValid = false;
+            inputs.forEach(input => {
+                if (input.type === 'radio') {
+                    if (input.checked) stepValid = true;
+                } else if (input.type === 'text') {
+                    if (input.value.trim() !== '') stepValid = true;
+                }
+            });
+            if (!stepValid) allValid = false;
+        });
+
+        const submitButton = document.getElementById('submitBtn');
+        if (submitButton) {
+            submitButton.disabled = !allValid;
+            if (allValid) {
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        return allValid;
+    }
+
     function changeStep(n) {
         if (n === 1 && !validateCurrentStep()) {
             // Shake effect or alert could go here
@@ -250,6 +296,8 @@
     }
 
     function validateCurrentStep() {
+        if (isFullPage) return validateAll();
+
         const currentStepEl = steps[currentStep];
         const inputs = currentStepEl.querySelectorAll('input');
         let isValid = false;
@@ -263,11 +311,12 @@
         });
 
         const nextButton = document.getElementById('nextBtn');
-        nextButton.disabled = !isValid;
+        if (nextButton) nextButton.disabled = !isValid;
 
         // Also disable submit if on last step and invalid
         if (currentStep === totalSteps - 1) {
-            document.getElementById('submitBtn').disabled = !isValid;
+            const submitButton = document.getElementById('submitBtn');
+            if (submitButton) submitButton.disabled = !isValid;
         }
 
         return isValid;

@@ -301,6 +301,23 @@ def admin_delete_all_quizzes(db):
     if session.get("role") != "admin":
         return redirect(url_for("admin.admin_login"))
 
+    # Delete all quiz files
+    quizzes = db.query(Quiz).all()
+    
+    # Get questions directory
+    app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    questions_dir = os.path.join(app_dir, "data", "questions")
+    
+    for quiz in quizzes:
+        if quiz.filename:
+            file_path = os.path.join(questions_dir, quiz.filename)
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    print(f"Deleted file: {file_path}")
+            except Exception as e:
+                print(f"Error deleting file {quiz.filename}: {str(e)}")
+
     # Delete all quizzes and associated results
     db.query(Result).delete()
     db.query(Quiz).delete()
@@ -509,6 +526,7 @@ def admin_settings_update(db):
     # Get form data
     max_attempts = request.form.get("max_attempts", type=int)
     smtp_enabled = request.form.get("smtp_enabled") == "on"
+    full_page_submission = request.form.get("full_page_submission") == "on"
 
     # Validate max_attempts
     if not max_attempts or max_attempts < 1 or max_attempts > 999:
@@ -530,6 +548,7 @@ def admin_settings_update(db):
     settings = get_or_create_settings(db)
     settings.max_attempts = max_attempts
     settings.smtp_enabled = smtp_enabled
+    settings.full_page_submission = full_page_submission
     db.commit()
 
     session["message"] = "Settings updated successfully!"
