@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.mail import SMTPMailer
 from app.database import SessionLocal
 from app.models import User, Quiz, Result
-from app.utils import get_current_user, get_max_attempts, is_smtp_enabled, load_quiz_by_id, calculate_score
+from app.utils import get_current_user, get_max_attempts, is_smtp_enabled, load_quiz_by_id, calculate_score, get_or_create_settings
 
 user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -138,7 +138,11 @@ def take_quiz(db, quiz_id):
         if not quiz or not quiz_data:
             return "<h1>Quiz not found or unavailable.</h1>", 404
 
-        return render_template("user/quiz.html", exam=quiz_data, quiz_id=quiz_id, attempt_number=attempt_number)
+        # Get settings
+        settings = get_or_create_settings(db)
+        full_page_submission = settings.full_page_submission
+
+        return render_template("user/quiz.html", exam=quiz_data, quiz_id=quiz_id, attempt_number=attempt_number, full_page_submission=full_page_submission)
     except Exception as e:
         print(f"ERROR in take_quiz: {str(e)}")
         import traceback

@@ -509,6 +509,7 @@ def admin_settings_update(db):
     # Get form data
     max_attempts = request.form.get("max_attempts", type=int)
     smtp_enabled = request.form.get("smtp_enabled") == "on"
+    full_page_submission = request.form.get("full_page_submission") == "on"
 
     # Validate max_attempts
     if not max_attempts or max_attempts < 1 or max_attempts > 999:
@@ -530,6 +531,7 @@ def admin_settings_update(db):
     settings = get_or_create_settings(db)
     settings.max_attempts = max_attempts
     settings.smtp_enabled = smtp_enabled
+    settings.full_page_submission = full_page_submission
     db.commit()
 
     session["message"] = "Settings updated successfully!"

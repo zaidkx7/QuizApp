@@ -60,6 +60,31 @@
                 <!-- Divider -->
                 <hr class="border-slate-100 my-8">
 
+                <!-- Full Page Submission Setting -->
+                <div class="mb-8">
+                    <!-- Toggle -->
+                    <div class="flex items-start justify-between bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="font-semibold text-slate-700 cursor-pointer select-none"
+                                for="full_page_submission">Enable Full Page Submission</label>
+                            <p class="text-sm text-slate-500 mt-1">Show all questions on a single page instead of
+                                step-by-step.
+                            </p>
+                        </div>
+
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="full_page_submission" name="full_page_submission"
+                                class="sr-only peer" {% if settings.full_page_submission %}checked{% endif %}>
+                            <div
+                                class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <hr class="border-slate-100 my-8">
+
                 <!-- Header -->
                 <div class="mb-6 flex items-center">
                     <div class="p-2 bg-purple-100 text-purple-600 rounded-lg mr-4">
@@ -114,7 +139,8 @@
                                         class="px-1 rounded bg-amber-100 text-amber-900 border border-amber-200 text-xs">EMAIL_USERNAME</code>,
                                     <code
                                         class="px-1 rounded bg-amber-100 text-amber-900 border border-amber-200 text-xs">EMAIL_PASSWORD</code>,
-                                    etc. in your .env file.</p>
+                                    etc. in your .env file.
+                                </p>
                                 {% endif %}
                             </div>
                         </div>
